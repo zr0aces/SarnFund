@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThaiESG All-in-One Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font for better aesthetics -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+
+    <!-- Import Map to handle React imports within the browser -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom": "https://esm.sh/react-dom@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "recharts": "https://esm.sh/recharts@2.12.7?external=react,react-dom",
+            "lucide-react": "https://esm.sh/lucide-react@0.395.0?external=react,react-dom"
+        }
+    }
+    </script>
+
+    <!-- Babel Standalone to compile JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Sticky Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="bg-slate-900 text-white p-1.5 rounded-lg group-hover:bg-brand-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-arrow-left">
+                        <path d="m12 19-7-7 7-7" />
+                        <path d="M19 12H5" />
+                    </svg>
+                </div>
+                <span class="font-bold text-slate-700 group-hover:text-brand-600 transition-colors">Back to Funds
+                    Portal</span>
+            </a>
+            <div class="text-sm font-semibold text-slate-500 hidden md:block">
+                ZeroTrust Investment Tools
+            </div>
+        </div>
+    </nav>
+
+    <div id="root"></div>
+
+    <!-- Application Code -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useMemo, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
+        import { Trophy, TrendingUp, AlertCircle, Filter, DollarSign, PieChart, ArrowUpRight, ArrowDownRight, Calendar, RefreshCw, Clock, Sparkles, Leaf, ExternalLink } from 'lucide-react';
+
+        // --- Mock Data: ข้อมูลกองทุน ThaiESG (Thai Sustainable Equity Fund) ---
+        const initialFundsData = [
+            // ================= KKP (เกียรตินาคินภัทร) =================
+            { id: 'k1', code: 'KKP EQ THAI ESG', name: 'เคเคพี หุ้นไทยเพื่อความยั่งยืน', amc: 'KKP', nav: 10.45, ytd: 4.2, return1y: 6.5, risk: 6, type: 'Equity ESG', isNew: false },
+            { id: 'k2', code: 'KKP GB THAI ESG', name: 'เคเคพี พันธบัตรรัฐบาลไทยเพื่อความยั่งยืน', amc: 'KKP', nav: 10.15, ytd: 2.8, return1y: 3.2, risk: 3, type: 'Bond ESG', isNew: false },
+
+            // ================= Krungsri (กรุงศรี) =================
+            { id: 'ks1', code: 'KFTHAIESG', name: 'กรุงศรีไทยเพื่อความยั่งยืน (ชนิดสะสมมูลค่า)', amc: 'Krungsri', nav: 9.85, ytd: 3.5, return1y: 5.8, risk: 6, type: 'Equity ESG', isNew: false },
+            { id: 'ks2', code: 'KFTHAIESGD', name: 'กรุงศรีไทยเพื่อความยั่งยืน (ชนิดจ่ายเงินปันผล)', amc: 'Krungsri', nav: 9.72, ytd: 3.2, return1y: 5.5, risk: 6, type: 'Equity ESG', isNew: false },
+
+            // ================= Bualuang (บัวหลวง) =================
+            { id: 'b1', code: 'B-TOP-THAIESG', name: 'บัวหลวงทศพลไทยเพื่อความยั่งยืน', amc: 'Bualuang', nav: 10.80, ytd: 5.5, return1y: 8.2, risk: 6, type: 'Equity ESG', isNew: false },
+            { id: 'b2', code: 'B-DYNAMIC-THAIESG', name: 'บัวหลวงไดนามิกไทยเพื่อความยั่งยืน', amc: 'Bualuang', nav: 10.25, ytd: 4.8, return1y: 7.5, risk: 6, type: 'Equity ESG', isNew: true },
+            { id: 'b3', code: 'B-SI-THAIESG', name: 'บัวหลวงยั่งยืน (Sustainable Investment)', amc: 'Bualuang', nav: 10.10, ytd: 4.1, return1y: 6.2, risk: 6, type: 'Equity ESG', isNew: true },
+
+            // ================= TISCO (ทิสโก้) =================
+            { id: 't1', code: 'TISCOThaiESG-A', name: 'ทิสโก้ หุ้นไทยเพื่อความยั่งยืน ชนิดสะสมมูลค่า', amc: 'TISCO', nav: 10.60, ytd: 4.5, return1y: 7.2, risk: 6, type: 'Equity ESG', isNew: false },
+            { id: 't2', code: 'TISCOThaiESG-D', name: 'ทิสโก้ หุ้นไทยเพื่อความยั่งยืน ชนิดจ่ายเงินปันผล', amc: 'TISCO', nav: 10.40, ytd: 4.2, return1y: 6.8, risk: 6, type: 'Equity ESG', isNew: false },
+        ];
+
+        // --- Configuration: สีประจำบลจ. ---
+        const AMC_COLORS = {
+            KKP: '#6F42C1',       // ม่วง (KKP)
+            Krungsri: '#F59E0B',  // เหลือง (Krungsri)
+            Bualuang: '#1E3A8A',  // น้ำเงินเข้ม (BBLAM)
+            TISCO: '#CC0000',     // แดง (TISCO)
+            All: '#059669'        // เขียวเข้ม (Emerald for ESG)
+        };
+
+        const ThaiEsgDashboard = () => {
+            const [funds, setFunds] = useState(initialFundsData);
+            const [selectedAmc, setSelectedAmc] = useState('All');
+            const [sortBy, setSortBy] = useState('return1y');
+            const [showNewOnly, setShowNewOnly] = useState(false);
+            const [isLoading, setIsLoading] = useState(false);
+            const [lastUpdated, setLastUpdated] = useState(new Date().toLocaleTimeString('th-TH'));
+
+            const handleRefresh = () => {
+                setIsLoading(true);
+                setTimeout(() => {
+                    const updatedFunds = funds.map(f => ({
+                        ...f,
+                        ytd: f.ytd + (Math.random() - 0.5) * 0.2,
+                        nav: f.nav + (Math.random() - 0.5) * 0.05
+                    }));
+                    setFunds(updatedFunds);
+                    setLastUpdated(new Date().toLocaleTimeString('th-TH'));
+                    setIsLoading(false);
+                }, 1500);
+            };
+
+            const filteredFunds = useMemo(() => {
+                let data = funds;
+                if (selectedAmc !== 'All') {
+                    data = data.filter(f => f.amc === selectedAmc);
+                }
+                if (showNewOnly) {
+                    data = data.filter(f => f.isNew);
+                }
+                const sortKey = (showNewOnly && sortBy === 'return1y') ? 'ytd' : sortBy;
+                return data.sort((a, b) => b[sortKey] - a[sortKey]);
+            }, [funds, selectedAmc, sortBy, showNewOnly]);
+
+            const stats = useMemo(() => {
+                if (filteredFunds.length === 0) return { bestFund: null, avgReturn: 0 };
+                const metric = showNewOnly ? 'ytd' : sortBy;
+                const bestFund = [...filteredFunds].sort((a, b) => b[metric] - a[metric])[0];
+                const totalReturn = filteredFunds.reduce((sum, f) => sum + f[metric], 0);
+                const avgReturn = totalReturn / filteredFunds.length;
+                return { bestFund, avgReturn, metric };
+            }, [filteredFunds, sortBy, showNewOnly]);
+
+            const chartData = filteredFunds.slice(0, 5).map(f => ({
+                name: f.code,
+                return: f[showNewOnly ? 'ytd' : sortBy],
+                amc: f.amc,
+                isNew: f.isNew
+            }));
+
+            const renderReturnCell = (value, isBold = false) => {
+                if (value === 0 || value === undefined) return <span className="text-slate-300">-</span>;
+                return (
+                    <span className={`${value >= 0 ? 'text-green-600' : 'text-red-500'} ${isBold ? 'font-bold' : 'font-medium'}`}>
+                        {value > 0 ? '+' : ''}{value.toFixed(2)}%
+                    </span>
+                );
+            };
+
+            const getSortLabel = (key) => {
+                if (showNewOnly && key === 'return1y') return 'YTD (กองใหม่)';
+                switch (key) {
+                    case 'ytd': return 'YTD';
+                    case 'return1y': return '1 ปี';
+                    default: return 'ผลตอบแทน';
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans text-slate-800">
+
+                    {/* Header Section */}
+                    <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
+                                <Leaf className="w-8 h-8 text-emerald-600" />
+                                ThaiESG Dashboard
+                            </h1>
+                            <p className="text-slate-500 mt-1 flex items-center gap-2">
+                                กองทุนลดหย่อนภาษีหุ้นไทยยั่งยืน (KKP, Krungsri, Bualuang, TISCO)
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="flex items-center text-xs bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm">
+                                    <Clock size={12} className="mr-1" /> Updated: {lastUpdated}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <button
+                                onClick={handleRefresh}
+                                disabled={isLoading}
+                                className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-emerald-100 text-emerald-600 rounded-xl shadow-sm hover:bg-emerald-50 active:scale-95 transition-all"
+                            >
+                                <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />
+                                {isLoading ? 'Updating...' : 'Update Data'}
+                            </button>
+
+                            <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+                                {['All', 'KKP', 'Krungsri', 'Bualuang', 'TISCO'].map((amc) => (
+                                    <button
+                                        key={amc}
+                                        onClick={() => setSelectedAmc(amc)}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${selectedAmc === amc
+                                            ? 'bg-slate-900 text-white shadow-md'
+                                            : 'text-slate-600 hover:bg-slate-100'
+                                            }`}
+                                    >
+                                        {amc === 'All' ? 'ทั้งหมด' : amc}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* KPI Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <Trophy size={64} color={AMC_COLORS[stats.bestFund?.amc || 'All']} />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-slate-500 mb-1">
+                                    Top Performer ({showNewOnly ? 'YTD' : getSortLabel(sortBy)})
+                                </p>
+                                <h3 className="text-2xl font-bold text-slate-800 tracking-tight">
+                                    {stats.bestFund ? stats.bestFund.code : '-'}
+                                </h3>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className={`text-xs px-2 py-1 rounded-full font-bold text-white`}
+                                        style={{ backgroundColor: stats.bestFund ? AMC_COLORS[stats.bestFund.amc] : '#ccc' }}>
+                                        {stats.bestFund ? stats.bestFund.amc : '-'}
+                                    </span>
+                                    <span className="text-lg font-bold text-emerald-600 flex items-center">
+                                        +{stats.bestFund ? stats.bestFund[stats.metric].toFixed(2) : 0}% <ArrowUpRight size={16} />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center">
+                            <div className="mr-4 bg-emerald-50 p-3 rounded-full">
+                                <TrendingUp className="text-emerald-600 w-6 h-6" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-slate-500 mb-1">Average Return ({showNewOnly ? 'YTD' : getSortLabel(sortBy)})</p>
+                                <h3 className={`text-2xl font-bold tracking-tight ${stats.avgReturn >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                                    {stats.avgReturn.toFixed(2)}%
+                                </h3>
+                                <p className="text-xs text-slate-400 mt-1">จากทั้งหมด {filteredFunds.length} กองทุน</p>
+                            </div>
+                        </div>
+
+                        <div
+                            onClick={() => setShowNewOnly(!showNewOnly)}
+                            className={`cursor-pointer rounded-2xl p-6 shadow-sm border transition-all duration-200 flex items-center ${showNewOnly ? 'bg-orange-50 border-orange-200 ring-2 ring-orange-100' : 'bg-white border-slate-100 hover:border-orange-200'
+                                }`}
+                        >
+                            <div className={`mr-4 p-3 rounded-full ${showNewOnly ? 'bg-orange-200' : 'bg-orange-50'}`}>
+                                <Sparkles className="text-orange-600 w-6 h-6" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-slate-500 mb-1">
+                                    {showNewOnly ? 'แสดงกองทุนใหม่เท่านั้น' : 'กองทุนมาใหม่ (New Arrivals)'}
+                                </p>
+                                <h3 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                                    {funds.filter(f => f.isNew).length} <span className="text-sm font-normal text-slate-400">กองทุน</span>
+                                </h3>
+                                <p className="text-xs text-orange-500 font-medium mt-1">
+                                    {showNewOnly ? 'คลิกเพื่อดูทั้งหมด' : 'คลิกเพื่อกรองเฉพาะกองทุนใหม่'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                        {/* Main Chart */}
+                        <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-lg font-semibold text-slate-800">
+                                    Top 5 Performance <span className="text-slate-400 font-normal text-sm">({showNewOnly ? 'Based on YTD' : getSortLabel(sortBy)})</span>
+                                </h3>
+                                <div className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+                                    <span className="w-2 h-2 rounded-full bg-purple-600"></span> KKP
+                                    <span className="w-2 h-2 rounded-full bg-yellow-500 ml-1"></span> Krungsri
+                                    <span className="w-2 h-2 rounded-full bg-blue-800 ml-1"></span> Bualuang
+                                    <span className="w-2 h-2 rounded-full bg-red-600 ml-1"></span> TISCO
+                                </div>
+                            </div>
+                            <div className="h-80 w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                                        <XAxis type="number" unit="%" tick={{ fill: '#64748b', fontSize: 12 }} />
+                                        <YAxis dataKey="name" type="category" width={110} tick={{ fill: '#475569', fontSize: 11, fontWeight: 500 }} />
+                                        <Tooltip
+                                            cursor={{ fill: '#f1f5f9' }}
+                                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                            formatter={(value) => [`${value.toFixed(2)}%`, `Return`]}
+                                        />
+                                        <Bar dataKey="return" radius={[0, 4, 4, 0]} barSize={28}>
+                                            {chartData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={AMC_COLORS[entry.amc]} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Summary / Filter Note */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col">
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4">ThaiESG Insights</h3>
+
+                            <div className="flex-1 space-y-4">
+                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <h4 className="text-sm font-bold text-emerald-700 mb-2 flex items-center gap-2">
+                                        <Leaf size={16} /> Tax Saving Trend
+                                    </h4>
+                                    <p className="text-sm text-emerald-800/80 leading-relaxed">
+                                        กองทุน ThaiESG เน้นลงทุนในหุ้นและตราสารหนี้ไทยที่มีความยั่งยืน (ESG) โดยให้สิทธิลดหย่อนภาษีสูงสุด 300,000 บาท (ระยะเวลาถือครอง 5 ปี)
+                                    </p>
+                                </div>
+
+                                <div className="mt-4">
+                                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Asset Types</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {Array.from(new Set(filteredFunds.map(f => f.type))).map(type => (
+                                            <span key={type} className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded border border-slate-200">
+                                                {type}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 mt-auto">
+                                    <h4 className="text-xs font-bold text-slate-500 mb-1">Did you know?</h4>
+                                    <p className="text-xs text-slate-400 leading-relaxed">
+                                        ThaiESG กองทุนน้องใหม่ที่เพิ่งเริ่มช่วงปลายปี 2023 ทำให้ข้อมูลผลตอบแทนย้อนหลังระยะยาว (2 ปีขึ้นไป) ยังไม่มีข้อมูลสำหรับกองทุนส่วนใหญ่
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* Fund List Table */}
+                    <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                                {showNewOnly ? 'รายการกองทุนใหม่ (New Arrivals)' : 'ตารางผลตอบแทนย้อนหลัง'}
+                                {showNewOnly && <span className="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full">Showing {filteredFunds.length} items</span>}
+                            </h3>
+
+                            <div className="flex items-center gap-2 text-sm bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                                <Filter size={16} className="text-slate-400" />
+                                <span className="text-slate-600">Sort by:</span>
+                                <select
+                                    className="bg-transparent font-medium text-emerald-600 outline-none cursor-pointer"
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                >
+                                    <option value="ytd">YTD Return</option>
+                                    <option value="return1y">1 Year Return</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-50 text-slate-500 text-sm uppercase tracking-wider">
+                                        <th className="p-4 font-medium">ชื่อกองทุน</th>
+                                        <th className="p-4 font-medium hidden lg:table-cell">ประเภท</th>
+                                        <th className="p-4 font-medium text-center">ความเสี่ยง</th>
+                                        <th className={`p-4 font-medium text-right ${sortBy === 'ytd' || showNewOnly ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>YTD</th>
+                                        <th className={`p-4 font-medium text-right ${sortBy === 'return1y' && !showNewOnly ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>1Y</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {filteredFunds.map((fund) => (
+                                        <tr key={fund.id} className="hover:bg-slate-50/80 transition-colors">
+                                            <td className="p-4">
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-bold text-slate-800">{fund.code}</span>
+                                                        {fund.isNew && (
+                                                            <span className="px-1.5 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded uppercase border border-orange-200">
+                                                                New
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-xs text-slate-400 hidden sm:inline-block">{fund.name}</span>
+
+                                                    {/* External Links */}
+                                                    <div className="flex gap-2 mt-1">
+                                                        <a href={`https://www.finnomena.com/fund/${fund.code.replace(/\s+/g, '-')}`} target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-500 hover:text-blue-700 hover:underline flex items-center gap-0.5 transition-colors">
+                                                            Finnomena <ExternalLink size={10} />
+                                                        </a>
+                                                        <a href={`https://www.wealthmagik.com/FundInfo/FundProfile.aspx?FundCode=${fund.code}`} target="_blank" rel="noopener noreferrer" className="text-[10px] text-orange-500 hover:text-orange-700 hover:underline flex items-center gap-0.5 transition-colors">
+                                                            WealthMagik <ExternalLink size={10} />
+                                                        </a>
+                                                    </div>
+
+                                                    <span className={`text-[10px] uppercase font-bold mt-1 w-fit px-1.5 py-0.5 rounded text-white sm:hidden`}
+                                                        style={{ backgroundColor: AMC_COLORS[fund.amc] }}>
+                                                        {fund.amc}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 hidden lg:table-cell">
+                                                <span className="px-2 py-1 rounded-md bg-slate-100 text-xs font-medium text-slate-600 border border-slate-200">
+                                                    {fund.type}
+                                                </span>
+                                                <div className="mt-1 flex items-center gap-1">
+                                                    <div className={`w-2 h-2 rounded-full`} style={{ backgroundColor: AMC_COLORS[fund.amc] }}></div>
+                                                    <span className="text-xs text-slate-400">{fund.amc}</span>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-center">
+                                                <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold text-sm">
+                                                    {fund.risk}
+                                                </div>
+                                            </td>
+                                            {/* Return Columns - Only YTD and 1Y */}
+                                            <td className={`p-4 text-right font-mono ${sortBy === 'ytd' || showNewOnly ? 'bg-emerald-50/30 font-bold' : ''}`}>
+                                                {renderReturnCell(fund.ytd, sortBy === 'ytd' || showNewOnly)}
+                                            </td>
+                                            <td className={`p-4 text-right font-mono ${sortBy === 'return1y' && !showNewOnly ? 'bg-emerald-50/30' : ''}`}>
+                                                {renderReturnCell(fund.return1y, sortBy === 'return1y')}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {filteredFunds.length === 0 && (
+                                <div className="p-12 text-center text-slate-400">
+                                    <p>ไม่พบข้อมูลกองทุนตามเงื่อนไขที่เลือก</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-8 text-center text-xs text-slate-400">
+                        <p>* ข้อมูลจำลอง (Mock Data) | ThaiESG เป็นกองทุนลดหย่อนภาษีใหม่ (เริ่มปลายปี 2566) จึงยังไม่มีข้อมูลผลตอบแทนระยะยาว</p>
+                        <p className="mt-2">© 2024 ZeroTrust.in.th | <a href="index.html" className="hover:text-slate-600 transition-colors">Funds Portal</a></p>
+                    </div>
+
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<ThaiEsgDashboard />);
+    </script>
+</body>
+
+</html>
