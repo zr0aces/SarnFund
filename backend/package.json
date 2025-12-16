@@ -11,9 +11,8 @@
     "init": "node init-data.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "playwright": "^1.40.0",
+    "express": "^4.18.2",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {

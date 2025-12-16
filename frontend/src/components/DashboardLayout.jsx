@@ -77,7 +77,12 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                             </span>
                         )}
                         <button
-                            onClick={refresh}
+                            onClick={() => {
+                                localStorage.removeItem(`fund_cache_v2_${fundType}`);
+                                localStorage.removeItem('fund_cache_v2_rmf');
+                                localStorage.removeItem('fund_cache_v2_tesg');
+                                window.location.reload();
+                            }}
                             disabled={loading}
                             className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl shadow-sm hover:bg-slate-800 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >

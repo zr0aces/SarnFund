@@ -218,15 +218,15 @@ app.get('/api/health', async (req, res) => {
 });
 
 // Schedule daily scraping at 1 AM
-// cron.schedule('0 1 * * *', async () => {
-//   console.log('Running scheduled scrape at 1 AM...');
-//   try {
-//     await scrapeData();
-//     console.log('Scheduled scrape completed successfully');
-//   } catch (error) {
-//     console.error('Scheduled scrape failed:', error);
-//   }
-// });
+cron.schedule('0 1 * * *', async () => {
+  console.log('Running scheduled scrape at 1 AM...');
+  try {
+    await scrapeData();
+    console.log('Scheduled scrape completed successfully');
+  } catch (error) {
+    console.error('Scheduled scrape failed:', error);
+  }
+});
 
 // Start server
 app.listen(PORT, () => {
