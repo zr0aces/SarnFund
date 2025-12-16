@@ -68,7 +68,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
 
                                         <div className="flex gap-2 mt-1">
                                             <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded text-white`}
-                                                style={{ backgroundColor: AMC_COLORS[fund.amc] }}>
+                                                style={{ backgroundColor: AMC_COLORS[fund.amc] || '#1e293b' }}>
                                                 {fund.amc}
                                             </span>
                                             <a href="#" className="text-[10px] text-blue-500 hover:underline flex items-center gap-0.5">

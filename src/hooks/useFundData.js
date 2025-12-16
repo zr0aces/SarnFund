@@ -33,15 +33,15 @@ export const useFundData = (fundType, initialMockData) => {
             }
         }
 
-        // If no cache or expired, use mock data initially
-        // User can manually refresh to fetch from API
-        setFunds(initialMockData);
-        setLastUpdated(new Date().toLocaleTimeString());
-        setDataSource('mock');
-        
-        // Try to fetch from API in the background without showing errors
-        fetchDataFromAPI(false, true);
-    }, [fundType, initialMockData]);
+        // If no cache or expired, start with empty/loading
+        if (!cached) {
+            setLastUpdated(null);
+            setDataSource('loading');
+        }
+
+        // Try to fetch from API
+        fetchDataFromAPI(false, false);
+    }, [fundType]);
 
     const fetchDataFromAPI = useCallback(async (forceRefresh = false, silent = false) => {
         setLoading(true);
@@ -50,25 +50,25 @@ export const useFundData = (fundType, initialMockData) => {
         try {
             const endpoint = fundType === 'rmf' ? '/api/funds/rmf' : '/api/funds/tesg';
             const response = await fetch(`${API_BASE_URL}${endpoint}`);
-            
+
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
 
             const result = await response.json();
-            
+
             if (result.success && result.data && result.data.length > 0) {
                 setFunds(result.data);
                 setLastUpdated(new Date(result.timestamp).toLocaleTimeString());
                 setDataSource('api');
-                
+
                 // Save to local cache
                 const cachePayload = {
                     timestamp: result.timestamp,
                     data: result.data
                 };
                 localStorage.setItem(`fund_cache_${fundType}`, JSON.stringify(cachePayload));
-                
+
                 console.log(`[useFundData] Fetched ${result.data.length} funds from API`);
             } else {
                 throw new Error('No data available from API');
@@ -76,21 +76,16 @@ export const useFundData = (fundType, initialMockData) => {
 
         } catch (err) {
             console.error(`[useFundData] Error fetching from API:`, err);
-            
-            // Only show error to user if this is a manual refresh (not silent)
+
+            // Show error to user
             if (!silent) {
-                setError(`Unable to fetch data: ${err.message}. Using fallback data.`);
-                
-                // Fallback to mock data if API fails on manual refresh
-                setFunds(initialMockData);
-                setLastUpdated(new Date().toLocaleTimeString());
-                setDataSource('mock');
+                setError(`Unable to fetch data: ${err.message}`);
+                setDataSource('error');
             }
-            // If silent, just log and don't change anything (keep existing data)
         } finally {
             setLoading(false);
         }
-    }, [fundType, initialMockData]);
+    }, [fundType]);
 
     const refresh = useCallback(async () => {
         await fetchDataFromAPI(true);
