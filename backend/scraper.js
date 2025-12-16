@@ -159,6 +159,8 @@ async function scrapeFunds(page, fundType) {
         const fund = {
           id: `fund_${Date.now()}_${index}`,
           code: '',
+          return3m: 0,
+          return6m: 0,
           return1y: 0,
           return2y: 0,
           return3y: 0,
@@ -193,6 +195,12 @@ async function scrapeFunds(page, fundType) {
             fund.nav = parseFloat(text.replace(/,/g, '')) || 0;
           } else if (i === linkColumnIndex + 8) {
             fund.ytd = parseFloat(text.replace(/%/g, '').replace(/,/g, '')) || 0;
+          } else if (i === linkColumnIndex + 9) {
+            // 3M
+            fund.return3m = parseFloat(text.replace(/%/g, '').replace(/,/g, '')) || 0;
+          } else if (i === linkColumnIndex + 10) {
+            // 6M
+            fund.return6m = parseFloat(text.replace(/%/g, '').replace(/,/g, '')) || 0;
           } else if (i === linkColumnIndex + 11) {
             fund.return1y = parseFloat(text.replace(/%/g, '').replace(/,/g, '')) || 0;
           } else if (i === linkColumnIndex + 12) {
