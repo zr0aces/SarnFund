@@ -1,7 +1,7 @@
 import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { Trophy } from 'lucide-react';
-import { AMC_COLORS_RMF } from '../data/funds';
+import { AMC_COLORS_RMF, INITIAL_RMF } from '../data/funds';
 
 const RmfPage = () => {
     return (
@@ -10,6 +10,7 @@ const RmfPage = () => {
             icon={Trophy}
             fundType="rmf"
             AMC_COLORS={AMC_COLORS_RMF}
+            initialMockData={INITIAL_RMF}
         />
     );
 };

@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
-import { scrapeData } from './scraper.js';
+// import { scrapeData } from './scraper.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,7 +38,7 @@ async function getCachedData(filename) {
     const filePath = path.join(DATA_DIR, filename);
     const data = await fs.readFile(filePath, 'utf-8');
     const parsed = JSON.parse(data);
-    
+
     if (isCacheValid(parsed.timestamp)) {
       console.log(`Using valid cache for ${filename}`);
       return parsed;
@@ -58,10 +58,10 @@ async function getCachedData(filename) {
 app.get('/api/funds/rmf', async (req, res) => {
   try {
     console.log('GET /api/funds/rmf');
-    
+
     // Check cache first
     const cached = await getCachedData('rmf.json');
-    
+
     if (cached) {
       return res.json({
         success: true,
@@ -69,14 +69,14 @@ app.get('/api/funds/rmf', async (req, res) => {
         ...cached
       });
     }
-    
+
     // If no valid cache, return error and suggest manual scrape
     return res.status(503).json({
       success: false,
       error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
       message: 'Run: npm run scrape in the backend directory'
     });
-    
+
   } catch (error) {
     console.error('Error fetching RMF data:', error);
     res.status(500).json({
@@ -92,10 +92,10 @@ app.get('/api/funds/rmf', async (req, res) => {
 app.get('/api/funds/tesg', async (req, res) => {
   try {
     console.log('GET /api/funds/tesg');
-    
+
     // Check cache first
     const cached = await getCachedData('tesg.json');
-    
+
     if (cached) {
       return res.json({
         success: true,
@@ -103,14 +103,14 @@ app.get('/api/funds/tesg', async (req, res) => {
         ...cached
       });
     }
-    
+
     // If no valid cache, return error
     return res.status(503).json({
       success: false,
       error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
       message: 'Run: npm run scrape in the backend directory'
     });
-    
+
   } catch (error) {
     console.error('Error fetching TESG data:', error);
     res.status(500).json({
@@ -126,9 +126,9 @@ app.get('/api/funds/tesg', async (req, res) => {
 app.get('/api/funds/all', async (req, res) => {
   try {
     console.log('GET /api/funds/all');
-    
+
     const cached = await getCachedData('all.json');
-    
+
     if (cached) {
       return res.json({
         success: true,
@@ -136,12 +136,12 @@ app.get('/api/funds/all', async (req, res) => {
         ...cached
       });
     }
-    
+
     return res.status(503).json({
       success: false,
       error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.'
     });
-    
+
   } catch (error) {
     console.error('Error fetching all data:', error);
     res.status(500).json({
@@ -157,7 +157,7 @@ app.get('/api/funds/all', async (req, res) => {
 app.post('/api/scrape', async (req, res) => {
   try {
     console.log('POST /api/scrape - Manual scrape triggered');
-    
+
     // Check if there's valid cache
     const cached = await getCachedData('all.json');
     if (cached) {
@@ -168,8 +168,9 @@ app.post('/api/scrape', async (req, res) => {
         data: cached
       });
     }
-    
+
     // Trigger scraping
+    /*
     const result = await scrapeData();
     
     res.json({
@@ -177,7 +178,8 @@ app.post('/api/scrape', async (req, res) => {
       message: 'Scraping completed successfully',
       data: result
     });
-    
+    */
+    res.status(403).json({ success: false, message: 'Scraping is disabled' });
   } catch (error) {
     console.error('Error during manual scrape:', error);
     res.status(500).json({
@@ -194,7 +196,7 @@ app.get('/api/health', async (req, res) => {
   try {
     const rmfCache = await getCachedData('rmf.json');
     const tesgCache = await getCachedData('tesg.json');
-    
+
     res.json({
       status: 'ok',
       cache: {
@@ -216,15 +218,15 @@ app.get('/api/health', async (req, res) => {
 });
 
 // Schedule daily scraping at 1 AM
-cron.schedule('0 1 * * *', async () => {
-  console.log('Running scheduled scrape at 1 AM...');
-  try {
-    await scrapeData();
-    console.log('Scheduled scrape completed successfully');
-  } catch (error) {
-    console.error('Scheduled scrape failed:', error);
-  }
-});
+// cron.schedule('0 1 * * *', async () => {
+//   console.log('Running scheduled scrape at 1 AM...');
+//   try {
+//     await scrapeData();
+//     console.log('Scheduled scrape completed successfully');
+//   } catch (error) {
+//     console.error('Scheduled scrape failed:', error);
+//   }
+// });
 
 // Start server
 app.listen(PORT, () => {

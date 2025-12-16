@@ -33,15 +33,24 @@ export const useFundData = (fundType, initialMockData) => {
             }
         }
 
-        // If no cache or expired, start with empty/loading
-        if (!cached) {
-            setLastUpdated(null);
-            setDataSource('loading');
+        // Use Mock/Initial Data if available
+        if (initialMockData && initialMockData.length > 0) {
+            console.log(`[useFundData] Using initial mock data for ${fundType}`);
+            setFunds(initialMockData);
+            setDataSource('mock');
+            setLastUpdated(new Date().toLocaleTimeString());
+            // Optionally fetch fresh data in background
+            fetchDataFromAPI(false, true); // silent update
+            return;
         }
+
+        // If no cache or mock, start with loading
+        setLastUpdated(null);
+        setDataSource('loading');
 
         // Try to fetch from API
         fetchDataFromAPI(false, false);
-    }, [fundType]);
+    }, [fundType, initialMockData]);
 
     const fetchDataFromAPI = useCallback(async (forceRefresh = false, silent = false) => {
         setLoading(true);

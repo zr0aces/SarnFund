@@ -6,7 +6,6 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "scrape": "node scraper.js",
     "dev": "nodemon server.js",
     "init": "node init-data.js"
   },

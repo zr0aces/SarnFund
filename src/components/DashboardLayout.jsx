@@ -6,9 +6,9 @@ import KPICards from './KPICards';
 import FundTable from './FundTable';
 import FundChart from './FundChart';
 
-const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS }) => {
+const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockData }) => {
     // Shared State
-    const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType);
+    const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType, initialMockData);
 
     // UI State
     const [selectedAmc, setSelectedAmc] = useState('All');
