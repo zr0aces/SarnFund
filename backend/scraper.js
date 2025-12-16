@@ -13,8 +13,8 @@ await fs.mkdir(DATA_DIR, { recursive: true });
 
 // URLs to scrape
 const URLS = {
-  RMF: 'https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=RMF&performancePeriod=1Y&dividendPolicy=N',
-  TESG: 'https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=TESG&performancePeriod=1Y&dividendPolicy=N'
+  RMF: 'https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=RMF&performancePeriod=1Y',
+  TESG: 'https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=TESG'
 };
 
 // Selected AMCs to include in the data
@@ -77,8 +77,32 @@ async function scrapeFunds(page, fundType) {
   console.log(`Scraping ${fundType} funds...`);
 
   try {
-    // Wait for the table to load
-    await page.waitForSelector('table, .fund-list, [class*="table"]', { timeout: 30000 });
+    // Wait for the table data to load and ensure it has content
+    await page.waitForFunction(
+      () => {
+        const cells = document.querySelectorAll('table tbody tr td');
+        return cells.length > 0 && cells[0].innerText.trim().length > 0;
+      },
+      { timeout: 30000 }
+    );
+
+    // Auto-scroll to load all data
+    await page.evaluate(async () => {
+      await new Promise((resolve) => {
+        let totalHeight = 0;
+        const distance = 100;
+        const timer = setInterval(() => {
+          const scrollHeight = document.body.scrollHeight;
+          window.scrollBy(0, distance);
+          totalHeight += distance;
+
+          if (totalHeight >= scrollHeight) {
+            clearInterval(timer);
+            resolve();
+          }
+        }, 100);
+      });
+    });
 
     // Extract fund data - this will need to be adjusted based on actual page structure
     const funds = await page.evaluate(() => {
@@ -89,13 +113,14 @@ async function scrapeFunds(page, fundType) {
       let fundTable = null;
 
       // Find the table that contains fund data (usually has headers like "ชื่อกองทุน", "NAV", etc.)
-      // Find the table that contains fund data
       for (const table of tables) {
         const text = table.innerText.toLowerCase();
         // Strict check: must contain both NAV and Fund Name/Code
         if ((text.includes('กองทุน') || text.includes('fund') || text.includes('name')) && text.includes('nav')) {
           fundTable = table;
           break;
+        } else {
+          console.log('Skipped table with text length:', text.length, text.substring(0, 50));
         }
       }
 
@@ -118,18 +143,22 @@ async function scrapeFunds(page, fundType) {
 
       console.log('Detected headers:', headers);
 
+      let loggedFirstRow = false;
       rows.forEach((row, index) => {
         const cells = row.querySelectorAll('td');
         // Skip invalid rows or mobile layout rows
         if (cells.length < 5) return;
 
+        if (!loggedFirstRow) {
+          console.log('ROW RAW:', row.innerText);
+          const cellTexts = Array.from(cells).map((c, i) => `[${i}]${c.innerText.trim()}`);
+          console.log('ROW CELLS:', cellTexts.join(' | '));
+          loggedFirstRow = true;
+        }
+
         const fund = {
           id: `fund_${Date.now()}_${index}`,
           code: '',
-          name: '',
-          amc: '',
-          nav: 0,
-          ytd: 0,
           return1y: 0,
           return2y: 0,
           return3y: 0,
@@ -258,6 +287,7 @@ async function scrapeData() {
 
     // Scrape TESG data
     const tesgPage = await context.newPage();
+    tesgPage.on('console', msg => console.log('TESG PAGE LOG:', msg.text()));
     await tesgPage.goto(URLS.TESG, { waitUntil: 'networkidle', timeout: 60000 });
     await tesgPage.waitForTimeout(3000);
     const tesgData = await scrapeFunds(tesgPage, 'TESG');
