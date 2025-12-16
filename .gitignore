@@ -41,6 +41,10 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+backend/node_modules/
+
+# Backend data cache
+backend/data/
 
 # TypeScript v1 declaration files
 typings/
