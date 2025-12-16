@@ -71,9 +71,15 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                                 style={{ backgroundColor: AMC_COLORS[fund.amc] || '#1e293b' }}>
                                                 {fund.amc}
                                             </span>
-                                            <a href="#" className="text-[10px] text-blue-500 hover:underline flex items-center gap-0.5">
-                                                Factsheet <ExternalLink size={10} />
-                                            </a>
+                                            {fund.factsheetUrl ? (
+                                                <a href={fund.factsheetUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-500 hover:underline flex items-center gap-0.5">
+                                                    Factsheet <ExternalLink size={10} />
+                                                </a>
+                                            ) : (
+                                                <span className="text-[10px] text-slate-300 flex items-center gap-0.5 cursor-not-allowed">
+                                                    Factsheet <ExternalLink size={10} />
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </td>
