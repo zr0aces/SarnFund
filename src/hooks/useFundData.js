@@ -1,19 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export const useFundData = (fundType, initialMockData) => {
     const [funds, setFunds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
-
-    // API Key Logic: Env -> LocalStorage -> Empty
-    const getApiKey = () => {
-        return import.meta.env.VITE_SEC_API_KEY || localStorage.getItem('sec_api_key') || '';
-    };
-
-    const [apiKey, setApiKey] = useState(getApiKey());
 
     // Load initial state from Cache or Mock
     useEffect(() => {
@@ -37,80 +31,61 @@ export const useFundData = (fundType, initialMockData) => {
             }
         }
 
-        // If no cache or expired, default to mock (user triggers update for real data)
-        setFunds(initialMockData);
-    }, [fundType, initialMockData]);
+        // If no cache or expired, try to fetch from API, fallback to mock
+        fetchDataFromAPI(false);
+    }, [fundType]);
 
-    const fetchData = useCallback(async () => {
-        const key = getApiKey();
-        if (!key) {
-            setError("Missing API Key. Please configure in settings or .env");
-            // Simulate mock update for demo
-            setLoading(true);
-            setTimeout(() => {
-                const updated = funds.map(f => ({
-                    ...f,
-                    nav: f.nav * (1 + (Math.random() - 0.5) * 0.01),
-                    ytd: f.ytd + (Math.random() - 0.5) * 0.1
-                }));
-                setFunds(updated);
-                setLastUpdated(new Date().toLocaleTimeString());
-                setLoading(false);
-            }, 1000);
-            return;
-        }
-
+    const fetchDataFromAPI = useCallback(async (forceRefresh = false) => {
         setLoading(true);
         setError(null);
 
         try {
-            // Placeholder: Logic to fetch real SEC API would go here.
-            // Since we don't have the exact mapping yet, we simulate a successful fetch 
-            // but update the Timestamp to prove "Logic" execution.
+            const endpoint = fundType === 'rmf' ? '/api/funds/rmf' : '/api/funds/tesg';
+            const response = await fetch(`${API_BASE_URL}${endpoint}`);
+            
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
 
-            // In a real scenario:
-            // const res = await fetch('...', { headers: { 'Ocp-Apim-Subscription-Key': key } });
-            // const data = await res.json();
-
-            console.log(`[useFundData] Fetching real data for ${fundType} with key...`);
-            await new Promise(r => setTimeout(r, 1500)); // Simulate net delay
-
-            // Simulate "Fresh" Data
-            const freshData = funds.map(f => ({
-                ...f,
-                nav: f.nav * (1 + (Math.random() - 0.5) * 0.02),
-                last_updated: new Date().toISOString()
-            }));
-
-            setFunds(freshData);
-            setLastUpdated(new Date().toLocaleTimeString());
-
-            // Save to Cache
-            const cachePayload = {
-                timestamp: Date.now(),
-                data: freshData
-            };
-            localStorage.setItem(`fund_cache_${fundType}`, JSON.stringify(cachePayload));
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.length > 0) {
+                setFunds(result.data);
+                setLastUpdated(new Date(result.timestamp).toLocaleTimeString());
+                
+                // Save to local cache
+                const cachePayload = {
+                    timestamp: result.timestamp,
+                    data: result.data
+                };
+                localStorage.setItem(`fund_cache_${fundType}`, JSON.stringify(cachePayload));
+                
+                console.log(`[useFundData] Fetched ${result.data.length} funds from API`);
+            } else {
+                throw new Error('No data available from API');
+            }
 
         } catch (err) {
-            setError(err.message);
+            console.error(`[useFundData] Error fetching from API:`, err);
+            setError(`Unable to fetch data: ${err.message}. Using fallback data.`);
+            
+            // Fallback to mock data if API fails
+            setFunds(initialMockData);
+            setLastUpdated(new Date().toLocaleTimeString());
         } finally {
             setLoading(false);
         }
-    }, [apiKey, funds, fundType]);
+    }, [fundType, initialMockData]);
 
-    const updateApiKey = (key) => {
-        setApiKey(key);
-        localStorage.setItem('sec_api_key', key);
-    };
+    const refresh = useCallback(async () => {
+        await fetchDataFromAPI(true);
+    }, [fetchDataFromAPI]);
 
     return {
         funds,
         loading,
         error,
         lastUpdated,
-        apiKey,
-        updateApiKey,
-        refresh: fetchData
+        refresh
     };
 };

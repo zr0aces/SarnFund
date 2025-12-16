@@ -35,22 +35,22 @@ export const INITIAL_RMF = [
     { id: 'ks13', code: 'KFPROPRMF', name: 'กรุงศรี พร็อพเพอร์ตี้ RMF', amc: 'Krungsri', nav: 13.10, ytd: -3.5, return1y: -1.2, return2y: -5.5, return3y: -3.2, return5y: -0.5, risk: 8, type: 'Property/REITs', isNew: false },
     { id: 'ks6', code: 'KFCASHRMF', name: 'กรุงศรีแคชแมเนจเมนท์ RMF', amc: 'Krungsri', nav: 12.10, ytd: 1.8, return1y: 2.1, return2y: 1.9, return3y: 1.5, return5y: 1.2, risk: 1, type: 'Money Market', isNew: false },
 
-    // ================= Bualuang (บัวหลวง) =================
+    // ================= BBL (บัวหลวง) =================
     // Global & Foreign Equity
-    { id: 'b2', code: 'B-INNOTECH RMF', name: 'บัวหลวงโกลบอลอินโนเวชั่น RMF', amc: 'Bualuang', nav: 24.12, ytd: 22.1, return1y: 28.5, return2y: 25.2, return3y: 14.8, return5y: 17.5, risk: 7, type: 'Technology', isNew: false },
-    { id: 'b3', code: 'B-ASIA RMF', name: 'บัวหลวงเอเชียเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 12.34, ytd: 6.7, return1y: 9.1, return2y: 4.5, return3y: -1.2, return5y: 2.8, risk: 6, type: 'Asia Equity', isNew: false },
-    { id: 'b5', code: 'B-USALPHA RMF', name: 'บัวหลวงยูเอสอัลฟ่า RMF', amc: 'Bualuang', nav: 14.50, ytd: 18.2, return1y: 24.5, return2y: 20.1, return3y: 0, return5y: 0, risk: 6, type: 'US Equity', isNew: false },
-    { id: 'b6', code: 'B-EV RMF', name: 'บัวหลวงโกลบอล อีวี RMF', amc: 'Bualuang', nav: 9.85, ytd: 5.4, return1y: 0, return2y: 0, return3y: 0, return5y: 0, risk: 7, type: 'Technology', isNew: true },
-    { id: 'b7', code: 'B-GLOBALRMF', name: 'บัวหลวงโกลบอลเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 16.80, ytd: 11.5, return1y: 15.2, return2y: 10.5, return3y: 8.4, return5y: 9.5, risk: 6, type: 'Global Equity', isNew: false },
-    { id: 'b8', code: 'B-NIPPONRMF', name: 'บัวหลวงนิปปอนเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 13.50, ytd: 14.5, return1y: 18.2, return2y: 12.5, return3y: 5.5, return5y: 0, risk: 6, type: 'Japan Equity', isNew: false },
-    { id: 'b11', code: 'B-CHINA RMF', name: 'บัวหลวงหุ้นจีนเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 8.50, ytd: -6.5, return1y: -9.5, return2y: -16.5, return3y: -12.5, return5y: -4.5, risk: 6, type: 'China Equity', isNew: false },
+    { id: 'b2', code: 'B-INNOTECH RMF', name: 'บัวหลวงโกลบอลอินโนเวชั่น RMF', amc: 'BBL', nav: 24.12, ytd: 22.1, return1y: 28.5, return2y: 25.2, return3y: 14.8, return5y: 17.5, risk: 7, type: 'Technology', isNew: false },
+    { id: 'b3', code: 'B-ASIA RMF', name: 'บัวหลวงเอเชียเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 12.34, ytd: 6.7, return1y: 9.1, return2y: 4.5, return3y: -1.2, return5y: 2.8, risk: 6, type: 'Asia Equity', isNew: false },
+    { id: 'b5', code: 'B-USALPHA RMF', name: 'บัวหลวงยูเอสอัลฟ่า RMF', amc: 'BBL', nav: 14.50, ytd: 18.2, return1y: 24.5, return2y: 20.1, return3y: 0, return5y: 0, risk: 6, type: 'US Equity', isNew: false },
+    { id: 'b6', code: 'B-EV RMF', name: 'บัวหลวงโกลบอล อีวี RMF', amc: 'BBL', nav: 9.85, ytd: 5.4, return1y: 0, return2y: 0, return3y: 0, return5y: 0, risk: 7, type: 'Technology', isNew: true },
+    { id: 'b7', code: 'B-GLOBALRMF', name: 'บัวหลวงโกลบอลเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 16.80, ytd: 11.5, return1y: 15.2, return2y: 10.5, return3y: 8.4, return5y: 9.5, risk: 6, type: 'Global Equity', isNew: false },
+    { id: 'b8', code: 'B-NIPPONRMF', name: 'บัวหลวงนิปปอนเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 13.50, ytd: 14.5, return1y: 18.2, return2y: 12.5, return3y: 5.5, return5y: 0, risk: 6, type: 'Japan Equity', isNew: false },
+    { id: 'b11', code: 'B-CHINA RMF', name: 'บัวหลวงหุ้นจีนเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 8.50, ytd: -6.5, return1y: -9.5, return2y: -16.5, return3y: -12.5, return5y: -4.5, risk: 6, type: 'China Equity', isNew: false },
     // Thai Equity
-    { id: 'b1', code: 'BERMF', name: 'บัวหลวงตราสารทุนเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 56.78, ytd: 3.5, return1y: 7.2, return2y: 2.1, return3y: 5.4, return5y: 4.2, risk: 6, type: 'Thai Equity', isNew: false },
-    { id: 'b9', code: 'B-TOPTENRMF', name: 'บัวหลวงทศพลเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 48.20, ytd: 4.2, return1y: 8.5, return2y: 3.5, return3y: 6.2, return5y: 4.8, risk: 6, type: 'Thai Equity', isNew: false },
+    { id: 'b1', code: 'BERMF', name: 'บัวหลวงตราสารทุนเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 56.78, ytd: 3.5, return1y: 7.2, return2y: 2.1, return3y: 5.4, return5y: 4.2, risk: 6, type: 'Thai Equity', isNew: false },
+    { id: 'b9', code: 'B-TOPTENRMF', name: 'บัวหลวงทศพลเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 48.20, ytd: 4.2, return1y: 8.5, return2y: 3.5, return3y: 6.2, return5y: 4.8, risk: 6, type: 'Thai Equity', isNew: false },
     // Alternative & Mixed & Fixed Income
-    { id: 'b4', code: 'B-FLEXRMF', name: 'บัวหลวงเฟล็กซิเบิลเพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 19.88, ytd: 2.1, return1y: 4.8, return2y: 1.5, return3y: 3.2, return5y: 3.0, risk: 5, type: 'Mixed', isNew: false },
-    { id: 'b10', code: 'B-GOLDRMF', name: 'บัวหลวงโกลด์เพื่อการเลี้ยงชีพ', amc: 'Bualuang', nav: 21.50, ytd: 12.5, return1y: 15.5, return2y: 10.2, return3y: 8.5, return5y: 9.2, risk: 8, type: 'Gold', isNew: false },
-    { id: 'b12', code: 'B-TREASURY RMF', name: 'บัวหลวงตราสารหนี้ภาครัฐ RMF', amc: 'Bualuang', nav: 10.50, ytd: 1.9, return1y: 2.2, return2y: 1.8, return3y: 1.6, return5y: 1.4, risk: 4, type: 'Fixed Income', isNew: false },
+    { id: 'b4', code: 'B-FLEXRMF', name: 'บัวหลวงเฟล็กซิเบิลเพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 19.88, ytd: 2.1, return1y: 4.8, return2y: 1.5, return3y: 3.2, return5y: 3.0, risk: 5, type: 'Mixed', isNew: false },
+    { id: 'b10', code: 'B-GOLDRMF', name: 'บัวหลวงโกลด์เพื่อการเลี้ยงชีพ', amc: 'BBL', nav: 21.50, ytd: 12.5, return1y: 15.5, return2y: 10.2, return3y: 8.5, return5y: 9.2, risk: 8, type: 'Gold', isNew: false },
+    { id: 'b12', code: 'B-TREASURY RMF', name: 'บัวหลวงตราสารหนี้ภาครัฐ RMF', amc: 'BBL', nav: 10.50, ytd: 1.9, return1y: 2.2, return2y: 1.8, return3y: 1.6, return5y: 1.4, risk: 4, type: 'Fixed Income', isNew: false },
 
     // ================= TISCO (ทิสโก้) =================
     // Global & Foreign Equity
@@ -78,10 +78,10 @@ export const INITIAL_ESG = [
     { id: 'ks1', code: 'KFTHAIESG', name: 'กรุงศรีไทยเพื่อความยั่งยืน (ชนิดสะสมมูลค่า)', amc: 'Krungsri', nav: 9.85, ytd: 3.5, return1y: 5.8, risk: 6, type: 'Equity ESG', isNew: false },
     { id: 'ks2', code: 'KFTHAIESGD', name: 'กรุงศรีไทยเพื่อความยั่งยืน (ชนิดจ่ายเงินปันผล)', amc: 'Krungsri', nav: 9.72, ytd: 3.2, return1y: 5.5, risk: 6, type: 'Equity ESG', isNew: false },
 
-    // ================= Bualuang (บัวหลวง) =================
-    { id: 'b1', code: 'B-TOP-THAIESG', name: 'บัวหลวงทศพลไทยเพื่อความยั่งยืน', amc: 'Bualuang', nav: 10.80, ytd: 5.5, return1y: 8.2, risk: 6, type: 'Equity ESG', isNew: false },
-    { id: 'b2', code: 'B-DYNAMIC-THAIESG', name: 'บัวหลวงไดนามิกไทยเพื่อความยั่งยืน', amc: 'Bualuang', nav: 10.25, ytd: 4.8, return1y: 7.5, risk: 6, type: 'Equity ESG', isNew: true },
-    { id: 'b3', code: 'B-SI-THAIESG', name: 'บัวหลวงยั่งยืน (Sustainable Investment)', amc: 'Bualuang', nav: 10.10, ytd: 4.1, return1y: 6.2, risk: 6, type: 'Equity ESG', isNew: true },
+    // ================= BBL (บัวหลวง) =================
+    { id: 'b1', code: 'B-TOP-THAIESG', name: 'บัวหลวงทศพลไทยเพื่อความยั่งยืน', amc: 'BBL', nav: 10.80, ytd: 5.5, return1y: 8.2, risk: 6, type: 'Equity ESG', isNew: false },
+    { id: 'b2', code: 'B-DYNAMIC-THAIESG', name: 'บัวหลวงไดนามิกไทยเพื่อความยั่งยืน', amc: 'BBL', nav: 10.25, ytd: 4.8, return1y: 7.5, risk: 6, type: 'Equity ESG', isNew: true },
+    { id: 'b3', code: 'B-SI-THAIESG', name: 'บัวหลวงยั่งยืน (Sustainable Investment)', amc: 'BBL', nav: 10.10, ytd: 4.1, return1y: 6.2, risk: 6, type: 'Equity ESG', isNew: true },
 
     // ================= TISCO (ทิสโก้) =================
     { id: 't1', code: 'TISCOThaiESG-A', name: 'ทิสโก้ หุ้นไทยเพื่อความยั่งยืน ชนิดสะสมมูลค่า', amc: 'TISCO', nav: 10.60, ytd: 4.5, return1y: 7.2, risk: 6, type: 'Equity ESG', isNew: false },
@@ -90,10 +90,8 @@ export const INITIAL_ESG = [
 
 export const AMC_COLORS_RMF = {
     KKP: '#6F42C1',
-    SCB: '#4F46E5',
-    KBank: '#047857',
     Krungsri: '#F59E0B',
-    Bualuang: '#1E3A8A',
+    BBL: '#1E3A8A',
     TISCO: '#CC0000',
     All: '#4F46E5'
 };
@@ -101,7 +99,7 @@ export const AMC_COLORS_RMF = {
 export const AMC_COLORS_ESG = {
     KKP: '#6F42C1',
     Krungsri: '#F59E0B',
-    Bualuang: '#1E3A8A',
+    BBL: '#1E3A8A',
     TISCO: '#CC0000',
     All: '#059669'
 };

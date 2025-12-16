@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, Settings, Search, XCircle, Leaf, Zap, ArrowLeft } from 'lucide-react';
+import { RefreshCw, Search, ArrowLeft } from 'lucide-react';
 import { useFundData } from '../hooks/useFundData';
 import KPICards from './KPICards';
 import FundTable from './FundTable';
@@ -8,14 +8,12 @@ import FundChart from './FundChart';
 
 const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS }) => {
     // Shared State
-    const { funds, loading, error, lastUpdated, apiKey, updateApiKey, refresh } = useFundData(fundType, initialFunds);
+    const { funds, loading, error, lastUpdated, refresh } = useFundData(fundType, initialFunds);
 
     // UI State
     const [selectedAmc, setSelectedAmc] = useState('All');
     const [sortBy, setSortBy] = useState('return1y');
     const [showNewOnly, setShowNewOnly] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [tempKey, setTempKey] = useState('');
 
     // Filter Logic
     const filteredFunds = useMemo(() => {
@@ -73,17 +71,9 @@ const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS
 
                     <div className="flex gap-2">
                         <button
-                            onClick={() => { setTempKey(apiKey); setShowSettings(true); }}
-                            className={`p-2 rounded-xl border transition-all ${apiKey ? 'bg-green-50 text-green-600 border-green-200' : 'bg-white text-slate-400 border-slate-200'}`}
-                            title="API Settings"
-                        >
-                            <Settings size={20} />
-                        </button>
-
-                        <button
                             onClick={refresh}
                             disabled={loading}
-                            className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl shadow-sm hover:bg-slate-800 active:scale-95 transition-all"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl shadow-sm hover:bg-slate-800 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
                             {loading ? 'Updating...' : 'Update Data'}
@@ -93,33 +83,8 @@ const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS
 
                 {/* Error Message */}
                 {error && (
-                    <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100">
+                    <div className="mb-4 p-4 bg-yellow-50 text-yellow-800 rounded-xl border border-yellow-200">
                         {error}
-                    </div>
-                )}
-
-                {/* Config Modal */}
-                {showSettings && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-slate-100">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-xl font-bold text-slate-800">API Configuration</h3>
-                                <button onClick={() => setShowSettings(false)}><XCircle size={24} className="text-slate-400" /></button>
-                            </div>
-                            <input
-                                type="password"
-                                value={tempKey}
-                                onChange={(e) => setTempKey(e.target.value)}
-                                placeholder="Enter SEC API Key"
-                                className="w-full px-4 py-2 border border-slate-200 rounded-lg mb-4"
-                            />
-                            <button
-                                onClick={() => { updateApiKey(tempKey); setShowSettings(false); }}
-                                className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                            >
-                                Save Key
-                            </button>
-                        </div>
                     </div>
                 )}
 
