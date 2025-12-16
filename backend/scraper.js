@@ -54,7 +54,7 @@ function normalizeAMC(name) {
   const upperName = name.toUpperCase();
   if (upperName.includes('KKP') || upperName.includes('เกียรติ')) return 'KKP';
   if (upperName.includes('KRUNGSRI') || upperName.includes('กรุงศรี') || upperName.includes('KF')) return 'Krungsri';
-  if (upperName.includes('BBL') || upperName.includes('บัวหลวง') || upperName.includes('BUALUANG') || upperName.includes('B-')) return 'BBL';
+  if (upperName.includes('BBL') || upperName.includes('บัวหลวง') || upperName.includes('BUALUANG') || upperName.startsWith('B-') || upperName.match(/^B[A-Z]/)) return 'BBL';
   if (upperName.includes('TISCO') || upperName.includes('ทิสโก้')) return 'TISCO';
   
   return null;

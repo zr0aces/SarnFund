@@ -1,9 +1,28 @@
 services:
-  web:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/data:/app/data
+    environment:
+      - PORT=3001
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+  
+  frontend:
     build: .
     ports:
       - "8082:80"
-    volumes:
-      - ./src:/app/src # Optional: For checking code if volume mapped in dev mode, though build stage is static
+    depends_on:
+      - backend
     environment:
-      - VITE_SEC_API_KEY=${VITE_SEC_API_KEY}
+      - VITE_API_URL=http://backend:3001
+    restart: unless-stopped
