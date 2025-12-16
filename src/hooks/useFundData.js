@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://backend:3001';
 
 export const useFundData = (fundType, initialMockData) => {
     const [funds, setFunds] = useState([]);
