@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/app/src # Optional: For checking code if volume mapped in dev mode, though build stage is static
+    environment:
+      - VITE_SEC_API_KEY=${VITE_SEC_API_KEY}

@@ -1,132 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Funds Portal</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font -->
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZeroTrust Investment Dashboard</title>
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-6">
-
-    <div class="max-w-4xl w-full">
-        <!-- Header -->
-        <div class="text-center mb-12 relative">
-            <a href="index.html"
-                class="absolute left-0 top-0 text-indigo-600 hover:text-indigo-800 font-semibold text-sm flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-layout-grid">
-                    <rect width="7" height="7" x="3" y="3" rx="1" />
-                    <rect width="7" height="7" x="14" y="3" rx="1" />
-                    <rect width="7" height="7" x="14" y="14" rx="1" />
-                    <rect width="7" height="7" x="3" y="14" rx="1" />
-                </svg>
-                Funds Portal
-            </a>
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight pt-8">Investment Funds Portal</h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Comprehensive data and analytics for tax-saving investment funds. Choose a category below to explore
-                performance metrics and insights.
-            </p>
-        </div>
-
-        <!-- Cards Container -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <!-- RMF Card -->
-            <div
-                class="group bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hover:shadow-xl hover:border-indigo-100 hover:-translate-y-1 transition-all duration-300">
-                <div
-                    class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mb-6 text-indigo-600 group-hover:scale-110 transition-transform duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-pie-chart">
-                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
-                        <path d="M22 12A10 10 0 0 0 12 2v10z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-700 transition-colors">RMF
-                    Funds</h2>
-                <div class="h-1 w-12 bg-indigo-600 rounded-full mb-4"></div>
-                <p class="text-slate-600 mb-8 leading-relaxed">
-                    Retirement Mutual Funds. Designed for long-term saving for retirement with tax benefits. Explore
-                    various asset classes and performance histories.
-                </p>
-
-                <div class="flex flex-col gap-3">
-                    <a href="RmfDashboard.html"
-                        class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-sm hover:shadow-indigo-200">
-                        View Interactive Dashboard
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-arrow-right">
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                        </svg>
-                    </a>
-                    <a href="rmf-dashboard.html"
-                        class="text-center text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors py-2">
-                        View Legacy Version (Static)
-                    </a>
-                </div>
-            </div>
-
-            <!-- ThaiESG Card -->
-            <div
-                class="group bg-white rounded-2xl shadow-sm border border-slate-200 p-8 hover:shadow-xl hover:border-emerald-100 hover:-translate-y-1 transition-all duration-300">
-                <div
-                    class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-leaf">
-                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.77 10-10 10Z" />
-                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
-                    ThaiESG Funds</h2>
-                <div class="h-1 w-12 bg-emerald-600 rounded-full mb-4"></div>
-                <p class="text-slate-600 mb-8 leading-relaxed">
-                    Thailand ESG Funds. Sustainable investments focusing on Environmental, Social, and Governance
-                    criteria with special tax deduction privileges.
-                </p>
-
-                <div class="flex flex-col gap-3">
-                    <a href="ThaiEsgDashboard.html"
-                        class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all shadow-sm hover:shadow-emerald-200">
-                        View Interactive Dashboard
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-arrow-right">
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                        </svg>
-                    </a>
-                    <a href="thaiesg-dashboard.html"
-                        class="text-center text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors py-2">
-                        View Legacy Version (Static)
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-16 text-center text-xs text-slate-400">
-            <p>&copy; 2025 ZeroTrust Web | <a href="index.html" class="hover:text-slate-600 transition-colors">Funds
-                    Portal</a> | <a href="#" class="hover:underline">Privacy Policy</a></p>
-        </div>
-    </div>
-
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
