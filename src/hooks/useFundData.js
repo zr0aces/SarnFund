@@ -12,7 +12,7 @@ export const useFundData = (fundType, initialMockData) => {
 
     // Load initial state from Cache or Mock
     useEffect(() => {
-        const cacheKey = `fund_cache_${fundType}`;
+        const cacheKey = `fund_cache_v2_${fundType}`;
         const cached = localStorage.getItem(cacheKey);
 
         if (cached) {
@@ -76,7 +76,7 @@ export const useFundData = (fundType, initialMockData) => {
                     timestamp: result.timestamp,
                     data: result.data
                 };
-                localStorage.setItem(`fund_cache_${fundType}`, JSON.stringify(cachePayload));
+                localStorage.setItem(`fund_cache_v2_${fundType}`, JSON.stringify(cachePayload));
 
                 console.log(`[useFundData] Fetched ${result.data.length} funds from API`);
             } else {
