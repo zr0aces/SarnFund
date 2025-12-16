@@ -31,11 +31,16 @@ export const useFundData = (fundType, initialMockData) => {
             }
         }
 
-        // If no cache or expired, try to fetch from API, fallback to mock
-        fetchDataFromAPI(false);
-    }, [fundType]);
+        // If no cache or expired, use mock data initially
+        // User can manually refresh to fetch from API
+        setFunds(initialMockData);
+        setLastUpdated(new Date().toLocaleTimeString());
+        
+        // Try to fetch from API in the background without showing errors
+        fetchDataFromAPI(false, true);
+    }, [fundType, initialMockData]);
 
-    const fetchDataFromAPI = useCallback(async (forceRefresh = false) => {
+    const fetchDataFromAPI = useCallback(async (forceRefresh = false, silent = false) => {
         setLoading(true);
         setError(null);
 
@@ -67,11 +72,16 @@ export const useFundData = (fundType, initialMockData) => {
 
         } catch (err) {
             console.error(`[useFundData] Error fetching from API:`, err);
-            setError(`Unable to fetch data: ${err.message}. Using fallback data.`);
             
-            // Fallback to mock data if API fails
-            setFunds(initialMockData);
-            setLastUpdated(new Date().toLocaleTimeString());
+            // Only show error to user if this is a manual refresh (not silent)
+            if (!silent) {
+                setError(`Unable to fetch data: ${err.message}. Using fallback data.`);
+                
+                // Fallback to mock data if API fails on manual refresh
+                setFunds(initialMockData);
+                setLastUpdated(new Date().toLocaleTimeString());
+            }
+            // If silent, just log and don't change anything (keep existing data)
         } finally {
             setLoading(false);
         }
