@@ -8,6 +8,7 @@ export const useFundData = (fundType, initialMockData) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
+    const [dataSource, setDataSource] = useState('loading'); // 'loading', 'cache', 'api', 'mock'
 
     // Load initial state from Cache or Mock
     useEffect(() => {
@@ -22,6 +23,7 @@ export const useFundData = (fundType, initialMockData) => {
                     console.log(`[useFundData] Using valid cache for ${fundType}`);
                     setFunds(parsed.data);
                     setLastUpdated(new Date(parsed.timestamp).toLocaleTimeString());
+                    setDataSource('cache');
                     return;
                 } else {
                     console.log(`[useFundData] Cache expired for ${fundType}`);
@@ -35,6 +37,7 @@ export const useFundData = (fundType, initialMockData) => {
         // User can manually refresh to fetch from API
         setFunds(initialMockData);
         setLastUpdated(new Date().toLocaleTimeString());
+        setDataSource('mock');
         
         // Try to fetch from API in the background without showing errors
         fetchDataFromAPI(false, true);
@@ -57,6 +60,7 @@ export const useFundData = (fundType, initialMockData) => {
             if (result.success && result.data && result.data.length > 0) {
                 setFunds(result.data);
                 setLastUpdated(new Date(result.timestamp).toLocaleTimeString());
+                setDataSource('api');
                 
                 // Save to local cache
                 const cachePayload = {
@@ -80,6 +84,7 @@ export const useFundData = (fundType, initialMockData) => {
                 // Fallback to mock data if API fails on manual refresh
                 setFunds(initialMockData);
                 setLastUpdated(new Date().toLocaleTimeString());
+                setDataSource('mock');
             }
             // If silent, just log and don't change anything (keep existing data)
         } finally {
@@ -96,6 +101,7 @@ export const useFundData = (fundType, initialMockData) => {
         loading,
         error,
         lastUpdated,
+        dataSource,
         refresh
     };
 };

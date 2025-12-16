@@ -23,6 +23,11 @@ npm install
 npx playwright install chromium
 ```
 
+3. Initialize data directory (creates initial mock data):
+```bash
+npm run init
+```
+
 ## Running
 
 ### Development Mode

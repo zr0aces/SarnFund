@@ -8,7 +8,7 @@ import FundChart from './FundChart';
 
 const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS }) => {
     // Shared State
-    const { funds, loading, error, lastUpdated, refresh } = useFundData(fundType, initialFunds);
+    const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType, initialFunds);
 
     // UI State
     const [selectedAmc, setSelectedAmc] = useState('All');
@@ -64,12 +64,18 @@ const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS
                             {title}
                         </h1>
                         <p className="text-slate-500 mt-1 flex items-center gap-2">
-                            Real-time Data Dashboard
+                            {dataSource === 'mock' ? 'Demo Data - Start backend to load real data' : 'Real-time Data Dashboard'}
                             {lastUpdated && <span className="text-xs bg-white px-2 py-0.5 rounded border border-slate-200">Updated: {lastUpdated}</span>}
                         </p>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
+                        {dataSource === 'mock' && (
+                            <span className="text-xs font-semibold bg-amber-100 text-amber-800 px-3 py-2 rounded-lg border border-amber-300 flex items-center gap-1">
+                                <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                                Mock Data
+                            </span>
+                        )}
                         <button
                             onClick={refresh}
                             disabled={loading}
