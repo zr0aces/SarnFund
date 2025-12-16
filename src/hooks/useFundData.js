@@ -39,8 +39,8 @@ export const useFundData = (fundType, initialMockData) => {
             setFunds(initialMockData);
             setDataSource('mock');
             setLastUpdated(new Date().toLocaleTimeString());
-            // Optionally fetch fresh data in background
-            fetchDataFromAPI(false, true); // silent update
+            // Disable background API fetch to prevent overwriting with stale data
+            // fetchDataFromAPI(false, true); // silent update
             return;
         }
 
