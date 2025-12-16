@@ -30,6 +30,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                     >
                         <option value="ytd">YTD Return</option>
                         <option value="return1y">1 Year Return</option>
+                        <option value="return2y">2 Years Return</option>
                         <option value="return3y">3 Years Return</option>
                         <option value="return5y">5 Years Return</option>
                     </select>
@@ -45,6 +46,9 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                             <th className="p-4 font-medium text-center">Risk</th>
                             <th className={`p-4 font-medium text-right ${sortBy === 'ytd' || showNewOnly ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>YTD</th>
                             <th className={`p-4 font-medium text-right ${sortBy === 'return1y' && !showNewOnly ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>1Y</th>
+                            <th className={`p-4 font-medium text-right hidden sm:table-cell ${sortBy === 'return2y' ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>2Y</th>
+                            <th className={`p-4 font-medium text-right hidden md:table-cell ${sortBy === 'return3y' ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>3Y</th>
+                            <th className={`p-4 font-medium text-right hidden lg:table-cell ${sortBy === 'return5y' ? 'text-emerald-600 bg-emerald-50/50' : ''}`}>5Y</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -88,6 +92,15 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                 </td>
                                 <td className={`p-4 text-right font-mono ${sortBy === 'return1y' && !showNewOnly ? 'bg-emerald-50/30' : ''}`}>
                                     {renderReturnCell(fund.return1y, sortBy === 'return1y')}
+                                </td>
+                                <td className={`p-4 text-right font-mono hidden sm:table-cell ${sortBy === 'return2y' ? 'bg-emerald-50/30' : ''}`}>
+                                    {renderReturnCell(fund.return2y, sortBy === 'return2y')}
+                                </td>
+                                <td className={`p-4 text-right font-mono hidden md:table-cell ${sortBy === 'return3y' ? 'bg-emerald-50/30' : ''}`}>
+                                    {renderReturnCell(fund.return3y, sortBy === 'return3y')}
+                                </td>
+                                <td className={`p-4 text-right font-mono hidden lg:table-cell ${sortBy === 'return5y' ? 'bg-emerald-50/30' : ''}`}>
+                                    {renderReturnCell(fund.return5y, sortBy === 'return5y')}
                                 </td>
                             </tr>
                         ))}
