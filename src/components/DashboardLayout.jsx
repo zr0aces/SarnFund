@@ -3,6 +3,7 @@ import { RefreshCw, Settings, Search, XCircle, Leaf, Zap } from 'lucide-react';
 import { useFundData } from '../hooks/useFundData';
 import KPICards from './KPICards';
 import FundTable from './FundTable';
+import FundChart from './FundChart';
 
 const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS }) => {
     // Shared State
@@ -124,6 +125,14 @@ const DashboardLayout = ({ title, icon: Icon, fundType, initialFunds, AMC_COLORS
                 showNewOnly={showNewOnly}
                 setShowNewOnly={setShowNewOnly}
                 sortBy={sortBy}
+                getSortLabel={getSortLabel}
+                AMC_COLORS={AMC_COLORS}
+            />
+
+            <FundChart
+                funds={filteredFunds}
+                sortBy={sortBy}
+                showNewOnly={showNewOnly}
                 getSortLabel={getSortLabel}
                 AMC_COLORS={AMC_COLORS}
             />
