@@ -66,18 +66,39 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                         </div>
                                         <span className="text-xs text-slate-400 hidden sm:inline-block">{fund.name}</span>
 
-                                        <div className="flex gap-2 mt-1">
+                                        <div className="flex flex-wrap gap-2 mt-1">
                                             <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded text-white`}
                                                 style={{ backgroundColor: AMC_COLORS[fund.amc] || '#1e293b' }}>
                                                 {fund.amc}
                                             </span>
+
+                                            {/* Finnomena Link */}
+                                            <a
+                                                href={`https://www.finnomena.com/fund/${encodeURIComponent(fund.code)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-[10px] text-yellow-600 hover:underline flex items-center gap-0.5 font-medium"
+                                            >
+                                                Finnomena <ExternalLink size={10} />
+                                            </a>
+
+                                            {/* WealthMagik Link */}
+                                            <a
+                                                href={`https://www.wealthmagik.com/funds/${encodeURIComponent(fund.code)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-[10px] text-cyan-600 hover:underline flex items-center gap-0.5 font-medium"
+                                            >
+                                                WealthMagik <ExternalLink size={10} />
+                                            </a>
+
                                             {fund.factsheetUrl ? (
-                                                <a href={fund.factsheetUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-500 hover:underline flex items-center gap-0.5">
-                                                    Factsheet <ExternalLink size={10} />
+                                                <a href={fund.factsheetUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-green-600 hover:underline flex items-center gap-0.5 font-medium">
+                                                    Settrade <ExternalLink size={10} />
                                                 </a>
                                             ) : (
                                                 <span className="text-[10px] text-slate-300 flex items-center gap-0.5 cursor-not-allowed">
-                                                    Factsheet <ExternalLink size={10} />
+                                                    Settrade <ExternalLink size={10} />
                                                 </span>
                                             )}
                                         </div>

@@ -2,6 +2,10 @@ URL="https://www.settrade.com/api/set-fund/fund-compare/list?lang=th&amcId=ALL&a
 COOKIE='charlot=36f4fcad-1054-45d9-bcc5-46e96651b2a4; visid_incap_2685215=wpyySu6FSyiUTRZyL3vHRugtQWkAAAAAQUIPAAAAAAAZvTIzd1An4q5/jiYQL0tE; nlbi_2685215=55HJMb9ieGTjaViM2+vbQgAAAAAuU76UNY49bgomRrtCh552; route=d260eeb4244841dbfb0f19b27d56dfe3; incap_ses_373_2685215=vZSkUPnokw9V72tUsiktBfg2QWkAAAAAAdjLrtsOUsnBpEuSjS+oNA=='
 UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
 
+# Ensure data directory exists and is writable
+mkdir -p backend/data
+chmod 777 backend/data
+
 curl "$URL" \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.8' \

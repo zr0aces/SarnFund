@@ -1,3 +1,7 @@
+# Ensure data directory exists and is writable
+mkdir -p backend/data
+chmod 777 backend/data
+
 # RMF Fetch - Removed dividendPolicy=N
 curl 'https://www.settrade.com/api/set-fund/fund-compare/list?lang=th&amcId=ALL&aimcType=ALL&specificationCode=RMF' \
   -H 'accept: application/json, text/plain, */*' \
