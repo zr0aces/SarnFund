@@ -1,0 +1,12 @@
+# SEC-API Url
+Url=https://api.sec.or.th
+
+# Subscription key [replace your subscription key in (xxxxx)]
+FundFactsheetKey=xxxxx
+FundDailyInfoKey=xxxxx
+BondKey=xxxxx
+CommonKey=xxxxx
+DigitalAssetKey=xxxxx
+OnereportKey=xxxxx
+PVDFactsheetKey=xxxxx
+LicenseCheckKey=xxxxx
