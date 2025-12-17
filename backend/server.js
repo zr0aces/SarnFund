@@ -15,6 +15,13 @@ const PORT = process.env.PORT || 3001;
 const DATA_DIR = path.join(__dirname, 'data');
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+// Cache file constants
+const CACHE_FILES = {
+  ALL: 'all.json',
+  RMF: 'rmf.json',
+  TESG: 'tesg.json'
+};
+
 // Rate limiting configuration
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
@@ -61,10 +68,6 @@ async function getCachedData(filename) {
     const data = await fs.readFile(filePath, 'utf-8');
     const parsed = JSON.parse(data);
 
-    // For all_funds.json, we rely on the python script's "timestamp" field if it exists,
-    // or file modification time? 
-    // The python script output format: { timestamp: ..., data: ... }
-
     // Check internal timestamp if present
     if (parsed.timestamp && isCacheValid(parsed.timestamp)) {
       console.log(`Using valid cache for ${filename}`);
@@ -104,7 +107,7 @@ app.get('/api/funds/all', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/all');
 
-    const cached = await getCachedData('all.json');
+    const cached = await getCachedData(CACHE_FILES.ALL);
 
     if (cached) {
       return res.json({
@@ -119,7 +122,7 @@ app.get('/api/funds/all', apiLimiter, async (req, res) => {
 
     // Check if file exists (even if expired) to serve stale data
     try {
-      const filePath = path.join(DATA_DIR, 'all.json');
+      const filePath = path.join(DATA_DIR, CACHE_FILES.ALL);
       const data = await fs.readFile(filePath, 'utf-8');
       const parsed = JSON.parse(data);
       
@@ -158,7 +161,7 @@ app.get('/api/funds/rmf', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/rmf');
 
-    const cached = await getCachedData('rmf.json');
+    const cached = await getCachedData(CACHE_FILES.RMF);
 
     if (cached) {
       return res.json({
@@ -172,7 +175,7 @@ app.get('/api/funds/rmf', apiLimiter, async (req, res) => {
 
     // Check if file exists (even if expired)
     try {
-      const filePath = path.join(DATA_DIR, 'rmf.json');
+      const filePath = path.join(DATA_DIR, CACHE_FILES.RMF);
       const data = await fs.readFile(filePath, 'utf-8');
       const parsed = JSON.parse(data);
       
@@ -209,7 +212,7 @@ app.get('/api/funds/tesg', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/tesg');
 
-    const cached = await getCachedData('tesg.json');
+    const cached = await getCachedData(CACHE_FILES.TESG);
 
     if (cached) {
       return res.json({
@@ -223,7 +226,7 @@ app.get('/api/funds/tesg', apiLimiter, async (req, res) => {
 
     // Check if file exists (even if expired)
     try {
-      const filePath = path.join(DATA_DIR, 'tesg.json');
+      const filePath = path.join(DATA_DIR, CACHE_FILES.TESG);
       const data = await fs.readFile(filePath, 'utf-8');
       const parsed = JSON.parse(data);
       
@@ -281,7 +284,7 @@ app.post('/api/scrape', scrapeLimiter, async (req, res) => {
 app.get('/api/health', apiLimiter, async (req, res) => {
   try {
     // Check if data files exist and their age
-    const files = ['rmf.json', 'tesg.json', 'all.json'];
+    const files = [CACHE_FILES.RMF, CACHE_FILES.TESG, CACHE_FILES.ALL];
     const status = {};
 
     for (const file of files) {

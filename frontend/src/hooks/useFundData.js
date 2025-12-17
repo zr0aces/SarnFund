@@ -97,7 +97,7 @@ export const useFundData = (fundType, initialMockData) => {
     }, [fundType]);
 
     const refresh = useCallback(async () => {
-        await fetchDataFromAPI(false);
+        await fetchDataFromAPI();
     }, [fetchDataFromAPI]);
 
     return {
