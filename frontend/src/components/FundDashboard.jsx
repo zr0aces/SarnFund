@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { RefreshCw, AlertCircle, TrendingUp, Trophy } from 'lucide-react';
-import { AMC_COLORS, FUND_TYPES, TIMEFRAMES, API_URL } from '../utils/constants';
+import { useState, useEffect, useMemo } from 'react';
+import { RefreshCw, AlertCircle, Trophy } from 'lucide-react';
+import { AMC_COLORS, API_URL } from '../utils/constants';
 import FundChart from './FundChart';
 import FundTable from './FundTable';
 import FilterBar from './FilterBar';

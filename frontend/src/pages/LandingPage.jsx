@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3 } from 'lucide-react';
 import { INITIAL_RMF, INITIAL_ESG } from '../data/funds';

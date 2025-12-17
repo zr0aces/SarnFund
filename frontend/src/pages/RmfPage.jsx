@@ -1,4 +1,4 @@
-import React from 'react';
+
 import DashboardLayout from '../components/DashboardLayout';
 import { Trophy } from 'lucide-react';
 import { AMC_COLORS_RMF, INITIAL_RMF } from '../data/funds';

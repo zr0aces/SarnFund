@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Trophy, TrendingUp, Sparkles, ArrowUpRight } from 'lucide-react';
 
 const KPICards = ({ funds, showNewOnly, setShowNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { TrendingUp } from 'lucide-react';
 import { FUND_TYPES, TIMEFRAMES } from '../utils/constants';
 

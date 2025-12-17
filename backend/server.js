@@ -4,10 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
-import { exec } from 'child_process';
-import util from 'util';
-
-const execPromise = util.promisify(exec);
+import { scrapeData } from './scraper.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,17 +65,16 @@ async function getCachedData(filename) {
 }
 
 /**
- * Run generic python scraper
+ * Run scraper to fetch fresh data
  */
-async function runPythonScraper() {
-  console.log('Starting Python scraper...');
+async function runScraper() {
+  console.log('Starting data scraper...');
   try {
-    const { stdout, stderr } = await execPromise('python3 fetch_funds.py', { cwd: __dirname });
-    console.log('Python script stdout:', stdout);
-    if (stderr) console.error('Python script stderr:', stderr);
+    await scrapeData();
+    console.log('Scraper completed successfully');
     return true;
   } catch (error) {
-    console.error('Error running python script:', error);
+    console.error('Error running scraper:', error.message);
     return false;
   }
 }
@@ -90,43 +86,148 @@ app.get('/api/funds/all', async (req, res) => {
   try {
     console.log('GET /api/funds/all');
 
-    const cached = await getCachedData('all_funds.json');
+    const cached = await getCachedData('all.json');
 
     if (cached) {
       return res.json({
         success: true,
         cached: true,
-        ...cached
+        timestamp: cached.timestamp,
+        lastUpdated: cached.lastUpdated,
+        selectedAMCs: cached.selectedAMCs,
+        data: cached.data
       });
     }
 
-    // Should we trigger scrape if missing? 
-    // Yes, but async to avoid timeout, or sync if critical?
-    // Let's return 503 and trigger async if it's missing entirely.
-
-    // Check if file exists at least (even if expired) to serve *something*
+    // Check if file exists (even if expired) to serve stale data
     try {
-      const filePath = path.join(DATA_DIR, 'all_funds.json');
+      const filePath = path.join(DATA_DIR, 'all.json');
       const data = await fs.readFile(filePath, 'utf-8');
       const parsed = JSON.parse(data);
-      // Serve expired data if no valid cache (better than nothing)
+      
+      console.log('Serving expired cache for all.json');
       return res.json({
         success: true,
         cached: false,
         expired: true,
-        ...parsed
+        timestamp: parsed.timestamp,
+        lastUpdated: parsed.lastUpdated,
+        selectedAMCs: parsed.selectedAMCs,
+        data: parsed.data
       });
     } catch (e) {
-      // No file at all
-      runPythonScraper(); // Trigger in background
+      // No file at all - trigger background scrape
+      runScraper();
       return res.status(503).json({
         success: false,
-        error: 'No data available. Scraping started in background. Please try again later.'
+        error: 'No data available. Scraping started in background. Please try again in a few minutes.'
       });
     }
 
   } catch (error) {
     console.error('Error fetching all data:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * Get RMF fund data
+ */
+app.get('/api/funds/rmf', async (req, res) => {
+  try {
+    console.log('GET /api/funds/rmf');
+
+    const cached = await getCachedData('rmf.json');
+
+    if (cached) {
+      return res.json({
+        success: true,
+        cached: true,
+        timestamp: cached.timestamp,
+        selectedAMCs: cached.selectedAMCs,
+        data: cached.data
+      });
+    }
+
+    // Check if file exists (even if expired)
+    try {
+      const filePath = path.join(DATA_DIR, 'rmf.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const parsed = JSON.parse(data);
+      
+      console.log('Serving expired cache for rmf.json');
+      return res.json({
+        success: true,
+        cached: false,
+        expired: true,
+        timestamp: parsed.timestamp,
+        selectedAMCs: parsed.selectedAMCs,
+        data: parsed.data
+      });
+    } catch (e) {
+      runScraper();
+      return res.status(503).json({
+        success: false,
+        error: 'No RMF data available. Scraping started in background.'
+      });
+    }
+
+  } catch (error) {
+    console.error('Error fetching RMF data:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * Get ThaiESG fund data
+ */
+app.get('/api/funds/tesg', async (req, res) => {
+  try {
+    console.log('GET /api/funds/tesg');
+
+    const cached = await getCachedData('tesg.json');
+
+    if (cached) {
+      return res.json({
+        success: true,
+        cached: true,
+        timestamp: cached.timestamp,
+        selectedAMCs: cached.selectedAMCs,
+        data: cached.data
+      });
+    }
+
+    // Check if file exists (even if expired)
+    try {
+      const filePath = path.join(DATA_DIR, 'tesg.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const parsed = JSON.parse(data);
+      
+      console.log('Serving expired cache for tesg.json');
+      return res.json({
+        success: true,
+        cached: false,
+        expired: true,
+        timestamp: parsed.timestamp,
+        selectedAMCs: parsed.selectedAMCs,
+        data: parsed.data
+      });
+    } catch (e) {
+      runScraper();
+      return res.status(503).json({
+        success: false,
+        error: 'No ThaiESG data available. Scraping started in background.'
+      });
+    }
+
+  } catch (error) {
+    console.error('Error fetching ThaiESG data:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -141,11 +242,12 @@ app.post('/api/scrape', async (req, res) => {
   try {
     console.log('POST /api/scrape - Manual scrape triggered');
 
-    runPythonScraper(); // Run in background
+    // Run in background
+    runScraper();
 
     res.json({
       success: true,
-      message: 'Scraping started in background'
+      message: 'Scraping started in background. Data will be available shortly.'
     });
   } catch (error) {
     res.status(500).json({
@@ -159,22 +261,67 @@ app.post('/api/scrape', async (req, res) => {
  * Health check endpoint
  */
 app.get('/api/health', async (req, res) => {
-  res.json({ status: 'ok' });
+  try {
+    // Check if data files exist and their age
+    const files = ['rmf.json', 'tesg.json', 'all.json'];
+    const status = {};
+
+    for (const file of files) {
+      try {
+        const filePath = path.join(DATA_DIR, file);
+        const data = await fs.readFile(filePath, 'utf-8');
+        const parsed = JSON.parse(data);
+        const age = Date.now() - parsed.timestamp;
+        const isValid = age < CACHE_DURATION;
+        
+        status[file] = {
+          exists: true,
+          valid: isValid,
+          age: Math.floor(age / 1000 / 60), // age in minutes
+          lastUpdated: parsed.lastUpdated || new Date(parsed.timestamp).toISOString()
+        };
+      } catch (e) {
+        status[file] = {
+          exists: false,
+          valid: false
+        };
+      }
+    }
+
+    res.json({
+      status: 'ok',
+      uptime: process.uptime(),
+      cache: status
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      error: error.message
+    });
+  }
 });
 
 // Schedule daily scraping at 1 AM
 cron.schedule('0 1 * * *', async () => {
   console.log('Running scheduled scrape at 1 AM...');
-  await runPythonScraper();
+  await runScraper();
 });
 
 // Start server
 app.listen(PORT, () => {
+  console.log(`\n=== SarnFund Backend Server ===`);
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`API endpoints:`);
-  console.log(`  GET  /api/funds/all  - Get all fund data`);
-  console.log(`  POST /api/scrape     - Manually trigger scraping`);
-  console.log(`  GET  /api/health     - Health check`);
+  console.log(`\nAPI Endpoints:`);
+  console.log(`  GET  /api/funds/all  - Get all fund data (RMF + ThaiESG)`);
+  console.log(`  GET  /api/funds/rmf  - Get RMF fund data`);
+  console.log(`  GET  /api/funds/tesg - Get ThaiESG fund data`);
+  console.log(`  POST /api/scrape     - Manually trigger data scraping`);
+  console.log(`  GET  /api/health     - Health check and cache status`);
+  console.log(`\nScheduled Tasks:`);
+  console.log(`  Daily scrape at 1:00 AM`);
+  console.log(`\nCache Duration: 24 hours`);
+  console.log(`Data Directory: ${DATA_DIR}`);
+  console.log(`===============================\n`);
 });
 
 export default app;

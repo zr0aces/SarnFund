@@ -52,7 +52,7 @@ export const useFundData = (fundType, initialMockData) => {
         fetchDataFromAPI(false, false);
     }, [fundType, initialMockData]);
 
-    const fetchDataFromAPI = useCallback(async (forceRefresh = false, silent = false) => {
+    const fetchDataFromAPI = useCallback(async (silent = false) => {
         setLoading(true);
         setError(null);
 
@@ -97,7 +97,7 @@ export const useFundData = (fundType, initialMockData) => {
     }, [fundType]);
 
     const refresh = useCallback(async () => {
-        await fetchDataFromAPI(true);
+        await fetchDataFromAPI(false);
     }, [fetchDataFromAPI]);
 
     return {

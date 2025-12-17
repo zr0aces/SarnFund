@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ListFilter, AlertCircle } from 'lucide-react';
 import { TIMEFRAMES } from '../utils/constants';
 

@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, Search, ArrowLeft } from 'lucide-react';
+import { RefreshCw, ArrowLeft } from 'lucide-react';
 import { useFundData } from '../hooks/useFundData';
 import KPICards from './KPICards';
 import FundTable from './FundTable';
@@ -8,7 +8,7 @@ import FundChart from './FundChart';
 
 const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockData }) => {
     // Shared State
-    const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType, initialMockData);
+    const { funds, loading, error, lastUpdated, dataSource } = useFundData(fundType, initialMockData);
 
     // UI State
     const [selectedAmc, setSelectedAmc] = useState('All');

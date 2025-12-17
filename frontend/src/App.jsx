@@ -1,4 +1,3 @@
-import React from 'react';
 import FundDashboard from './components/FundDashboard';
 import './index.css';
 

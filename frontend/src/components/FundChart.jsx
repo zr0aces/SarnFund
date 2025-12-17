@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { BarChart3 } from 'lucide-react';
 import { TIMEFRAMES } from '../utils/constants';
@@ -36,7 +35,7 @@ const FundChart = ({ data, timeframe, colors }) => {
     };
 
     // Determine colors for legend/mapping
-    const top5AMCs = Object.entries(colors).slice(0, 5); // Just a few for example
+    // const top5AMCs = Object.entries(colors).slice(0, 5);
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
