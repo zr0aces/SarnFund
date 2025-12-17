@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
+import rateLimit from 'express-rate-limit';
 import { scrapeData } from './scraper.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +14,23 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const DATA_DIR = path.join(__dirname, 'data');
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+// Rate limiting configuration
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // Limit each IP to 30 requests per minute
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const scrapeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 scrape requests per 15 minutes
+  message: 'Too many scrape requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Middleware
 app.use(cors());
@@ -82,7 +100,7 @@ async function runScraper() {
 /**
  * Get all fund data
  */
-app.get('/api/funds/all', async (req, res) => {
+app.get('/api/funds/all', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/all');
 
@@ -136,7 +154,7 @@ app.get('/api/funds/all', async (req, res) => {
 /**
  * Get RMF fund data
  */
-app.get('/api/funds/rmf', async (req, res) => {
+app.get('/api/funds/rmf', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/rmf');
 
@@ -187,7 +205,7 @@ app.get('/api/funds/rmf', async (req, res) => {
 /**
  * Get ThaiESG fund data
  */
-app.get('/api/funds/tesg', async (req, res) => {
+app.get('/api/funds/tesg', apiLimiter, async (req, res) => {
   try {
     console.log('GET /api/funds/tesg');
 
@@ -238,7 +256,7 @@ app.get('/api/funds/tesg', async (req, res) => {
 /**
  * Manually trigger scraping
  */
-app.post('/api/scrape', async (req, res) => {
+app.post('/api/scrape', scrapeLimiter, async (req, res) => {
   try {
     console.log('POST /api/scrape - Manual scrape triggered');
 
@@ -260,7 +278,7 @@ app.post('/api/scrape', async (req, res) => {
 /**
  * Health check endpoint
  */
-app.get('/api/health', async (req, res) => {
+app.get('/api/health', apiLimiter, async (req, res) => {
   try {
     // Check if data files exist and their age
     const files = ['rmf.json', 'tesg.json', 'all.json'];

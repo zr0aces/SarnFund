@@ -137,3 +137,4 @@ dist-ssr/
 *.njsproj
 *.sln
 *.sw?
+backend/backend/data/

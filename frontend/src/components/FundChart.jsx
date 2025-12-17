@@ -34,8 +34,7 @@ const FundChart = ({ data, timeframe, colors }) => {
         return null;
     };
 
-    // Determine colors for legend/mapping
-    // const top5AMCs = Object.entries(colors).slice(0, 5);
+    // Determine colors for legend/mapping (if needed in future)
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
