@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,5 +7,6 @@
 @layer base {
   body {
     @apply antialiased text-slate-800 bg-gray-50;
+    font-family: 'Sarabun', sans-serif;
   }
 }

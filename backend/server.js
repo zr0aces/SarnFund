@@ -4,7 +4,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
-// import { scrapeData } from './scraper.js';
+import { exec } from 'child_process';
+import util from 'util';
+
+const execPromise = util.promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +22,11 @@ app.use(cors());
 app.use(express.json());
 
 // Ensure data directory exists
-await fs.mkdir(DATA_DIR, { recursive: true });
+try {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+} catch (err) {
+  console.error('Error creating data directory:', err);
+}
 
 /**
  * Check if cached data is still valid (less than 24 hours old)
@@ -39,86 +46,42 @@ async function getCachedData(filename) {
     const data = await fs.readFile(filePath, 'utf-8');
     const parsed = JSON.parse(data);
 
-    if (isCacheValid(parsed.timestamp)) {
+    // For all_funds.json, we rely on the python script's "timestamp" field if it exists,
+    // or file modification time? 
+    // The python script output format: { timestamp: ..., data: ... }
+
+    // Check internal timestamp if present
+    if (parsed.timestamp && isCacheValid(parsed.timestamp)) {
       console.log(`Using valid cache for ${filename}`);
       return parsed;
-    } else {
-      console.log(`Cache expired for ${filename}`);
-      return null;
     }
+
+    console.log(`Cache expired or missing timestamp for ${filename}`);
+    return null;
+
   } catch (error) {
-    console.log(`No cache found for ${filename}:`, error.message);
+    if (error.code !== 'ENOENT') {
+      console.log(`Error reading cache for ${filename}:`, error.message);
+    }
     return null;
   }
 }
 
 /**
- * Get RMF fund data
+ * Run generic python scraper
  */
-app.get('/api/funds/rmf', async (req, res) => {
+async function runPythonScraper() {
+  console.log('Starting Python scraper...');
   try {
-    console.log('GET /api/funds/rmf');
-
-    // Check cache first
-    const cached = await getCachedData('rmf.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error and suggest manual scrape
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
-    });
-
+    const { stdout, stderr } = await execPromise('python3 fetch_funds.py', { cwd: __dirname });
+    console.log('Python script stdout:', stdout);
+    if (stderr) console.error('Python script stderr:', stderr);
+    return true;
   } catch (error) {
-    console.error('Error fetching RMF data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error('Error running python script:', error);
+    return false;
   }
-});
-
-/**
- * Get ThaiESG fund data
- */
-app.get('/api/funds/tesg', async (req, res) => {
-  try {
-    console.log('GET /api/funds/tesg');
-
-    // Check cache first
-    const cached = await getCachedData('tesg.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
-    });
-
-  } catch (error) {
-    console.error('Error fetching TESG data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+}
 
 /**
  * Get all fund data
@@ -127,7 +90,7 @@ app.get('/api/funds/all', async (req, res) => {
   try {
     console.log('GET /api/funds/all');
 
-    const cached = await getCachedData('all.json');
+    const cached = await getCachedData('all_funds.json');
 
     if (cached) {
       return res.json({
@@ -137,10 +100,30 @@ app.get('/api/funds/all', async (req, res) => {
       });
     }
 
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.'
-    });
+    // Should we trigger scrape if missing? 
+    // Yes, but async to avoid timeout, or sync if critical?
+    // Let's return 503 and trigger async if it's missing entirely.
+
+    // Check if file exists at least (even if expired) to serve *something*
+    try {
+      const filePath = path.join(DATA_DIR, 'all_funds.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      const parsed = JSON.parse(data);
+      // Serve expired data if no valid cache (better than nothing)
+      return res.json({
+        success: true,
+        cached: false,
+        expired: true,
+        ...parsed
+      });
+    } catch (e) {
+      // No file at all
+      runPythonScraper(); // Trigger in background
+      return res.status(503).json({
+        success: false,
+        error: 'No data available. Scraping started in background. Please try again later.'
+      });
+    }
 
   } catch (error) {
     console.error('Error fetching all data:', error);
@@ -152,36 +135,19 @@ app.get('/api/funds/all', async (req, res) => {
 });
 
 /**
- * Manually trigger scraping (protected endpoint - add authentication in production)
+ * Manually trigger scraping
  */
 app.post('/api/scrape', async (req, res) => {
   try {
     console.log('POST /api/scrape - Manual scrape triggered');
 
-    // Check if there's valid cache
-    const cached = await getCachedData('all.json');
-    if (cached) {
-      return res.json({
-        success: true,
-        message: 'Cache is still valid. Scraping not needed.',
-        nextScrapeIn: CACHE_DURATION - (Date.now() - cached.timestamp),
-        data: cached
-      });
-    }
+    runPythonScraper(); // Run in background
 
-    // Trigger scraping
-    /*
-    const result = await scrapeData();
-    
     res.json({
       success: true,
-      message: 'Scraping completed successfully',
-      data: result
+      message: 'Scraping started in background'
     });
-    */
-    res.status(403).json({ success: false, message: 'Scraping is disabled' });
   } catch (error) {
-    console.error('Error during manual scrape:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -193,52 +159,22 @@ app.post('/api/scrape', async (req, res) => {
  * Health check endpoint
  */
 app.get('/api/health', async (req, res) => {
-  try {
-    const rmfCache = await getCachedData('rmf.json');
-    const tesgCache = await getCachedData('tesg.json');
-
-    res.json({
-      status: 'ok',
-      cache: {
-        rmf: rmfCache ? {
-          valid: true,
-          age: Date.now() - rmfCache.timestamp,
-          lastUpdated: new Date(rmfCache.timestamp).toISOString()
-        } : { valid: false },
-        tesg: tesgCache ? {
-          valid: true,
-          age: Date.now() - tesgCache.timestamp,
-          lastUpdated: new Date(tesgCache.timestamp).toISOString()
-        } : { valid: false }
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ status: 'error', error: error.message });
-  }
+  res.json({ status: 'ok' });
 });
 
 // Schedule daily scraping at 1 AM
 cron.schedule('0 1 * * *', async () => {
   console.log('Running scheduled scrape at 1 AM...');
-  try {
-    await scrapeData();
-    console.log('Scheduled scrape completed successfully');
-  } catch (error) {
-    console.error('Scheduled scrape failed:', error);
-  }
+  await runPythonScraper();
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`API endpoints:`);
-  console.log(`  GET  /api/funds/rmf  - Get RMF fund data`);
-  console.log(`  GET  /api/funds/tesg - Get ThaiESG fund data`);
   console.log(`  GET  /api/funds/all  - Get all fund data`);
   console.log(`  POST /api/scrape     - Manually trigger scraping`);
   console.log(`  GET  /api/health     - Health check`);
-  console.log(`\nScheduled scraping: Daily at 1 AM`);
-  console.log(`Cache duration: 24 hours`);
 });
 
 export default app;
