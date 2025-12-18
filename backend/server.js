@@ -169,17 +169,9 @@ app.post('/api/scrape', async (req, res) => {
       });
     }
 
-    // Trigger scraping
-    /*
-    const result = await scrapeData();
-    
-    res.json({
-      success: true,
-      message: 'Scraping completed successfully',
-      data: result
-    });
-    */
-    res.status(403).json({ success: false, message: 'Scraping is disabled' });
+    // Trigger manual scrape is disabled in prod without auth
+    // const result = await scrapeData();
+    res.status(403).json({ success: false, message: 'Manual scraping via API is currently disabled for security.' });
   } catch (error) {
     console.error('Error during manual scrape:', error);
     res.status(500).json({

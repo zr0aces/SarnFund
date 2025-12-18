@@ -1,156 +1,70 @@
-# SanFund
+# SanFund Scraper Service
 
-A comprehensive, full-stack mutual fund dashboard designed to track and analyze RMF (Retirement Mutual Fund) and ThaiESG funds. The system automates data collection from external sources, processes it for specific Asset Management Companies (AMCs), and presents it through an interactive, high-performance web interface.
+A dedicated backend service for collecting and serving Mutual Fund data (RMF, ThaiESG) from the Stock Exchange of Thailand (SET).
 
-## System Overview
+## Architecture
 
-SanFund operates on a modern split-stack architecture:
+This service runs as a Docker container and performs the following:
 
-1. **Data Ingestion Layer (Backend)**:
-    - Utilizes **Playwright** for robust scraping of fund data from `settrade.com`.
-    - Implements **Node.js** scripts to fetch, normalize, and filter data.
-    - Focuses on four key AMCs: **KKP**, **Krungsri**, **BBL** (Bangkok Bank), and **TISCO**.
-    - Stores processed data in a local JSON-based caching system to ensure low latency and reduced upstream load.
-
-2. **Presentation Layer (Frontend)**:
-    - A **React**-based single-page application (SPA).
-    - Delivers real-time visualization of fund performance (NAV, Returns: YTD, 1Y, 3Y, 5Y).
-    - Features distinct dashboards for **RMF** and **ThaiESG** categories.
-
-## Tech Stack
-
-### Frontend
-
-- **Core**: [React](https://react.dev/) (v18), [Vite](https://vitejs.dev/)
-- **Routing**: [React Router DOM](https://reactrouter.com/) (v6)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v3) - Utility-first CSS framework
-- **Visualization**: [Recharts](https://recharts.org/) - Composable charting library
-- **Icons**: [Lucide React](https://lucide.dev/)
-
-### Backend
-
-- **Runtime**: [Node.js](https://nodejs.org/)
-- **API Server**: [Express](https://expressjs.com/)
-- **Scraping Engine**: [Playwright](https://playwright.dev/) - Headless browser automation
-- **Scheduling**: [Node-cron](https://www.npmjs.com/package/node-cron) - Task scheduling
-
-### Infrastructure & DevOps
-
-- **Containerization**: Docker, Docker Compose
-- **Web Server**: Nginx (Reverse proxy configuration included)
-- **Scripts**: Bash scripts (`refetch_funds.sh`) for utility operations
-
-## Features
-
-- **Automated Data Collection**: Scheduled scraping tailored to Settrade's structure.
-- **Smart Caching**: 24-hour data persistence to minimize redundant network requests.
-- **AMC Filtering**: Proprietary normalization logic to map various fund naming conventions to standardized AMC codes.
-- **Responsive Design**: Mobile-friendly interface built with Tailwind CSS.
-- **Docker Ready**: Tailored `Dockerfile` and `docker-compose.yml` for instant deployment.
-
-## Quick Start
-
-### 1. Backend Setup
-
-```bash
-cd backend
-npm install
-npx playwright install chromium
-npm start
-```
-
-The backend will run on <http://localhost:3001>
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend will run on <http://localhost:5173>
-
-### 3. Initial Data Scraping
-
-```bash
-cd backend
-npm run scrape
-```
-
-This will scrape data from settrade.com and cache it for 24 hours.
-
-## Project Structure
-
-```
-SanFund/
-├── backend/              # Backend scraper service
-│   ├── server.js        # Express API server
-│   ├── scraper.js       # Web scraper logic
-│   ├── data/            # Cached JSON data
-│   └── package.json
-├── frontend/             # Frontend React app
-│   ├── src/             # Source code
-│   │   ├── components/  # React components
-│   │   ├── pages/       # Page components
-│   │   ├── hooks/       # Custom React hooks
-│   │   └── data/        # Mock/fallback data
-│   ├── public/          # Static assets
-│   └── package.json     # Frontend dependencies
-```
+1. **Scheduled Scraping**: A daily cron job (at 1:00 AM) triggers a data fetch.
+2. **Data Fetching**:
+    - Executes `refetch_funds_v2.sh` to fetch raw JSON data from SETTrade API using `curl`.
+    - Normalizes and processes the data using `scraper.js`.
+    - Saves processed data to `backend/data/`.
+3. **API Serving**: An Express.js server serves the processed data via REST endpoints.
 
 ## API Endpoints
 
-- `GET /api/funds/rmf` - Get RMF fund data
-- `GET /api/funds/tesg` - Get ThaiESG fund data
-- `GET /api/funds/all` - Get all fund data
-- `POST /api/scrape` - Manually trigger scraping
-- `GET /api/health` - Health check and cache status
+- `GET /api/funds/rmf` - Returns processed RMF fund data.
+- `GET /api/funds/tesg` - Returns processed ThaiESG fund data.
+- `GET /api/funds/all` - Returns all fund data including metadata.
+- `GET /api/health` - Health check endpoint (used by Docker).
 
-## Configuration
+## Setup & Usage
 
-### Frontend (.env)
+### Prerequisites
 
-```env
-VITE_API_URL=http://localhost:3001
-```
+- Docker & Docker Compose
+- Node.js 18+ (for local development)
 
-### Backend
+### Running with Docker
 
-The backend uses Playwright for web scraping and automatically:
-
-- Scrapes data daily at 1 AM
-- Caches data for 24 hours
-- Filters funds to only include KKP, Krungsri, BBL, and TISCO
-
-## Deployment
-
-### Using Docker
+The service is part of the main `docker-compose.yml`.
 
 ```bash
-docker-compose up -d
+docker-compose up -d backend
 ```
 
-### Production Notes
+### Local Development
 
-- Set up proper CORS configuration for production domains
-- Consider adding authentication for the `/api/scrape` endpoint
-- Use environment variables for configuration
-- Set up a process manager (PM2, systemd) for the backend
-- Configure reverse proxy (nginx) for production
+1. Navigate to the backend directory:
 
-## Data Sources
+   ```bash
+   cd backend
+   ```
 
-- RMF Funds: <https://www.settrade.com/th/mutualfund/screening> (RMF filter)
-- ThaiESG Funds: <https://www.settrade.com/th/mutualfund/screening> (TESG filter)
+2. Install dependencies:
 
-## AMCs Covered
+   ```bash
+   npm install
+   ```
 
-- **KKP** (เกียรตินาคินภัทร)
-- **Krungsri** (กรุงศรี)
-- **BBL** (บัวหลวง - Bangkok Bank)
-- **TISCO** (ทิสโก้)
+3. Start the server:
 
-## License
+   ```bash
+   npm start
+   ```
 
-MIT
+4. **Manual Scrape**:
+   To manually trigger a data fetch without waiting for the cron schedule:
+
+   ```bash
+   npm run scrape
+   ```
+
+## Project Structure
+
+- `server.js`: Main Express API server and Cron scheduler.
+- `scraper.js`: Data processing logic and shell script executor.
+- `refetch_funds_v2.sh`: Shell script to `curl` data from SETTrade.
+- `Dockerfile`: minimal Node.js Alpine image with `curl` support.
