@@ -1,4 +1,3 @@
-import React from 'react';
 import { ExternalLink, Filter } from 'lucide-react';
 
 const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {

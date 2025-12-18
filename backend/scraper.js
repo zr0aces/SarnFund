@@ -39,46 +39,61 @@ function processFunds(rawData) {
   try {
     json = JSON.parse(rawData);
   } catch (e) {
-    console.error('Error parsing JSON:', e);
+    console.error('Error parsing JSON:', e.message);
     return [];
   }
 
   const fundsList = json.filterFunds || json;
 
   if (!Array.isArray(fundsList)) {
-    console.log('Invalid data format');
+    console.log('Invalid data format: expected array, got', typeof fundsList);
     return [];
   }
 
   return fundsList
-    .map(item => {
-      const info = item.overviewInfo;
-      const perf = item.performanceInfo || {};
+    .map((item, index) => {
+      try {
+        // Validate required fields exist
+        if (!item || !item.overviewInfo) {
+          console.warn(`Skipping item ${index}: missing overviewInfo`);
+          return null;
+        }
 
-      const amcCode = info.amcCode;
-      // Use mapped name if available, otherwise fallback to original code
-      const myAmc = AMC_MAP[amcCode] || amcCode;
+        const info = item.overviewInfo;
+        const perf = item.performanceInfo || {};
 
-      // REMOVED: if (!myAmc) return null;
+        // Validate required fields
+        if (!info.symbol || !info.amcCode) {
+          console.warn(`Skipping item ${index}: missing symbol or amcCode`);
+          return null;
+        }
 
-      return {
-        id: `fund_${Date.now()}_${info.symbol}`,
-        code: info.symbol,
-        name: info.nameEn || info.name,
-        amc: myAmc,
-        nav: perf.navPerUnit,
-        ytd: perf.ytdPercentChange || 0,
-        return3m: perf.threeMonthPercentChange || 0,
-        return6m: perf.sixMonthPercentChange || 0,
-        return1y: perf.oneYearPercentChange || 0,
-        return2y: 0,
-        return3y: perf.threeYearPercentChange || 0,
-        return5y: perf.fiveYearPercentChange || 0,
-        risk: parseInt(info.riskLevel) || 0,
-        type: info.aimcType || '',
-        isNew: false,
-        factsheetUrl: `https://www.settrade.com/th/mutualfund/quote/${info.symbol}/overview`
-      };
+        const amcCode = info.amcCode;
+        // Use mapped name if available, otherwise fallback to original code
+        const myAmc = AMC_MAP[amcCode] || amcCode;
+
+        return {
+          id: `fund_${Date.now()}_${info.symbol}`,
+          code: info.symbol,
+          name: info.nameEn || info.name || 'Unknown',
+          amc: myAmc,
+          nav: parseFloat(perf.navPerUnit) || 0,
+          ytd: parseFloat(perf.ytdPercentChange) || 0,
+          return3m: parseFloat(perf.threeMonthPercentChange) || 0,
+          return6m: parseFloat(perf.sixMonthPercentChange) || 0,
+          return1y: parseFloat(perf.oneYearPercentChange) || 0,
+          return2y: 0,
+          return3y: parseFloat(perf.threeYearPercentChange) || 0,
+          return5y: parseFloat(perf.fiveYearPercentChange) || 0,
+          risk: parseInt(info.riskLevel) || 0,
+          type: info.aimcType || '',
+          isNew: false,
+          factsheetUrl: `https://www.settrade.com/th/mutualfund/quote/${encodeURIComponent(info.symbol)}/overview`
+        };
+      } catch (error) {
+        console.warn(`Error processing item ${index}:`, error.message);
+        return null;
+      }
     })
     .filter(f => f !== null);
 }

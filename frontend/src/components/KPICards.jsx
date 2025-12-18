@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { Trophy, TrendingUp, Sparkles, ArrowUpRight } from 'lucide-react';
+import { useMemo } from 'react';
+import { Trophy, TrendingUp, ArrowUpRight } from 'lucide-react';
 
-const KPICards = ({ funds, showNewOnly, setShowNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {
+const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {
 
     // Calculate Stats
     const stats = useMemo(() => {

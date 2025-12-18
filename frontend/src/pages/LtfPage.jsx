@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart3 } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import { INITIAL_RMF, AMC_COLORS_RMF } from '../data/funds';

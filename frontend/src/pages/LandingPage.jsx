@@ -1,12 +1,11 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3 } from 'lucide-react';
-import { INITIAL_RMF, INITIAL_ESG } from '../data/funds';
 
 const LandingPage = () => {
-    const [stats, setStats] = React.useState({ rmf: 0, tesg: 0, ltf: 0, ssf: 0 });
+    const [stats, setStats] = useState({ rmf: 0, tesg: 0, ltf: 0, ssf: 0 });
 
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchStats = async () => {
             try {
                 const response = await fetch('/api/stats');
