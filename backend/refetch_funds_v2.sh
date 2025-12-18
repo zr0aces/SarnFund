@@ -3,8 +3,8 @@ COOKIE='charlot=36f4fcad-1054-45d9-bcc5-46e96651b2a4; visid_incap_2685215=wpyySu
 UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
 
 # Ensure data directory exists and is writable
-mkdir -p backend/data
-chmod 777 backend/data
+mkdir -p data
+chmod 777 data
 
 curl "$URL" \
   -H 'accept: application/json, text/plain, */*' \
@@ -22,7 +22,7 @@ curl "$URL" \
   -H 'sec-fetch-site: same-origin' \
   -H 'sec-gpc: 1' \
   -H "user-agent: $UA" \
-  --compressed > backend/data/rmf-fetched.json
+  --compressed > data/rmf-fetched.json
 
 # TESG
 URL_TESG="https://www.settrade.com/api/set-fund/fund-compare/list?lang=th&amcId=ALL&aimcType=ALL&specificationCode=TESG"
@@ -42,4 +42,4 @@ curl "$URL_TESG" \
   -H 'sec-fetch-site: same-origin' \
   -H 'sec-gpc: 1' \
   -H "user-agent: $UA" \
-  --compressed > backend/data/tesg-fetched.json
+  --compressed > data/tesg-fetched.json

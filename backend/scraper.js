@@ -79,11 +79,12 @@ async function scrapeData() {
 
   try {
     // Run the shell script that handles the curl commands
-    // Assuming the script is in the root directory: ../refetch_funds_v2.sh
-    const scriptPath = path.resolve(__dirname, '../refetch_funds_v2.sh');
+    // The script is now in the same directory as this file
+    const scriptPath = path.resolve(__dirname, 'refetch_funds_v2.sh');
     console.log(`Executing ${scriptPath}...`);
 
-    await execPromise(`bash ${scriptPath}`);
+    // Run from current directory so that "data" in the script resolves correctly to backend/data
+    await execPromise(`bash ${scriptPath}`, { cwd: __dirname });
 
     console.log('Fetch completed. Processing data...');
 
