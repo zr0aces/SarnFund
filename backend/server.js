@@ -277,6 +277,32 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+/**
+ * Get fund stats (counts)
+ */
+app.get('/api/stats', async (req, res) => {
+  try {
+    const [rmf, tesg, ltf, ssf] = await Promise.all([
+      getCachedData('rmf.json'),
+      getCachedData('tesg.json'),
+      getCachedData('ltf.json'),
+      getCachedData('ssf.json')
+    ]);
+
+    res.json({
+      success: true,
+      stats: {
+        rmf: rmf?.data?.length || 0,
+        tesg: tesg?.data?.length || 0,
+        ltf: ltf?.data?.length || 0,
+        ssf: ssf?.data?.length || 0
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Schedule daily scraping at 1 AM
 cron.schedule('0 1 * * *', async () => {
   console.log('Running scheduled scrape at 1 AM...');

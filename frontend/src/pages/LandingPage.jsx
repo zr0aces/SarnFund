@@ -4,6 +4,23 @@ import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3 } from 'lucide-react';
 import { INITIAL_RMF, INITIAL_ESG } from '../data/funds';
 
 const LandingPage = () => {
+    const [stats, setStats] = React.useState({ rmf: 0, tesg: 0, ltf: 0, ssf: 0 });
+
+    React.useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await fetch('/api/stats');
+                const result = await response.json();
+                if (result.success && result.stats) {
+                    setStats(result.stats);
+                }
+            } catch (error) {
+                console.error('Failed to fetch stats:', error);
+            }
+        };
+        fetchStats();
+    }, []);
+
     return (
         <div className="min-h-screen bg-gray-50 font-sans text-slate-800">
             {/* Hero Section */}
@@ -40,7 +57,7 @@ const LandingPage = () => {
 
                             <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
                                 <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">350+</span>
+                                <span className="font-bold text-slate-800">{stats.rmf > 0 ? stats.rmf : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-orange-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />
@@ -62,7 +79,7 @@ const LandingPage = () => {
 
                             <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
                                 <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">50+</span>
+                                <span className="font-bold text-slate-800">{stats.tesg > 0 ? stats.tesg : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-teal-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />
@@ -84,7 +101,7 @@ const LandingPage = () => {
 
                             <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
                                 <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">350+</span>
+                                <span className="font-bold text-slate-800">{stats.ssf > 0 ? stats.ssf : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-purple-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />
@@ -106,7 +123,7 @@ const LandingPage = () => {
 
                             <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
                                 <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">70+</span>
+                                <span className="font-bold text-slate-800">{stats.ltf > 0 ? stats.ltf : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-blue-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />

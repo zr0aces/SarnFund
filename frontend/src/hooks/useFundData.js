@@ -57,7 +57,7 @@ export const useFundData = (fundType, initialMockData) => {
         setError(null);
 
         try {
-            const endpoint = fundType === 'rmf' ? '/api/funds/rmf' : '/api/funds/tesg';
+            const endpoint = `/api/funds/${fundType}`;
             const response = await fetch(`${API_BASE_URL}${endpoint}`);
 
             if (!response.ok) {
