@@ -10,48 +10,6 @@ export const useFundData = (fundType, initialMockData) => {
     const [lastUpdated, setLastUpdated] = useState(null);
     const [dataSource, setDataSource] = useState('loading'); // 'loading', 'cache', 'api', 'mock'
 
-    // Load initial state from Cache or Mock
-    useEffect(() => {
-        const cacheKey = `fund_cache_v3_${fundType}`;
-        const cached = localStorage.getItem(cacheKey);
-
-        if (cached) {
-            try {
-                const parsed = JSON.parse(cached);
-                const age = Date.now() - parsed.timestamp;
-                if (age < CACHE_DURATION) {
-                    console.log(`[useFundData] Using valid cache for ${fundType}`);
-                    setFunds(parsed.data);
-                    setLastUpdated(new Date(parsed.timestamp).toLocaleTimeString());
-                    setDataSource('cache');
-                    return;
-                } else {
-                    console.log(`[useFundData] Cache expired for ${fundType}`);
-                }
-            } catch (e) {
-                console.error("Cache parse error", e);
-            }
-        }
-
-        // Use Mock/Initial Data if available
-        if (initialMockData && initialMockData.length > 0) {
-            console.log(`[useFundData] Using initial mock data for ${fundType}`);
-            setFunds(initialMockData);
-            setDataSource('mock');
-            setLastUpdated(new Date().toLocaleTimeString());
-            // Disable background API fetch to prevent overwriting with stale data
-            // fetchDataFromAPI(false, true); // silent update
-            return;
-        }
-
-        // If no cache or mock, start with loading
-        setLastUpdated(null);
-        setDataSource('loading');
-
-        // Try to fetch from API
-        fetchDataFromAPI(false, false);
-    }, [fundType, initialMockData, fetchDataFromAPI]);
-
     const fetchDataFromAPI = useCallback(async (silent = false) => {
         setLoading(true);
         setError(null);
@@ -95,6 +53,46 @@ export const useFundData = (fundType, initialMockData) => {
             setLoading(false);
         }
     }, [fundType]);
+
+    // Load initial state from Cache or Mock
+    useEffect(() => {
+        const cacheKey = `fund_cache_v3_${fundType}`;
+        const cached = localStorage.getItem(cacheKey);
+
+        if (cached) {
+            try {
+                const parsed = JSON.parse(cached);
+                const age = Date.now() - parsed.timestamp;
+                if (age < CACHE_DURATION) {
+                    console.log(`[useFundData] Using valid cache for ${fundType}`);
+                    setFunds(parsed.data);
+                    setLastUpdated(new Date(parsed.timestamp).toLocaleTimeString());
+                    setDataSource('cache');
+                    return;
+                } else {
+                    console.log(`[useFundData] Cache expired for ${fundType}`);
+                }
+            } catch (e) {
+                console.error("Cache parse error", e);
+            }
+        }
+
+        // Use Mock/Initial Data if available
+        if (initialMockData && initialMockData.length > 0) {
+            console.log(`[useFundData] Using initial mock data for ${fundType}`);
+            setFunds(initialMockData);
+            setDataSource('mock');
+            setLastUpdated(new Date().toLocaleTimeString());
+            return;
+        }
+
+        // If no cache or mock, start with loading
+        setLastUpdated(null);
+        setDataSource('loading');
+
+        // Try to fetch from API
+        fetchDataFromAPI(false);
+    }, [fundType, initialMockData, fetchDataFromAPI]);
 
     const refresh = useCallback(async () => {
         await fetchDataFromAPI(true);
