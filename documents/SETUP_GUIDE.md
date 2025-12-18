@@ -58,7 +58,7 @@ You can verify it's running by visiting: http://localhost:3001/api/health
 In a new terminal:
 
 ```bash
-cd /path/to/SanFund
+cd /path/to/SarnFund
 npm install
 ```
 
@@ -292,7 +292,7 @@ npm install -g pm2
 
 # Start backend
 cd backend
-pm2 start server.js --name sanfund-backend
+pm2 start server.js --name sarnfund-backend
 
 # Start backend with ecosystem file
 pm2 start ecosystem.config.js

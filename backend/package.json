@@ -1,7 +1,7 @@
 {
-  "name": "sanfund-backend",
+  "name": "sarnfund-backend",
   "version": "1.0.0",
-  "description": "Backend scraper service for SanFund",
+  "description": "Backend scraper service for SarnFund",
   "type": "module",
   "main": "server.js",
   "scripts": {

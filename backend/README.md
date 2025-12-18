@@ -1,4 +1,4 @@
-# SanFund Backend Scraper Service
+# SarnFund Backend Scraper Service
 
 This backend service scrapes mutual fund data from settrade.com and provides it via a REST API.
 
