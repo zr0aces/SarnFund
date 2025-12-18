@@ -1,5 +1,5 @@
 {
-  "name": "zero-trust-funds-dashboard",
+  "name": "sarnfund-dashboard",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,23 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lucide-react": "^0.395.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1",
-    "recharts": "^2.12.7"
+    "lucide-react": "^0.561.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.2",
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.4",
-    "vite": "^5.2.0"
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.19",
+    "vite": "^5.4.21"
   }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "sanfund-backend",
+  "name": "sarnfund-backend",
   "version": "1.0.0",
-  "description": "Backend scraper service for SanFund",
+  "description": "Backend scraper service for SarnFund",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "express": "^4.22.1",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {

@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import RmfPage from './pages/RmfPage';
 import ThaiEsgPage from './pages/ThaiEsgPage';

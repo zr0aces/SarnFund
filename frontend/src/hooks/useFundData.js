@@ -50,9 +50,9 @@ export const useFundData = (fundType, initialMockData) => {
 
         // Try to fetch from API
         fetchDataFromAPI(false, false);
-    }, [fundType, initialMockData]);
+    }, [fundType, initialMockData, fetchDataFromAPI]);
 
-    const fetchDataFromAPI = useCallback(async (forceRefresh = false, silent = false) => {
+    const fetchDataFromAPI = useCallback(async (silent = false) => {
         setLoading(true);
         setError(null);
 

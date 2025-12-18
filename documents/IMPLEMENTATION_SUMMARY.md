@@ -2,7 +2,7 @@
 
 ## Overview
 
-Successfully implemented a comprehensive web scraping solution for the SanFund mutual fund dashboard, replacing the previous SEC API integration with automated data collection from settrade.com.
+Successfully implemented a comprehensive web scraping solution for the SarnFund mutual fund dashboard, replacing the previous SEC API integration with automated data collection from settrade.com.
 
 ## Key Accomplishments
 
@@ -228,7 +228,7 @@ docker-compose up -d
 ### Option 3: Production (PM2)
 ```bash
 # Backend
-cd backend && pm2 start server.js --name sanfund-backend
+cd backend && pm2 start server.js --name sarnfund-backend
 
 # Frontend
 npm run build
@@ -255,7 +255,7 @@ curl -X POST http://localhost:3001/api/scrape
 docker-compose logs -f
 
 # PM2
-pm2 logs sanfund-backend
+pm2 logs sarnfund-backend
 ```
 
 ## Conclusion

@@ -1,4 +1,3 @@
-import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { Leaf } from 'lucide-react';
 import { AMC_COLORS_ESG, INITIAL_ESG } from '../data/funds';
