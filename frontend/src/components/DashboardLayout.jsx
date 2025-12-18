@@ -11,7 +11,9 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
     const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType, initialMockData);
 
     // UI State
+    // UI State
     const [selectedAmc, setSelectedAmc] = useState('All');
+    const [selectedRisk, setSelectedRisk] = useState('All');
     const [sortBy, setSortBy] = useState('return1y');
     const [showNewOnly, setShowNewOnly] = useState(false);
 
@@ -21,12 +23,15 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
         if (selectedAmc !== 'All') {
             data = data.filter(f => f.amc === selectedAmc);
         }
+        if (selectedRisk !== 'All') {
+            data = data.filter(f => f.risk === parseInt(selectedRisk));
+        }
         if (showNewOnly) {
             data = data.filter(f => f.isNew);
         }
         const sortKey = (showNewOnly && sortBy === 'return1y') ? 'ytd' : sortBy;
         return [...data].sort((a, b) => (b[sortKey] || 0) - (a[sortKey] || 0));
-    }, [funds, selectedAmc, sortBy, showNewOnly]);
+    }, [funds, selectedAmc, selectedRisk, sortBy, showNewOnly]);
 
     const getSortLabel = (key) => {
         if (showNewOnly && key === 'return1y') return 'YTD (New)';
@@ -42,13 +47,30 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-slate-800">
             {/* Sticky Navigation */}
             <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-                <div className="container mx-auto px-4 md:px-8 py-3 flex justify-between items-center">
+                <div className="container mx-auto px-4 md:px-8 py-3 flex justify-between items-center gap-4">
                     <Link to="/" className="flex items-center gap-2 group text-slate-600 hover:text-indigo-600 transition-colors">
                         <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-indigo-50 text-slate-500 group-hover:text-indigo-600 transition-colors">
                             <ArrowLeft size={18} />
                         </div>
-                        <span className="font-semibold text-sm">Back to Home</span>
+                        <span className="font-semibold text-sm hidden sm:inline">Back to Home</span>
                     </Link>
+
+                    {/* Dashboard Switcher */}
+                    <div className="flex bg-slate-100 p-1 rounded-lg">
+                        <Link
+                            to="/funds/rmf"
+                            className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${fundType === 'rmf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                            RMF
+                        </Link>
+                        <Link
+                            to="/funds/thaiesg"
+                            className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${fundType === 'tesg' ? 'bg-white text-teal-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                            ThaiESG
+                        </Link>
+                    </div>
+
                     <div className="hidden md:block text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         ZeroTrust Investment Tools
                     </div>
@@ -78,9 +100,9 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                         )}
                         <button
                             onClick={() => {
-                                localStorage.removeItem(`fund_cache_v2_${fundType}`);
-                                localStorage.removeItem('fund_cache_v2_rmf');
-                                localStorage.removeItem('fund_cache_v2_tesg');
+                                localStorage.removeItem(`fund_cache_v3_${fundType}`);
+                                localStorage.removeItem('fund_cache_v3_rmf');
+                                localStorage.removeItem('fund_cache_v3_tesg');
                                 window.location.reload();
                             }}
                             disabled={loading}
@@ -100,16 +122,48 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                 )}
 
                 {/* Filters */}
-                <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit mb-6 overflow-x-auto">
-                    {['All', ...Object.keys(AMC_COLORS).filter(k => k !== 'All')].map((amc) => (
+                <div className="mb-6 flex flex-col gap-4">
+                    {/* AMC Filter */}
+                    <div className="flex flex-wrap gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-full items-center">
                         <button
-                            key={amc}
-                            onClick={() => setSelectedAmc(amc)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedAmc === amc ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                            onClick={() => setSelectedAmc('All')}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${selectedAmc === 'All' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
                         >
-                            {amc}
+                            <div className="grid grid-cols-2 gap-0.5 w-3 h-3 opacity-70">
+                                <span className="bg-current rounded-[1px]"></span><span className="bg-current rounded-[1px]"></span>
+                                <span className="bg-current rounded-[1px]"></span><span className="bg-current rounded-[1px]"></span>
+                            </div>
+                            All
                         </button>
-                    ))}
+
+                        <div className="w-px h-5 bg-slate-200 mx-1"></div>
+
+                        {Array.from(new Set(funds.map(f => f.amc))).sort().map((amc) => (
+                            <button
+                                key={amc}
+                                onClick={() => setSelectedAmc(amc)}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedAmc === amc ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                {amc}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Risk Filer */}
+                    <div className="flex items-center gap-2 overflow-x-auto">
+                        <span className="text-sm font-semibold text-slate-500 whitespace-nowrap">Risk Level:</span>
+                        <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
+                            {['All', '1', '2', '3', '4', '5', '6', '7', '8'].map((risk) => (
+                                <button
+                                    key={risk}
+                                    onClick={() => setSelectedRisk(risk)}
+                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedRisk === risk ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                                >
+                                    {risk}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Content */}

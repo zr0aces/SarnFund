@@ -8,7 +8,7 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
         const metric = showNewOnly ? 'ytd' : sortBy;
         const validFunds = funds.filter(f => f[metric] !== undefined);
 
-        return validFunds.slice(0, 5).map(f => ({
+        return validFunds.slice(0, 10).map(f => ({
             name: f.code,
             return: f[metric],
             amc: f.amc,
@@ -22,7 +22,7 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
         <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 mb-8">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold text-slate-800">
-                    Top 5 Performance <span className="text-slate-400 font-normal text-sm">({showNewOnly ? 'Based on YTD' : getSortLabel(sortBy)})</span>
+                    Top 10 Performance <span className="text-slate-400 font-normal text-sm">({showNewOnly ? 'Based on YTD' : getSortLabel(sortBy)})</span>
                 </h3>
             </div>
             <div className="h-80 w-full">

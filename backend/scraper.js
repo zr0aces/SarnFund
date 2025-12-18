@@ -14,7 +14,21 @@ const AMC_MAP = {
   'KKPAM': 'KKP',
   'KSAM': 'Krungsri',
   'BBLAM': 'BBL',
-  'TISCOASSET': 'TISCO'
+  'TISCOASSET': 'TISCO',
+  'SCBAM': 'SCB',
+  'KASSET': 'KAsset',
+  'KTAM': 'KTAM',
+  'ONEAM': 'ONE',
+  'UOBAM': 'UOB',
+  'PRINCIPAL': 'Principal',
+  'EASTSPRING': 'Eastspring',
+  'ASSETFUND': 'Asset Plus',
+  'DAOL': 'DAOL',
+  'KWI': 'KWI',
+  'LHFUND': 'LH Fund',
+  'MFC': 'MFC',
+  'TALIS': 'TALIS',
+  'XSPRING': 'XSpring'
 };
 
 /**
@@ -42,9 +56,10 @@ function processFunds(rawData) {
       const perf = item.performanceInfo || {};
 
       const amcCode = info.amcCode;
-      const myAmc = AMC_MAP[amcCode];
+      // Use mapped name if available, otherwise fallback to original code
+      const myAmc = AMC_MAP[amcCode] || amcCode;
 
-      if (!myAmc) return null;
+      // REMOVED: if (!myAmc) return null;
 
       return {
         id: `fund_${Date.now()}_${info.symbol}`,
@@ -84,7 +99,7 @@ async function scrapeData() {
     console.log(`Executing ${scriptPath}...`);
 
     // Run from current directory so that "data" in the script resolves correctly to backend/data
-    await execPromise(`bash ${scriptPath}`, { cwd: __dirname });
+    await execPromise(`sh ${scriptPath}`, { cwd: __dirname });
 
     console.log('Fetch completed. Processing data...');
 

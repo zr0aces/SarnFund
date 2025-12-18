@@ -17,7 +17,7 @@ const KPICards = ({ funds, showNewOnly, setShowNewOnly, sortBy, getSortLabel, AM
     }, [funds, sortBy, showNewOnly]);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Trophy size={64} color={AMC_COLORS[stats.bestFund?.amc || 'All'] || '#ccc'} />
@@ -51,27 +51,6 @@ const KPICards = ({ funds, showNewOnly, setShowNewOnly, sortBy, getSortLabel, AM
                         {stats.avgReturn.toFixed(2)}%
                     </h3>
                     <p className="text-xs text-slate-400 mt-1">From {funds.length} funds</p>
-                </div>
-            </div>
-
-            <div
-                onClick={() => setShowNewOnly(!showNewOnly)}
-                className={`cursor-pointer rounded-2xl p-6 shadow-sm border transition-all duration-200 flex items-center ${showNewOnly ? 'bg-orange-50 border-orange-200 ring-2 ring-orange-100' : 'bg-white border-slate-100 hover:border-orange-200'
-                    }`}
-            >
-                <div className={`mr-4 p-3 rounded-full ${showNewOnly ? 'bg-orange-200' : 'bg-orange-50'}`}>
-                    <Sparkles className="text-orange-600 w-6 h-6" />
-                </div>
-                <div>
-                    <p className="text-sm font-medium text-slate-500 mb-1">
-                        {showNewOnly ? 'Showing New Funds Only' : 'New Arrivals'}
-                    </p>
-                    <h3 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                        {funds.filter(f => f.isNew).length} <span className="text-sm font-normal text-slate-400">funds</span>
-                    </h3>
-                    <p className="text-xs text-orange-500 font-medium mt-1">
-                        {showNewOnly ? 'Click to show all' : 'Click to filter new'}
-                    </p>
                 </div>
             </div>
         </div>
