@@ -48,8 +48,8 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
             {/* Sticky Navigation */}
             <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="container mx-auto px-4 md:px-8 py-3 flex justify-between items-center gap-4">
-                    <Link to="/" className="flex items-center gap-2 group text-slate-600 hover:text-indigo-600 transition-colors">
-                        <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-indigo-50 text-slate-500 group-hover:text-indigo-600 transition-colors">
+                    <Link to="/" className="flex items-center gap-2 group text-slate-600 hover:text-orange-600 transition-colors">
+                        <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-orange-50 text-slate-500 group-hover:text-orange-600 transition-colors">
                             <ArrowLeft size={18} />
                         </div>
                         <span className="font-semibold text-sm hidden sm:inline">Back to Home</span>
@@ -59,27 +59,27 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                     <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto max-w-[200px] sm:max-w-none no-scrollbar">
                         <Link
                             to="/funds/rmf"
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'rmf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'rmf' ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             RMF
                         </Link>
                         <Link
                             to="/funds/thaiesg"
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'tesg' ? 'bg-white text-teal-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'tesg' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             ThaiESG
-                        </Link>
-                        <Link
-                            to="/funds/ltf"
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ltf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                        >
-                            LTF
                         </Link>
                         <Link
                             to="/funds/ssf"
                             className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ssf' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             SSF
+                        </Link>
+                        <Link
+                            to="/funds/ltf"
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ltf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                            LTF
                         </Link>
                     </div>
 
@@ -94,7 +94,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                 <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
-                            {Icon && <Icon className="w-8 h-8 text-indigo-600" />}
+                            {Icon && <Icon className="w-8 h-8 text-orange-600" />}
                             {title}
                         </h1>
                         <p className="text-slate-500 mt-1 flex items-center gap-2">
@@ -154,7 +154,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                             <button
                                 key={amc}
                                 onClick={() => setSelectedAmc(amc)}
-                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedAmc === amc ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedAmc === amc ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-50'}`}
                             >
                                 {amc}
                             </button>
@@ -169,7 +169,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                                 <button
                                     key={risk}
                                     onClick={() => setSelectedRisk(risk)}
-                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedRisk === risk ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${selectedRisk === risk ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-50'}`}
                                 >
                                     {risk}
                                 </button>
