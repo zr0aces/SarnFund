@@ -56,18 +56,30 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                     </Link>
 
                     {/* Dashboard Switcher */}
-                    <div className="flex bg-slate-100 p-1 rounded-lg">
+                    <div className="flex bg-slate-100 p-1 rounded-lg overflow-x-auto max-w-[200px] sm:max-w-none no-scrollbar">
                         <Link
                             to="/funds/rmf"
-                            className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${fundType === 'rmf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'rmf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             RMF
                         </Link>
                         <Link
                             to="/funds/thaiesg"
-                            className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${fundType === 'tesg' ? 'bg-white text-teal-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'tesg' ? 'bg-white text-teal-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             ThaiESG
+                        </Link>
+                        <Link
+                            to="/funds/ltf"
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ltf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                            LTF
+                        </Link>
+                        <Link
+                            to="/funds/ssf"
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ssf' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                            SSF
                         </Link>
                     </div>
 
@@ -199,7 +211,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                     <p>&copy; {new Date().getFullYear()} ZeroTrust Investment Tools. All rights reserved.</p>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 };
 

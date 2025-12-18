@@ -32,48 +32,92 @@ const LandingPage = () => {
 
             {/* Dashboard Previews */}
             <section className="container mx-auto px-4 -mt-10 pb-20 relative z-20">
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
 
                     {/* RMF Card */}
-                    <Link to="/funds/rmf" className="group bg-white rounded-2xl p-8 shadow-xl border border-slate-100 hover:border-indigo-200 hover:shadow-2xl transition-all relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
-                            <Trophy size={120} className="text-indigo-600" />
+                    <Link to="/funds/rmf" className="group bg-white rounded-2xl p-6 shadow-xl border border-slate-100 hover:border-indigo-200 hover:shadow-2xl transition-all relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                            <Trophy size={100} className="text-indigo-600" />
                         </div>
                         <div className="relative">
-                            <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                                <BarChart3 size={24} />
+                            <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <BarChart3 size={20} />
                             </div>
-                            <h2 className="text-2xl font-bold mb-2 text-slate-900">RMF Dashboard</h2>
-                            <p className="text-slate-500 mb-6">Retirement Mutual Funds tracking. Analyze long-term performance and risk.</p>
+                            <h2 className="text-xl font-bold mb-2 text-slate-900">RMF Dashboard</h2>
+                            <p className="text-slate-500 mb-4 text-sm">Retirement Mutual Funds. Long-term tracking.</p>
 
-                            <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
-                                <span className="text-slate-400">Tracked Funds</span>
-                                <span className="font-bold text-slate-800">{INITIAL_RMF.length} items</span>
+                            <div className="flex items-center justify-between text-xs py-2 border-t border-slate-100">
+                                <span className="text-slate-400">Funds</span>
+                                <span className="font-bold text-slate-800">{INITIAL_RMF.length}+</span>
                             </div>
-                            <div className="flex items-center text-indigo-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
-                                Launch Dashboard <ArrowRight size={16} className="ml-1" />
+                            <div className="flex items-center text-indigo-600 font-medium text-xs mt-3 group-hover:gap-2 transition-all">
+                                Launch <ArrowRight size={14} className="ml-1" />
                             </div>
                         </div>
                     </Link>
 
                     {/* ThaiESG Card */}
-                    <Link to="/funds/thaiesg" className="group bg-white rounded-2xl p-8 shadow-xl border border-slate-100 hover:border-emerald-200 hover:shadow-2xl transition-all relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
-                            <Leaf size={120} className="text-emerald-600" />
+                    <Link to="/funds/thaiesg" className="group bg-white rounded-2xl p-6 shadow-xl border border-slate-100 hover:border-emerald-200 hover:shadow-2xl transition-all relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                            <Leaf size={100} className="text-emerald-600" />
                         </div>
                         <div className="relative">
-                            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                                <Leaf size={24} />
+                            <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <Leaf size={20} />
                             </div>
-                            <h2 className="text-2xl font-bold mb-2 text-slate-900">ThaiESG Dashboard</h2>
-                            <p className="text-slate-500 mb-6">Sustainable Equity Funds. Tax saving opportunities with ESG focus.</p>
+                            <h2 className="text-xl font-bold mb-2 text-slate-900">ThaiESG</h2>
+                            <p className="text-slate-500 mb-4 text-sm">Sustainable Equity Funds. Tax saving + ESG.</p>
 
-                            <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
-                                <span className="text-slate-400">Tracked Funds</span>
-                                <span className="font-bold text-slate-800">{INITIAL_ESG.length} items</span>
+                            <div className="flex items-center justify-between text-xs py-2 border-t border-slate-100">
+                                <span className="text-slate-400">Funds</span>
+                                <span className="font-bold text-slate-800">{INITIAL_ESG.length}+</span>
                             </div>
-                            <div className="flex items-center text-emerald-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
-                                Launch Dashboard <ArrowRight size={16} className="ml-1" />
+                            <div className="flex items-center text-emerald-600 font-medium text-xs mt-3 group-hover:gap-2 transition-all">
+                                Launch <ArrowRight size={14} className="ml-1" />
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* LTF Card */}
+                    <Link to="/funds/ltf" className="group bg-white rounded-2xl p-6 shadow-xl border border-slate-100 hover:border-blue-200 hover:shadow-2xl transition-all relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                            <BarChart3 size={100} className="text-blue-600" />
+                        </div>
+                        <div className="relative">
+                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <BarChart3 size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold mb-2 text-slate-900">LTF Dashboard</h2>
+                            <p className="text-slate-500 mb-4 text-sm">Long Term Equity Funds. Historical tracking.</p>
+
+                            <div className="flex items-center justify-between text-xs py-2 border-t border-slate-100">
+                                <span className="text-slate-400">Funds</span>
+                                <span className="font-bold text-slate-800">70+</span>
+                            </div>
+                            <div className="flex items-center text-blue-600 font-medium text-xs mt-3 group-hover:gap-2 transition-all">
+                                Launch <ArrowRight size={14} className="ml-1" />
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* SSF Card */}
+                    <Link to="/funds/ssf" className="group bg-white rounded-2xl p-6 shadow-xl border border-slate-100 hover:border-purple-200 hover:shadow-2xl transition-all relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                            <Leaf size={100} className="text-purple-600" />
+                        </div>
+                        <div className="relative">
+                            <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                <Leaf size={20} />
+                            </div>
+                            <h2 className="text-xl font-bold mb-2 text-slate-900">SSF Dashboard</h2>
+                            <p className="text-slate-500 mb-4 text-sm">Super Savings Funds. Long term savings.</p>
+
+                            <div className="flex items-center justify-between text-xs py-2 border-t border-slate-100">
+                                <span className="text-slate-400">Funds</span>
+                                <span className="font-bold text-slate-800">350+</span>
+                            </div>
+                            <div className="flex items-center text-purple-600 font-medium text-xs mt-3 group-hover:gap-2 transition-all">
+                                Launch <ArrowRight size={14} className="ml-1" />
                             </div>
                         </div>
                     </Link>

@@ -43,3 +43,43 @@ curl "$URL_TESG" \
   -H 'sec-gpc: 1' \
   -H "user-agent: $UA" \
   --compressed > data/tesg-fetched.json
+
+# LTF
+URL_LTF="https://www.settrade.com/api/set-fund/fund-compare/list?lang=th&amcId=ALL&aimcType=ALL&specificationCode=LTF"
+curl "$URL_LTF" \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: en-US,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b "$COOKIE" \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.settrade.com/th/mutualfund/screening' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H "user-agent: $UA" \
+  --compressed > data/ltf-fetched.json
+
+# SSF
+URL_SSF="https://www.settrade.com/api/set-fund/fund-compare/list?lang=th&amcId=ALL&aimcType=ALL&specificationCode=SSF"
+curl "$URL_SSF" \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: en-US,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b "$COOKIE" \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.settrade.com/th/mutualfund/screening' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H "user-agent: $UA" \
+  --compressed > data/ssf-fetched.json

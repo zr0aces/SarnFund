@@ -121,6 +121,74 @@ app.get('/api/funds/tesg', async (req, res) => {
 });
 
 /**
+ * Get LTF fund data
+ */
+app.get('/api/funds/ltf', async (req, res) => {
+  try {
+    console.log('GET /api/funds/ltf');
+
+    // Check cache first
+    const cached = await getCachedData('ltf.json');
+
+    if (cached) {
+      return res.json({
+        success: true,
+        cached: true,
+        ...cached
+      });
+    }
+
+    // If no valid cache, return error
+    return res.status(503).json({
+      success: false,
+      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
+      message: 'Run: npm run scrape in the backend directory'
+    });
+
+  } catch (error) {
+    console.error('Error fetching LTF data:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * Get SSF fund data
+ */
+app.get('/api/funds/ssf', async (req, res) => {
+  try {
+    console.log('GET /api/funds/ssf');
+
+    // Check cache first
+    const cached = await getCachedData('ssf.json');
+
+    if (cached) {
+      return res.json({
+        success: true,
+        cached: true,
+        ...cached
+      });
+    }
+
+    // If no valid cache, return error
+    return res.status(503).json({
+      success: false,
+      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
+      message: 'Run: npm run scrape in the backend directory'
+    });
+
+  } catch (error) {
+    console.error('Error fetching SSF data:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
  * Get all fund data
  */
 app.get('/api/funds/all', async (req, res) => {

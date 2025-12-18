@@ -106,9 +106,13 @@ async function scrapeData() {
     // Read the fetched files
     const rmfRaw = await fs.readFile(path.join(DATA_DIR, 'rmf-fetched.json'), 'utf8');
     const tesgRaw = await fs.readFile(path.join(DATA_DIR, 'tesg-fetched.json'), 'utf8');
+    const ltfRaw = await fs.readFile(path.join(DATA_DIR, 'ltf-fetched.json'), 'utf8');
+    const ssfRaw = await fs.readFile(path.join(DATA_DIR, 'ssf-fetched.json'), 'utf8');
 
     const rmfData = processFunds(rmfRaw);
     const tesgData = processFunds(tesgRaw);
+    const ltfData = processFunds(ltfRaw);
+    const ssfData = processFunds(ssfRaw);
 
     const timestamp = Date.now();
     const selectedAMCs = Object.values(AMC_MAP);
@@ -119,7 +123,9 @@ async function scrapeData() {
       selectedAMCs,
       data: {
         rmf: rmfData,
-        tesg: tesgData
+        tesg: tesgData,
+        ltf: ltfData,
+        ssf: ssfData
       }
     };
 
@@ -135,6 +141,16 @@ async function scrapeData() {
     );
 
     await fs.writeFile(
+      path.join(DATA_DIR, 'ltf.json'),
+      JSON.stringify({ timestamp, selectedAMCs, data: ltfData }, null, 2)
+    );
+
+    await fs.writeFile(
+      path.join(DATA_DIR, 'ssf.json'),
+      JSON.stringify({ timestamp, selectedAMCs, data: ssfData }, null, 2)
+    );
+
+    await fs.writeFile(
       path.join(DATA_DIR, 'all.json'),
       JSON.stringify(result, null, 2)
     );
@@ -142,6 +158,8 @@ async function scrapeData() {
     console.log('\n=== Fetch Summary ===');
     console.log(`Processed RMF funds: ${rmfData.length}`);
     console.log(`Processed TESG funds: ${tesgData.length}`);
+    console.log(`Processed LTF funds: ${ltfData.length}`);
+    console.log(`Processed SSF funds: ${ssfData.length}`);
     console.log('=====================\n');
 
     return result;
