@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thai Tax Planner 2568 (Updated)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .badge-new {
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body class="bg-white min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i data-lucide="calculator" class="w-8 h-8 text-white/80"></i>
+                <div>
+                    <h1 class="text-2xl font-bold">Thai Tax Planner 2568 <span
+                            class="text-xs bg-white text-red-600 px-2 py-0.5 rounded-full ml-2 align-middle">Updated Dec
+                            2025</span></h1>
+                    <p class="text-orange-100 text-sm">วางแผนลดหย่อนภาษี อัปเดต Thai ESG & Easy E-Receipt 2.0</p>
+                </div>
+            </div>
+            <button onclick="resetData()" class="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
+                title="รีเซ็ตค่า">
+                <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+
+        <!-- Left Column: Inputs -->
+        <div class="lg:col-span-7 space-y-4">
+
+            <!-- Section 1: Income -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <button onclick="toggleSection('income')"
+                    class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors border-b border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                            <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold text-gray-700">1. รายได้ (Income)</span>
+                    </div>
+                    <i id="icon-income" data-lucide="chevron-up" class="w-5 h-5 text-gray-400 transition-transform"></i>
+                </button>
+                <div id="section-income" class="p-5 fade-in">
+                    <div class="space-y-4">
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">เงินเดือน (ทั้งปี)</label>
+                                <span class="text-xs text-gray-400">รวมรายได้ทั้งปี 2568</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="salary" oninput="updateData('salary', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">โบนัส (ทั้งปี)</label>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="bonus" oninput="updateData('bonus', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">รายได้อื่นๆ (40(1), 40(2))</label>
+                                <span class="text-xs text-gray-400">เช่น ค่านายหน้า, ฟรีแลนซ์</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="otherIncome" oninput="updateData('otherIncome', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-dashed border-gray-200 pt-4">
+                            <div class="input-group">
+                                <div class="flex justify-between mb-1">
+                                    <label class="text-sm font-medium text-gray-600">ภาษีหัก ณ ที่จ่าย
+                                        (สะสมทั้งปี)</label>
+                                    <span class="text-xs text-gray-400">ตามทวิ 50</span>
+                                </div>
+                                <div class="relative">
+                                    <input type="number" id="withholdingTax"
+                                        oninput="updateData('withholdingTax', this.value)" placeholder="0"
+                                        class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                    <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Family -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <button onclick="toggleSection('family')"
+                    class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors border-b border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                            <i data-lucide="heart" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold text-gray-700">2. ครอบครัว (Family)</span>
+                    </div>
+                    <i id="icon-family" data-lucide="chevron-down"
+                        class="w-5 h-5 text-gray-400 transition-transform"></i>
+                </button>
+                <div id="section-family" class="p-5 fade-in hidden">
+                    <div class="space-y-4">
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2 cursor-pointer select-none">
+                                <input type="checkbox" id="spouse" onchange="updateData('spouse', this.checked ? 1 : 0)"
+                                    class="w-5 h-5 text-orange-600 rounded focus:ring-orange-500 accent-orange-600">
+                                <span class="text-gray-700 text-sm font-medium">คู่สมรส (ไม่มีเงินได้) - 60,000</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">จำนวนบุตร (คน)</label>
+                                <span class="text-xs text-gray-400">30,000/คน (คนที่ 2 ปี 61+ ได้ 6 หมื่น)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="children" oninput="updateData('children', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">คน</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">จำนวนบิดามารดา (คน)</label>
+                                <span class="text-xs text-gray-400">30,000/คน (อายุ 60+)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="parents" oninput="updateData('parents', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">คน</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">อุปการะคนพิการ (คน)</label>
+                                <span class="text-xs text-gray-400">60,000/คน</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="disabledCare" oninput="updateData('disabledCare', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">คน</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Insurance & Funds -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <button onclick="toggleSection('insurance')"
+                    class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors border-b border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                            <i data-lucide="shield" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold text-gray-700">3. ประกัน & กองทุน (Max Cap Auto)</span>
+                    </div>
+                    <i id="icon-insurance" data-lucide="chevron-down"
+                        class="w-5 h-5 text-gray-400 transition-transform"></i>
+                </button>
+                <div id="section-insurance" class="p-5 fade-in hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ประกันสังคม</label>
+                                <span class="text-xs text-gray-400">สูงสุด 9,000</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="socialSecurity" value="9000"
+                                    oninput="updateData('socialSecurity', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ประกันชีวิตทั่วไป</label>
+                                <span class="text-xs text-gray-400">สูงสุด 100,000</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="lifeInsurance"
+                                    oninput="updateData('lifeInsurance', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ประกันสุขภาพ</label>
+                                <span class="text-xs text-gray-400">สูงสุด 25,000</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="healthInsurance"
+                                    oninput="updateData('healthInsurance', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ประกันสุขภาพพ่อแม่</label>
+                                <span class="text-xs text-gray-400">สูงสุด 15,000</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="healthInsuranceParents"
+                                    oninput="updateData('healthInsuranceParents', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="col-span-full h-px bg-gray-200 my-2"></div>
+
+                        <!-- Retirement Group -->
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">PVD / กบข.</label>
+                                <span class="text-xs text-gray-400">ไม่เกิน 15% / 500k</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="providentFund"
+                                    oninput="updateData('providentFund', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+
+                        <!-- RMF Highlighted -->
+                        <div class="input-group bg-orange-50 p-2 rounded border border-orange-100 shadow-sm">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-bold text-orange-700 flex items-center">
+                                    กองทุน RMF <span class="badge-new bg-orange-500">Recommended</span>
+                                </label>
+                                <span class="text-xs text-orange-600 font-medium">ไม่เกิน 30% / 500k</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="rmf" oninput="updateData('rmf', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-white border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">กองทุน SSF</label>
+                                <span class="text-xs text-gray-400">ไม่เกิน 30% / 200k</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="ssf" oninput="updateData('ssf', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ประกันบำนาญ</label>
+                                <span class="text-xs text-gray-400">ไม่เกิน 15% / 200k</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="pensionInsurance"
+                                    oninput="updateData('pensionInsurance', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="col-span-full h-px bg-gray-200 my-2"></div>
+
+                        <!-- Thai ESG New -->
+                        <div class="input-group col-span-full bg-green-50 p-2 rounded border border-green-100">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-bold text-green-700 flex items-center">
+                                    Thai ESG (ปี 2568) <span class="badge-new">NEW Limit 300k</span>
+                                </label>
+                                <span class="text-xs text-green-600">ลดหย่อน 30% สูงสุด 300,000
+                                    (แยกจากกลุ่มเกษียณ)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="tesg" oninput="updateData('tesg', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-white border border-green-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Stimulus & Donation -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <button onclick="toggleSection('donation')"
+                    class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors border-b border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                            <i data-lucide="gift" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold text-gray-700">4. กระตุ้นเศรษฐกิจ & บริจาค</span>
+                    </div>
+                    <i id="icon-donation" data-lucide="chevron-down"
+                        class="w-5 h-5 text-gray-400 transition-transform"></i>
+                </button>
+                <div id="section-donation" class="p-5 fade-in hidden">
+                    <div class="space-y-4">
+
+                        <!-- Easy E-Receipt -->
+                        <div class="input-group bg-blue-50 p-2 rounded border border-blue-100">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-bold text-blue-700 flex items-center">
+                                    Easy E-Receipt 2.0 <span class="badge-new">16 ม.ค.-28 ก.พ. 68</span>
+                                </label>
+                                <span class="text-xs text-blue-600">สูงสุด 50,000 บาท (ต้องมี e-Tax Invoice)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="easyEReceipt" oninput="updateData('easyEReceipt', this.value)"
+                                    placeholder="0"
+                                    class="w-full p-3 pr-10 bg-white border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+
+                        <!-- Tourism -->
+                        <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
+                            <div class="text-sm font-bold text-yellow-800 mb-2 flex items-center">
+                                เที่ยวดีมีคืน 2568 <span class="badge-new bg-yellow-500 text-white ml-2">ถึง 15 ธ.ค.
+                                    68</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="input-group mb-0">
+                                    <label class="text-xs text-gray-600 mb-1 block">เที่ยวเมืองหลัก (จ่ายจริง)</label>
+                                    <input type="number" id="tourismMain"
+                                        oninput="updateData('tourismMain', this.value)" placeholder="0"
+                                        class="w-full p-2 text-sm bg-white border border-yellow-200 rounded">
+                                </div>
+                                <div class="input-group mb-0">
+                                    <label class="text-xs text-gray-600 mb-1 block">เที่ยวเมืองรอง (จ่ายจริง x
+                                        1.5)</label>
+                                    <input type="number" id="tourismSecondary"
+                                        oninput="updateData('tourismSecondary', this.value)" placeholder="0"
+                                        class="w-full p-2 text-sm bg-white border border-yellow-200 rounded">
+                                </div>
+                            </div>
+                            <div class="text-xs text-yellow-700 mt-2 text-right">
+                                *ระบบจะคำนวณโควต้าให้อัตโนมัติ (รวมกันไม่เกิน 30,000)
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">ดอกเบี้ยบ้าน</label>
+                                <span class="text-xs text-gray-400">สูงสุด 100,000</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="interestHomeLoan"
+                                    oninput="updateData('interestHomeLoan', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+
+                        <div class="col-span-full h-px bg-gray-200 my-2"></div>
+
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">บริจาคการศึกษา/กีฬา (2 เท่า)</label>
+                                <span class="text-xs text-gray-400">ลดหย่อนได้ 2 เท่า สูงสุด 10% ของสุทธิ</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="donationEducation"
+                                    oninput="updateData('donationEducation', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-medium text-gray-600">บริจาคทั่วไป / พรรคการเมือง</label>
+                                <span class="text-xs text-gray-400">สูงสุด 10% / พรรคการเมือง 10k</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="donationGeneral"
+                                    oninput="updateData('donationGeneral', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Results -->
+        <div class="lg:col-span-5">
+            <div class="sticky top-24 space-y-6">
+
+                <!-- Main Result Card -->
+                <div
+                    class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl shadow-lg border-none overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-4 text-gray-300">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                            <span class="font-semibold uppercase tracking-wider text-sm">สรุปภาษี 2568</span>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="flex justify-between text-sm text-gray-400 mb-2">
+                                <span>ภาษีที่คำนวณได้</span>
+                                <span id="display-taxPayable">0</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-400 mb-4 pb-4 border-b border-gray-700">
+                                <span>หัก ณ ที่จ่ายแล้ว</span>
+                                <span id="display-withholding" class="text-orange-400">0</span>
+                            </div>
+
+                            <div>
+                                <p id="display-status-text" class="text-sm text-gray-300 mb-1">ชำระภาษีเพิ่ม (Net
+                                    Payable)</p>
+                                <div id="display-taxStatus"
+                                    class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                                    0 <span class="text-lg text-gray-400 font-normal">บาท</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pt-4 border-t border-gray-700 bg-black/20 -mx-6 -mb-6 p-6">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">รายได้รวมทั้งปี</span>
+                                <span id="display-totalIncome" class="font-medium">0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">หัก ค่าใช้จ่าย</span>
+                                <span id="display-expenses" class="text-orange-300 font-medium">-0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">หัก ค่าลดหย่อนรวม</span>
+                                <span id="display-deductions" class="text-orange-300 font-medium">-0</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-bold pt-2 border-t border-gray-700 mt-2">
+                                <span class="text-white">เงินได้สุทธิ (Net Taxable)</span>
+                                <span id="display-netTaxable" class="text-white">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakdown Card -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-5">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                        โครงสร้างภาษี
+                    </h3>
+                    <div class="space-y-1 bg-gray-50 rounded-lg p-2">
+                        <div
+                            class="flex justify-between text-xs font-semibold text-gray-500 px-3 pb-2 border-b border-gray-200 mb-2">
+                            <div class="w-1/3">ช่วงเงินได้สุทธิ</div>
+                            <div class="w-1/6 text-center">อัตรา</div>
+                            <div class="w-1/4 text-right">เงินได้</div>
+                            <div class="w-1/4 text-right">ภาษี</div>
+                        </div>
+                        <div id="bracket-container" class="space-y-1">
+                            <!-- Brackets injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips Card -->
+                <div class="bg-orange-50 border border-orange-100 rounded-xl shadow-sm p-5">
+                    <div class="flex gap-3">
+                        <div class="bg-orange-200 text-orange-700 p-2 rounded-full h-fit">
+                            <i data-lucide="info" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-orange-800 text-sm">คำแนะนำ (Thai ESG 2568)</h4>
+                            <p id="tax-tips" class="text-sm text-orange-700 mt-1">
+                                กรุณากรอกข้อมูลรายได้เพื่อรับคำแนะนำ
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let data = {
+            salary: 0,
+            bonus: 0,
+            otherIncome: 0,
+            withholdingTax: 0,
+            spouse: 0,
+            children: 0,
+            parents: 0,
+            disabledCare: 0,
+            socialSecurity: 9000,
+            lifeInsurance: 0,
+            healthInsurance: 0,
+            healthInsuranceParents: 0,
+            providentFund: 0,
+            ssf: 0,
+            rmf: 0,
+            tesg: 0,
+            pensionInsurance: 0,
+            easyEReceipt: 0,
+            interestHomeLoan: 0,
+            tourismMain: 0,
+            tourismSecondary: 0,
+            donationGeneral: 0,
+            donationEducation: 0
+        };
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // UI Helpers
+        function toggleSection(sectionId) {
+            const section = document.getElementById(`section-${sectionId}`);
+            const icon = document.getElementById(`icon-${sectionId}`);
+
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                icon.classList.remove('rotate-0');
+                icon.classList.add('rotate-180');
+                icon.setAttribute('data-lucide', 'chevron-up');
+            } else {
+                section.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                icon.classList.add('rotate-0');
+                icon.setAttribute('data-lucide', 'chevron-down');
+            }
+            lucide.createIcons();
+        }
+
+        function updateData(field, value) {
+            data[field] = parseFloat(value) || 0;
+            calculateTax();
+        }
+
+        function resetData() {
+            if (confirm('ต้องการล้างข้อมูลทั้งหมดใช่หรือไม่?')) {
+                location.reload();
+            }
+        }
+
+        function formatMoney(num) {
+            return num.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+        }
+
+        function calculateTax() {
+            // 1. รายได้
+            const totalIncome = data.salary + data.bonus + data.otherIncome;
+            const expenses = Math.min(totalIncome * 0.5, 100000);
+
+            // 2. ลดหย่อน
+            let deductions = 60000; // ส่วนตัว
+            deductions += (data.spouse ? 60000 : 0);
+            deductions += (data.children * 30000); // คำนวณเบื้องต้น 30,000 ต่อคน
+            deductions += (data.parents * 30000);
+            deductions += (data.disabledCare * 60000);
+
+            deductions += Math.min(data.socialSecurity, 9000);
+            const actualHealth = Math.min(data.healthInsurance, 25000);
+            const lifeAndHealth = Math.min(data.lifeInsurance + actualHealth, 100000);
+            deductions += lifeAndHealth;
+            deductions += Math.min(data.healthInsuranceParents, 15000);
+
+            // Retirement Group
+            const limitProvident = Math.min(data.providentFund, totalIncome * 0.15);
+            const limitSSF = Math.min(data.ssf, totalIncome * 0.30, 200000);
+            const limitRMF = Math.min(data.rmf, totalIncome * 0.30, 500000);
+            const limitPension = Math.min(data.pensionInsurance, totalIncome * 0.15, 200000);
+
+            // Retirement Cap 500,000
+            const retirementSum = limitProvident + limitSSF + limitRMF + limitPension;
+            const cappedRetirement = Math.min(retirementSum, 500000);
+            deductions += cappedRetirement;
+
+            // Thai ESG (NEW: 300k, Separate Limit)
+            const limitTESG = Math.min(data.tesg, totalIncome * 0.30, 300000);
+            deductions += limitTESG;
+
+            // Stimulus
+            deductions += Math.min(data.interestHomeLoan, 100000);
+            deductions += Math.min(data.easyEReceipt, 50000); // Easy E-Receipt 2.0
+
+            // Tourism (Teaw Dee Mee Kuen 2568)
+            // Rule: Main max 20k, Secondary 1.5x. Combined max 30k.
+            const tourMain = Math.min(data.tourismMain, 20000);
+            const tourSec = data.tourismSecondary * 1.5;
+            const totalTour = Math.min(tourMain + tourSec, 30000);
+            // Re-check logic: usually Main city spending is capped at 20k within the 30k total
+            // If Main=20k, Secondary=0 => 20k
+            // If Main=0, Secondary=20k => 30k
+            // If Main=20k, Secondary=10k => Main 20k + Secondary 15k = 35k -> Cap 30k.
+            deductions += totalTour;
+
+            // 3. ก่อนบริจาค
+            let netBeforeDonation = Math.max(0, totalIncome - expenses - deductions);
+
+            const limitDonationEdu = Math.min(data.donationEducation * 2, netBeforeDonation * 0.10);
+            netBeforeDonation -= limitDonationEdu;
+
+            // General Donation + Political Party (Political max 10k but counts as general donation cap logic usually separate or within 10%? 
+            // Usually Political is 10k max actually paid, deducted from income. General is 10% of net.
+            // Simplified here: Treat Political as General donation within 10% cap or just separate deduction?
+            // Actually Political party donation is deduct directly up to 10k. 
+            // Let's assume user puts Political in "Donation General" for simplicity or add back logic if complex.
+            // For this version: General Donation input covers general charity.
+            const limitDonationGen = Math.min(data.donationGeneral, netBeforeDonation * 0.10);
+
+            const totalDeductionsFinal = deductions + expenses + limitDonationEdu + limitDonationGen;
+            const netTaxable = Math.max(0, totalIncome - totalDeductionsFinal);
+
+            // 4. คำนวณภาษี
+            let tax = 0;
+            let brackets = [];
+            let remainingIncome = netTaxable;
+
+            const taxSteps = [
+                { range: 150000, rate: 0, label: '0 - 150,000' },
+                { range: 150000, rate: 0.05, label: '150,001 - 300,000' },
+                { range: 200000, rate: 0.10, label: '300,001 - 500,000' },
+                { range: 250000, rate: 0.15, label: '500,001 - 750,000' },
+                { range: 250000, rate: 0.20, label: '750,001 - 1,000,000' },
+                { range: 1000000, rate: 0.25, label: '1,000,001 - 2,000,000' },
+                { range: 3000000, rate: 0.30, label: '2,000,001 - 5,000,000' },
+                { range: Infinity, rate: 0.35, label: '5,000,001 ขึ้นไป' },
+            ];
+
+            taxSteps.forEach(step => {
+                let taxableInTier = 0;
+                if (remainingIncome > 0) {
+                    taxableInTier = Math.min(remainingIncome, step.range);
+                    const taxInTier = taxableInTier * step.rate;
+                    tax += taxInTier;
+                    brackets.push({ label: step.label, rate: step.rate * 100, amount: taxableInTier, tax: taxInTier });
+                    remainingIncome -= taxableInTier;
+                } else {
+                    brackets.push({ label: step.label, rate: step.rate * 100, amount: 0, tax: 0 });
+                }
+            });
+
+            const taxStatus = tax - data.withholdingTax;
+
+            // Update UI
+            document.getElementById('display-totalIncome').innerText = formatMoney(totalIncome);
+            document.getElementById('display-expenses').innerText = '-' + formatMoney(expenses);
+            document.getElementById('display-deductions').innerText = '-' + formatMoney(totalDeductionsFinal - expenses);
+            document.getElementById('display-netTaxable').innerText = formatMoney(netTaxable);
+            document.getElementById('display-taxPayable').innerText = formatMoney(tax);
+            document.getElementById('display-withholding').innerText = '-' + formatMoney(data.withholdingTax);
+
+            // Status Color & Text
+            const statusEl = document.getElementById('display-taxStatus');
+            const statusTextEl = document.getElementById('display-status-text');
+
+            if (taxStatus >= 0) {
+                statusTextEl.innerText = 'ชำระภาษีเพิ่ม (Net Payable)';
+                statusEl.innerHTML = `${formatMoney(taxStatus)} <span class="text-lg text-gray-400 font-normal">บาท</span>`;
+                statusEl.className = "text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500";
+            } else {
+                statusTextEl.innerText = 'ขอคืนภาษีได้ (Refund)';
+                statusEl.innerHTML = `${formatMoney(Math.abs(taxStatus))} <span class="text-lg text-gray-400 font-normal">บาท</span>`;
+                statusEl.className = "text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500";
+            }
+
+            // Render Brackets
+            const bracketContainer = document.getElementById('bracket-container');
+            bracketContainer.innerHTML = '';
+            brackets.forEach(b => {
+                const isActive = b.tax > 0;
+                const row = document.createElement('div');
+                row.className = `flex justify-between text-sm py-2 px-3 rounded ${isActive ? 'bg-orange-50 text-orange-700 font-medium' : 'text-gray-500'}`;
+                row.innerHTML = `
+                    <div class="w-1/3">${b.label}</div>
+                    <div class="w-1/6 text-center">${b.rate}%</div>
+                    <div class="w-1/4 text-right">${formatMoney(b.amount)}</div>
+                    <div class="w-1/4 text-right">${formatMoney(b.tax)}</div>
+                `;
+                bracketContainer.appendChild(row);
+            });
+
+            // Tips
+            const maxRate = brackets.reverse().find(b => b.amount > 0 && b.rate > 0)?.rate || 0;
+            const savingPer10k = (10000 * maxRate / 100);
+
+            if (netTaxable > 0 && maxRate > 0) {
+                document.getElementById('tax-tips').innerHTML = `
+                    อัตราภาษีสูงสุดของคุณอยู่ที่ <strong>${maxRate}%</strong><br>
+                    หากซื้อ <strong>Thai ESG</strong> เพิ่ม 10,000 บาท ประหยัดภาษีได้ ${formatMoney(savingPer10k)} บาท<br>
+                    <span class="text-xs text-orange-500">(Thai ESG ปี 68 วงเงินใหม่ 300,000 บาท ถือครอง 5 ปี)</span>
+                `;
+            } else {
+                document.getElementById('tax-tips').innerText = "คุณยังไม่ต้องเสียภาษี หรือยังไม่ได้ระบุรายได้";
+            }
+        }
+
+        // Initial Calc
+        calculateTax();
+    </script>
+</body>
+
+</html>
