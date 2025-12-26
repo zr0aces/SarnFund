@@ -11,6 +11,7 @@
 
 - **📈 Real-time Fund Data** - Automated daily scraping from SET Trade API
 - **🎯 Multiple Fund Types** - RMF, ThaiESG, LTF, and SSF support
+- **🧮 Thai Tax Planner 2568** - Interactive tax saving calculator
 - **📊 Interactive Charts** - Performance visualization with Recharts
 - **🏢 Multi-AMC Tracking** - Coverage of 18+ Asset Management Companies
 - **⚡ Smart Caching** - 24-hour dual-layer caching (backend + frontend)
@@ -65,6 +66,7 @@ docker-compose up -d
 ### Option 2: Local Development
 
 **Backend:**
+
 ```bash
 cd backend
 npm install
@@ -73,6 +75,7 @@ npm start         # Start API server on port 3001
 ```
 
 **Frontend:**
+
 ```bash
 npm install
 npm run dev       # Start Vite dev server on port 5173
@@ -81,12 +84,14 @@ npm run dev       # Start Vite dev server on port 5173
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - **Runtime:** Node.js 18+ (Alpine)
 - **Framework:** Express.js 4.x
 - **Scheduler:** node-cron 3.x
 - **Data Source:** SET Trade API
 
 ### Frontend
+
 - **Framework:** React 18.x
 - **Build Tool:** Vite 5.x
 - **Styling:** Tailwind CSS 3.x
@@ -95,6 +100,7 @@ npm run dev       # Start Vite dev server on port 5173
 - **Icons:** Lucide React
 
 ### Infrastructure
+
 - **Containers:** Docker & Docker Compose
 - **Web Server:** Nginx (frontend)
 - **Caching:** JSON files + localStorage
