@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, ArrowLeft } from 'lucide-react';
+import { RefreshCw, ArrowLeft, Calculator } from 'lucide-react';
 import { useFundData } from '../hooks/useFundData';
 import KPICards from './KPICards';
 import FundTable from './FundTable';
@@ -83,9 +83,10 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                         </Link>
                     </div>
 
-                    <div className="hidden md:block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        ZeroTrust Investment Tools
-                    </div>
+                    <a href="/ThaiTax2568.html" target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider hover:text-orange-600 transition-colors">
+                        <Calculator className="w-4 h-4" />
+                        Thai Tax 2568
+                    </a>
                 </div>
             </nav>
 
