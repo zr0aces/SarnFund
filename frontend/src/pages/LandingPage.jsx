@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3 } from 'lucide-react';
+import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3, Calculator } from 'lucide-react';
 
 const LandingPage = () => {
     const [stats, setStats] = useState({ rmf: 0, tesg: 0, ltf: 0, ssf: 0 });
@@ -129,6 +129,28 @@ const LandingPage = () => {
                             </div>
                         </div>
                     </Link>
+
+                    {/* Thai Tax 2568 Card */}
+                    <a href="/ThaiTax2568.html" target="_blank" rel="noopener noreferrer" className="group bg-white rounded-2xl p-8 shadow-xl border border-slate-100 hover:border-red-200 hover:shadow-2xl transition-all relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                            <Calculator size={140} className="text-red-600" />
+                        </div>
+                        <div className="relative">
+                            <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-red-600 mb-6 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                                <Calculator size={28} />
+                            </div>
+                            <h2 className="text-3xl font-bold mb-3 text-slate-900">Thai Tax 2568</h2>
+                            <p className="text-slate-500 mb-6 text-base">Wht Tax & Tax Saving Planner 2568.</p>
+
+                            <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
+                                <span className="text-slate-400">Status</span>
+                                <span className="font-bold text-slate-800">Active</span>
+                            </div>
+                            <div className="flex items-center text-red-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
+                                Open Calculator <ArrowRight size={18} className="ml-1" />
+                            </div>
+                        </div>
+                    </a>
 
                 </div>
             </section>
