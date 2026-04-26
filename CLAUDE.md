@@ -1,88 +1,186 @@
-  # 🧠 CLAUDE.md - Project Development Workflow & Architecture Guide
+# SarnFund — Developer Guide
 
-  This document serves as the primary developer resource for understanding the overarching architecture, common development workflows, and best practices
-  across the connected services.
+SarnFund is a mutual fund analytics dashboard for Thai tax-saving investments (RMF, SSF, TESG, LTF). It fetches data from the **SEC Thailand Open Data API v2** (`api.sec.or.th`) using subscription-key authentication.
 
-  ---
+---
 
-  ## 🧭 Project Overview & Service Map
+## Project Architecture
 
-  The system is composed of several distinct, yet interconnected services, each handling specialized domains.
+### Service Map
 
-  | Service | Primary Stack/Focus | Key Responsibilities | Primary Interaction Points |
-  | :--- | :--- | :--- | :--- |
-  | **HausClient/Web** | React, TypeScript | Frontend UI/UX layer. Consumes APIs via client SDK/REST. | All backend services (API Gateway). |
-  | **API Gateway** | (Implied/REST) | Central routing, rate limiting, authentication enforcement. | Houses endpoints for Auth, Data, and Business Logic. |
-  | **Auth Service** | (Implied Backend) | User registration, login, token issuance (JWT). | Required by all services before data access. |
-  | **Core Business Logic** | PHP/Laravel/Symfony | Contains core transactional logic for business domains. | Interacts heavily with dedicated data services.
-   |
-  | **HausDataService** | (Implied Backend) | Primary API layer for reading/writing structured data. | Called by the Business Logic layer. |
-  | **S3 Storage/Media** | AWS S3 | Centralized storage for non-structured assets (images, documents). | Accessed via SDK/Signed URLs. |
+| Service | Image | Role | Port |
+| :--- | :--- | :--- | :--- |
+| **backend** | built from `./backend` | Express API, SEC connector, cron scraper | `3001` (internal) |
+| **frontend** | built from `./frontend` | One-shot React/Vite builder — exits after `dist/` is copied to shared volume | N/A |
+| **nginx** | `nginx:1.27-alpine` (official) | Unified gateway: serves static files + proxies `/api/` to backend | `8091` (public) |
 
-  ---
+### Nginx Routing
 
-  ## 🚀 Development Workflows
+- `GET /` and all non-API paths → serves React static files from `frontend_dist` Docker volume
+- `GET /POST /api/*` → proxied to `backend:3001`
+- Config file: `nginx/default.conf` (volume-mounted; edit without rebuild)
 
-  ### 1. Standard Feature Implementation (New Feature)
+### Docker startup order
 
-  1.  **Requirement Definition:** Update Jira ticket/PR description detailing required inputs, desired outputs, and affected services.
-  2.  **API Contract First:** If the feature requires a new data endpoint, **update the API Gateway/Data Service contract first**. Define the required
-  payload and expected response structure (use OpenAPI/Swagger definitions).
-  3.  **Backend Implementation:** Implement the core logic in the relevant service (e.g., Business Logic). Focus on business validation and data integrity.
-  4.  **Data Layer Interaction:** Write/modify data access layer calls to use the `HausDataService` or relevant database ORM.
-  5.  **Frontend Integration:** Update the `HausClient/Web` component to consume the new endpoint, ensuring proper state management and error handling
-  (displaying API/Business errors gracefully).
-  6.  **Testing:** Write comprehensive unit tests (backend) and integration/e2e tests (frontend).
-  7.  **Deployment:** Follow the standard CI/CD pipeline flow.
+1. `frontend` service builds React and copies `dist/` to `frontend_dist` named volume, then exits with code 0
+2. `nginx` waits for `frontend` to complete (`condition: service_completed_successfully`)
+3. `backend` starts independently
 
-  ### 2. Data Model Changes (Schema Migration)
+---
 
-  1.  **Impact Assessment:** Identify *every* service that reads or writes to the affected table/model.
-  2.  **Migration Script:** Create a version-controlled, idempotent migration script (e.g., using Laravel Migrator).
-  3.  **Backend Update:** Update the models/services in *all* affected services to handle the new/changed schema structure *before* the migration runs
-  (read/write compatibility).
-  4.  **Deployment:** Deploy services sequentially: (1) Update Code -> (2) Run Migrations -> (3) Final Health Check.
+## Development Workflows
 
-  ### 3. Third-Party Integration (e.g., Payment Gateway)
+### Local development (no Docker)
 
-  1.  **Sandbox Setup:** Configure and test connectivity against the provider's sandbox environment.
-  2.  **Abstraction Layer:** **Crucial:** Do not embed provider-specific logic directly into the core service. Create an **Adapter Pattern** wrapper layer
-  (e.g., `PaymentGatewayAdapter`).
-  3.  **Error Mapping:** Map all provider-specific error codes/messages to standardized, internal application error codes for the client.
-  4.  **Network:** Handle secure credential storage (Vault/Secrets Manager) for API keys.
+```bash
+# Backend
+cd backend
+cp .env.example .env   # fill in SEC_FACTSHEET_KEY, SEC_DAILYINFO_KEY, SCRAPE_TOKEN
+npm install
+npm run scrape         # first-time registry build (2–5 min) + NAV fetch
+npm start              # API on :3001
 
-  ---
+# Frontend (separate terminal)
+cd frontend
+npm install
+npm run dev            # Vite dev server on :5173 — proxies /api/* to :3001
+```
 
-  ## 🛠️ Technical Guidelines & Best Practices
+### Docker deployment
 
-  ### 💾 Data Handling
-  *   **Principle of Least Privilege:** Services should only have read/write access to the data they strictly require.
-  *   **API Gateway Role:** Treat the Gateway as the single source of truth for *endpoint availability*, but the Business Logic services remain the source of
-   truth for *business rules*.
-  *   **Caching:** Utilize Redis/Memcached for session data and frequently accessed, non-critical read-only reference data. Cache keys must be aggressively
-  invalidated upon data write.
+```bash
+# First deploy or after code changes
+docker compose up -d --build
 
-  ### 🔐 Security
-  *   **Authentication:** Always use JWTs passed via the `Authorization` header. Validate the token's signature, expiry, and issuer on *every* request
-  hitting the API Gateway.
-  *   **Input Validation:** All user inputs must be validated (type, length, format) *at the entry point* (Gateway or Service Layer) and **never trusted**.
-  *   **Secrets:** **Never** hardcode credentials. Use environment variables or dedicated secret management tools.
+# After nginx/config change only (no code rebuild)
+docker compose restart nginx
 
-  ### 🎨 Frontend Development (HausClient/Web)
-  *   **State Management:** Use a centralized store (e.g., Redux/Zustand) for global state. Local component state should be minimal.
-  *   **API Calls:** Wrap all network calls using a custom hook/service to handle loading, error, and success states consistently across the application.
-  *   **Code Structure:** Adhere strictly to component/hook separation. Keep presentation logic out of business logic components.
+# Upgrade nginx version: edit image tag in docker-compose.yml, then:
+docker compose pull nginx && docker compose up -d nginx
 
-  ---
+# Rebuild frontend only
+docker compose build frontend && docker compose up -d
 
-  ## ☁️ Infrastructure & Deployment (DevOps Focus)
+# Trigger initial data scrape
+curl -X POST "http://localhost:8091/api/scrape?force=true" \
+     -H "X-Scrape-Token: <SCRAPE_TOKEN>"
+```
 
-  *   **Containerization:** All services must be containerized using Docker.
-  *   **Orchestration:** Deployment is managed via Kubernetes (K8s). Understand namespace management for isolating environments (Dev -> Staging -> Prod).
-  *   **Logging:** All services must emit structured logs (JSON format) containing at least: `timestamp`, `service_name`, `level`, `trace_id`, and a detailed
-   `message`.
-  *   **Tracing:** Implement distributed tracing (e.g., using Jaeger/OpenTelemetry) by propagating a unique `trace_id` across all inter-service calls to
-  debug latency issues.
+---
 
-  ---
-  *Last Updated: [Current Date/Date of Completion]*
+## SEC API v2
+
+### Authentication
+
+Every request requires:
+```
+Header: Ocp-Apim-Subscription-Key: <key>
+```
+
+Each subscription product (Fund Factsheet API, Fund Daily Info API) issues a **Primary Key** and a **Secondary Key**. The connector automatically retries with the secondary key on 401 — no restart needed.
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SEC_FACTSHEET_KEY` | Yes | Fund Factsheet API primary key |
+| `SEC_FACTSHEET_KEY_2` | Recommended | Fund Factsheet API secondary key (401 failover) |
+| `SEC_DAILYINFO_KEY` | Yes | Fund Daily Info API primary key |
+| `SEC_DAILYINFO_KEY_2` | Recommended | Fund Daily Info API secondary key (401 failover) |
+| `SCRAPE_TOKEN` | Recommended | Protects `POST /api/scrape` |
+| `PORT` | No | Default `3001` |
+| `CORS_ORIGIN` | No | Restrict CORS in production |
+
+Register and manage keys at [secopendata.sec.or.th/sec-open-apis](https://secopendata.sec.or.th/sec-open-apis).
+Old portal `api-portal.sec.or.th` is discontinued **June 30, 2026**.
+
+### API v2 Behaviour
+
+- Empty fields are returned as `"-"` (dash string), not JSON `null`
+- Use `numVal(v)` from `sec-api-connector.js` to parse any numeric field safely — handles `null`, `"-"`, `""`, and `NaN`
+- HTTP `204 No Content` = no data for that date (weekend/holiday); not an error
+- Rate limit: 3,000 calls / 300 s per key; connector enforces 120 ms between calls
+
+---
+
+## Data Flow
+
+### Phase 1 — Fund registry (7-day TTL)
+
+```
+getAmcList()  →  filter to 18 AMCs in AMC_MAP
+    └─ getFundsByAmc()  [batched ×5]  →  filter fund_status === 'RG'
+        └─ getFundPolicy()  [batched ×5]
+            └─ matchesFundType()  →  RMF | SSF | TESG | LTF
+                └─ save fund-registry.json  (proj_id, code, name, amc, class, type, riskLevel)
+```
+
+### Phase 2 — Daily NAV fetch (24-hour TTL)
+
+```
+loadRegistry()
+    └─ getLatestNav()  [batched ×5]  →  tries today … up to 5 days back
+        └─ getFundPerformance()  [non-fatal]
+            └─ assemble fund object
+                └─ write rmf.json, tesg.json, ltf.json, ssf.json, all.json
+```
+
+### Fund object fields
+
+| Field | Source | Notes |
+|-------|--------|-------|
+| `code` | `proj_abbr_name` | Fund ticker |
+| `class` | `class_abbr_name` | Unit class: A/D/I (API v2) |
+| `nav` | `last_val` | NAV per unit (THB) |
+| `navDate` | `nav_date` | Actual SEC market date |
+| `navChange` | `change_val` | Day-over-day THB change (API v2) |
+| `navChangePercent` | `change_percent` | Day-over-day % change (API v2) |
+| `netAsset` | `net_asset` | Total fund AUM in THB (API v2) |
+| `sellPrice` | `amc_info.sell_price` | AMC offer price (API v2) |
+| `buyPrice` | `amc_info.buy_price` | AMC redemption price (API v2) |
+| `ytd`…`return5y` | `performance` endpoint | % returns; may be `"-"` if removed |
+| `risk` | `risk_spectrum_id` | 1–8 scale |
+
+---
+
+## Key Source Files
+
+| File | Purpose |
+|------|---------|
+| `backend/sec-api-connector.js` | All SEC API calls: `_get`, `_post`, rate limiter, `numVal`, `matchesFundType` |
+| `backend/scraper.js` | Two-phase scrape logic; fund registry; NAV + performance fetch |
+| `backend/server.js` | Express routes, cron (01:00 AM daily), inline `.env` loader |
+| `backend/.env.example` | Template for all required and optional env vars |
+| `nginx/default.conf` | Nginx routing: static files + `/api/` proxy + gzip + asset caching |
+| `docker-compose.yml` | Three-service orchestration with named volume `frontend_dist` |
+| `frontend/src/hooks/useFundData.js` | Dual-layer cache (localStorage + server-timestamp guard) |
+| `frontend/src/components/DashboardLayout.jsx` | NAV date badge, scrape time badge, Update Data button |
+
+---
+
+## Internal API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/funds/rmf` | — | RMF fund data |
+| GET | `/api/funds/tesg` | — | ThaiESG fund data |
+| GET | `/api/funds/ltf` | — | LTF fund data |
+| GET | `/api/funds/ssf` | — | SSF fund data |
+| GET | `/api/funds/all` | — | All four types combined |
+| GET | `/api/health` | — | Keys, registry, cache status |
+| GET | `/api/stats` | — | Fund counts per type |
+| POST | `/api/scrape` | `X-Scrape-Token` | Manual scrape; `?force=true` bypasses cache |
+| DELETE | `/api/registry` | — | Clear 7-day registry; forces rebuild on next scrape |
+
+---
+
+## Frontend
+
+- **State**: local component state only; no global store
+- **Cache**: `useFundData.js` reads localStorage first, then silently checks backend; only updates if server timestamp is newer
+- **Cache key**: `fund_cache_v4_{fundType}` — bump version in hook when fund object schema changes
+- **Design**: Tailwind CSS + Lucide icons + Framer Motion
+- **Charts**: Recharts
+- **API proxy** (dev): Vite proxies `/api/*` to `http://localhost:3001` via `vite.config.js`
+
+*Last Updated: April 26, 2026*

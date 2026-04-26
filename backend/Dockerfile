@@ -1,5 +1,6 @@
 # Backend Dockerfile
-FROM node:18-alpine
+FROM node:22-alpine
+
 
 # Install curl for healthcheck
 RUN apk add --no-cache curl

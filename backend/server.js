@@ -328,8 +328,10 @@ app.get('/api/health', async (req, res) => {
     res.json({
       status: 'ok',
       secApi: {
-        factsheetKey: !!process.env.SEC_FACTSHEET_KEY,
-        dailyInfoKey: !!process.env.SEC_DAILYINFO_KEY,
+        factsheetKey:  !!process.env.SEC_FACTSHEET_KEY,
+        factsheetKey2: !!process.env.SEC_FACTSHEET_KEY_2,
+        dailyInfoKey:  !!process.env.SEC_DAILYINFO_KEY,
+        dailyInfoKey2: !!process.env.SEC_DAILYINFO_KEY_2,
       },
       registry,
       cache: {
@@ -383,10 +385,15 @@ cron.schedule('0 1 * * *', async () => {
 
 // Start server
 app.listen(PORT, () => {
-  const hasKeys  = process.env.SEC_FACTSHEET_KEY && process.env.SEC_DAILYINFO_KEY;
+  const hasFs    = !!process.env.SEC_FACTSHEET_KEY;
+  const hasFs2   = !!process.env.SEC_FACTSHEET_KEY_2;
+  const hasDi    = !!process.env.SEC_DAILYINFO_KEY;
+  const hasDi2   = !!process.env.SEC_DAILYINFO_KEY_2;
   const hasToken = !!process.env.SCRAPE_TOKEN;
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`SEC API keys:  ${hasKeys  ? 'configured ✓' : 'MISSING – set SEC_FACTSHEET_KEY and SEC_DAILYINFO_KEY in .env'}`);
+  console.log(`SEC Factsheet API: primary ${hasFs ? '✓' : '✗ MISSING'}  secondary ${hasFs2 ? '✓' : '–'}`);
+  console.log(`SEC Daily Info API: primary ${hasDi ? '✓' : '✗ MISSING'}  secondary ${hasDi2 ? '✓' : '–'}`);
+  if (!hasFs || !hasDi) console.log('  → set SEC_FACTSHEET_KEY / SEC_DAILYINFO_KEY in .env');
   console.log(`Scrape token:  ${hasToken ? 'configured ✓' : 'not set – /api/scrape is unprotected (set SCRAPE_TOKEN in .env)'}`);
   console.log(`\nAPI endpoints:`);
   console.log(`  GET    /api/funds/rmf   - RMF fund data`);

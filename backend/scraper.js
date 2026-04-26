@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import {
   SecApiClient,
   matchesFundType,
+  numVal,
   runBatched,
 } from './sec-api-connector.js';
 
@@ -108,12 +109,17 @@ async function buildRegistry(client) {
     const fundType = FUND_TYPES.find((t) => matchesFundType(policy, t));
     if (!fundType) continue;
 
+    // class_abbr_name added to fund-by-AMC response in API v2 (e.g. "A", "D", "I")
+    const classAbbr = (fund.class_abbr_name && fund.class_abbr_name !== '-')
+      ? fund.class_abbr_name : null;
+
     registry.push({
       proj_id:   fund.proj_id,
       code:      fund.proj_abbr_name,
       name:      fund.proj_name_en || fund.proj_name_th || fund.proj_abbr_name,
       amc:       displayName,
       type:      fundType,
+      class:     classAbbr,
       riskLevel: policy?.risk_spectrum_id ?? 0,
     });
   }
@@ -126,7 +132,7 @@ async function buildRegistry(client) {
 // ── NAV + performance fetch ───────────────────────────────────────────────────
 
 async function fetchFundData(client, entry) {
-  const { proj_id, code, name, amc, type, riskLevel } = entry;
+  const { proj_id, code, name, amc, type, class: fundClass, riskLevel } = entry;
 
   const result = await client.getLatestNav(proj_id);
   if (!result) return null;
@@ -135,25 +141,32 @@ async function fetchFundData(client, entry) {
   let perf = null;
   try {
     perf = await client.getFundPerformance(proj_id);
-  } catch { /* non-fatal – returns 0s */ }
+  } catch { /* non-fatal – performance data returns as 0s */ }
 
+  // API v2 returns "-" for empty values — numVal() handles null, "-", and NaN.
   return {
-    id:        `fund_${Date.now()}_${code}`,
+    id:               `fund_${Date.now()}_${code}`,
     code,
     name,
     amc,
-    nav:       parseFloat(nav.last_val)  || 0,
-    navDate,                                    // actual NAV date (YYYY-MM-DD)
-    ytd:       parseFloat(perf?.ytd)     || 0,
-    return3m:  parseFloat(perf?.month_3) || 0,
-    return6m:  parseFloat(perf?.month_6) || 0,
-    return1y:  parseFloat(perf?.year_1)  || 0,
-    return2y:  0,
-    return3y:  parseFloat(perf?.year_3)  || 0,
-    return5y:  parseFloat(perf?.year_5)  || 0,
-    risk:      parseInt(riskLevel)        || 0,
+    class:            fundClass,                   // unit class e.g. "A", "D", "I" (v2)
+    nav:              numVal(nav.last_val),         // NAV per unit (THB)
+    navDate,                                        // actual NAV date from SEC (YYYY-MM-DD)
+    navChange:        numVal(nav.change_val),       // absolute day-over-day change (v2)
+    navChangePercent: numVal(nav.change_percent),   // percentage day-over-day change (v2)
+    netAsset:         numVal(nav.net_asset),        // total net assets in THB (v2)
+    sellPrice:        numVal(nav.amc_info?.sell_price),  // AMC offer price (v2)
+    buyPrice:         numVal(nav.amc_info?.buy_price),   // AMC redemption price (v2)
+    ytd:              numVal(perf?.ytd),
+    return3m:         numVal(perf?.month_3),
+    return6m:         numVal(perf?.month_6),
+    return1y:         numVal(perf?.year_1),
+    return2y:         0,                            // not available from SEC API
+    return3y:         numVal(perf?.year_3),
+    return5y:         numVal(perf?.year_5),
+    risk:             numVal(riskLevel),
     type,
-    isNew:     false,
+    isNew:            false,
     factsheetUrl: `https://www.sec.or.th/th/Pages/Fund/FundProjectDetail.aspx?PROJ_ID=${proj_id}`,
   };
 }
@@ -166,7 +179,11 @@ export async function scrapeData() {
 
   const client = new SecApiClient(
     process.env.SEC_FACTSHEET_KEY,
-    process.env.SEC_DAILYINFO_KEY
+    process.env.SEC_DAILYINFO_KEY,
+    {
+      factsheetKey2: process.env.SEC_FACTSHEET_KEY_2,
+      dailyInfoKey2: process.env.SEC_DAILYINFO_KEY_2,
+    }
   );
 
   // Step 1: get or build registry

@@ -126,15 +126,16 @@ The legacy `refetch_funds_v2.sh` script has been removed. All data fetching is n
 
 ### ✅ Environment Variables
 - No secrets hardcoded in source
-- Environment variables used for configuration
+- Four SEC API keys (primary + secondary per product) stored only in `backend/.env`
 - `.env` files excluded from version control
+- Secondary keys enable zero-downtime rotation without exposing secrets
 
 ### ✅ Docker Security
-- Alpine-based images (minimal attack surface)
-- Non-root user execution
-- Health checks implemented
-- Proper volume permissions
-- No exposed ports except necessary ones
+- Alpine-based images (minimal attack surface): `node:22-alpine`, `nginx:1.27-alpine`
+- Backend service has no externally exposed ports — all traffic routed through nginx
+- Health checks implemented on backend
+- Named volumes used for build artifact sharing (`frontend_dist`)
+- `frontend` builder service uses `restart: "no"` — exits cleanly after build
 
 ### ✅ Frontend Security
 - No inline scripts (CSP-friendly)
@@ -164,7 +165,7 @@ The legacy `refetch_funds_v2.sh` script has been removed. All data fetching is n
 
 ### 4. Weak Input Validation ✅ FIXED
 **Issue:** Insufficient data type validation  
-**Resolution:** Added parseFloat/parseInt, null checks, error boundaries  
+**Resolution:** Added `numVal()` helper that safely handles `null`, `"-"` (API v2 empty value), `""`, and `NaN` across all numeric fields  
 **Status:** ✅ Resolved
 
 ---
