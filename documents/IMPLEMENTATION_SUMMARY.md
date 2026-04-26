@@ -2,272 +2,206 @@
 
 ## Overview
 
-Successfully implemented a comprehensive web scraping solution for the SarnFund mutual fund dashboard, replacing the previous SEC API integration with automated data collection from settrade.com.
+SarnFund v2.0 replaces the previous Settrade.com scraper with the **official SEC Thailand Open Data API v2**. The old approach used `curl` with hardcoded session cookies — cookies expire silently and the Settrade API is undocumented and subject to change without notice. The new connector uses proper subscription-key authentication, returns richer metadata (including the actual NAV date per fund), and is far more reliable.
 
-## Key Accomplishments
+---
 
-### ✅ Backend Service (Node.js + Express)
+## Backend
 
-**Location**: `/backend/`
+### `sec-api-connector.js`
 
-**Features Implemented**:
-- Web scraper using Playwright to extract fund data from settrade.com
-- Intelligent AMC normalization to identify and filter funds
-- 24-hour caching mechanism with automatic daily refresh at 1 AM
-- RESTful API with endpoints for RMF, ThaiESG, and combined data
-- Health check endpoint for monitoring
-- Manual scrape triggering capability
+The SEC API client. Wraps two API products with separate rate limiters.
 
-**Key Files**:
-- `server.js` - Express API server with cron scheduling
-- `scraper.js` - Web scraping logic with Playwright
-- `test-normalization.js` - Test suite for AMC identification
-- `Dockerfile` - Docker containerization support
-- `package.json` - Dependencies and scripts
+**Authentication**
 
-### ✅ Frontend Updates (React + Vite)
-
-**Changes Made**:
-- Updated `useFundData.js` hook to fetch from new backend API
-- Removed SEC API key configuration and settings UI
-- Maintained dual-layer caching (backend + localStorage)
-- Updated AMC colors to reflect only selected AMCs
-- Changed "Bualuang" references to "BBL" for consistency
-
-**Key Files Modified**:
-- `src/hooks/useFundData.js` - API integration
-- `src/components/DashboardLayout.jsx` - Removed settings modal
-- `src/data/funds.js` - Updated AMC names and colors
-
-### ✅ AMC Filtering
-
-Implemented smart filtering to include only these 4 AMCs:
-
-1. **KKP** (เกียรตินาคินภัทร)
-2. **Krungsri** (กรุงศรี) 
-3. **BBL** (บัวหลวง - Bangkok Bank)
-4. **TISCO** (ทิสโก้)
-
-The `normalizeAMC()` function handles various fund code patterns:
-- KKP: Matches "KKP", "เกียรติ"
-- Krungsri: Matches "KF", "Krungsri", "กรุงศรี"
-- BBL: Matches "B-", "BERMF", "บัวหลวง", fund codes starting with "B"
-- TISCO: Matches "TISCO", "ทิสโก้"
-
-**Test Results**: 19/19 tests passed ✓
-
-### ✅ Data Sources
-
-**RMF Funds**:
 ```
-https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=RMF&percentageReturn=50&performancePeriod=1Y&dividendPolicy=N
+Header: Ocp-Apim-Subscription-Key: <key>
 ```
 
-**ThaiESG Funds**:
+Two separate keys are required:
+- `SEC_FACTSHEET_KEY` — for the Fund Factsheet API (static fund metadata)
+- `SEC_DAILYINFO_KEY` — for the Fund Daily Info API (daily NAV prices)
+
+**Rate limiting**
+
 ```
-https://www.settrade.com/th/mutualfund/screening?amcId=ALL&aimcType=ALL&specificationCode=TESG&percentageReturn=50&performancePeriod=1Y&dividendPolicy=N
+SEC limit:  3,000 calls / 300 seconds per key
+Enforced:   120 ms between calls (≈ 8 calls/sec)
+Retry:      exponential backoff on 421/429 — 1 s, 2 s, 3 s (max 3 attempts)
 ```
 
-### ✅ Caching Strategy
+The `RateLimiter` class uses a **promise-chain queue** so concurrent callers cannot bypass the delay by reading the same timestamp simultaneously.
 
-**Backend Cache** (24 hours):
-- Location: `backend/data/` directory
-- Files: `rmf.json`, `tesg.json`, `all.json`
-- Format: JSON with timestamp and data array
-- Validation: Checks age on every API request
+**Key endpoints used**
 
-**Frontend Cache** (24 hours):
-- Location: Browser localStorage
-- Keys: `fund_cache_rmf`, `fund_cache_thaiesg`
-- Fallback: Uses mock data if API unavailable
+| Endpoint | API product | Purpose |
+|----------|------------|---------|
+| `GET /FundFactsheet/fund/amc` | Factsheet | List all AMCs |
+| `GET /FundFactsheet/fund/amc/{unique_id}` | Factsheet | List funds for one AMC |
+| `GET /FundFactsheet/fund/{proj_id}/policy` | Factsheet | Fund type + risk level |
+| `GET /FundFactsheet/fund/{proj_id}/performance` | Factsheet | YTD, 3M, 6M, 1Y, 3Y, 5Y returns |
+| `GET /FundDailyInfo/{proj_id}/dailynav/{YYYY-MM-DD}` | Daily Info | NAV per unit for a date |
 
-### ✅ API Endpoints
+**Thai timezone**
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/funds/rmf` | GET | Get RMF fund data |
-| `/api/funds/tesg` | GET | Get ThaiESG fund data |
-| `/api/funds/all` | GET | Get all fund data |
-| `/api/scrape` | POST | Manually trigger scraping |
-| `/api/health` | GET | Health check with cache status |
+The NAV endpoint requires a Thai-market date. `thaiDateStr(daysAgo)` adds the UTC+7 offset before producing the date string, preventing the midnight off-by-one error that `toISOString()` would cause.
 
-### ✅ Docker Support
+**Concurrent batch helper**
 
-**Services**:
-1. **backend** - Scraper and API service (port 3001)
-2. **frontend** - React application (port 8082)
+`runBatched(tasks, concurrency=5)` runs async task functions in groups of 5. Failed tasks are warned and skipped; their absence does not abort the whole batch. This is used both in registry build (policy fetches) and in the daily NAV loop.
 
-**Features**:
-- Multi-stage builds for optimization
-- Health checks for monitoring
-- Volume mounting for persistent cache
-- Automatic networking between services
-- Alpine-based images for smaller size
+---
 
-### ✅ Documentation
+### `scraper.js`
 
-Created comprehensive documentation:
+Implements two-phase scraping.
 
-1. **README.md** - Project overview and quick start
-2. **SETUP_GUIDE.md** - Detailed setup and troubleshooting
-3. **backend/README.md** - Backend-specific documentation
-4. **.env.example** - Environment variable template
+#### Phase 1 — Fund registry (weekly, ~2–5 min first time)
 
-## Technical Details
+```
+getAmcList()
+    └─ filter to 18 target AMCs (AMC_MAP)
+        └─ getFundsByAmc() [batched ×5]
+            └─ filter fund_status === 'RG' (active)
+                └─ getFundPolicy() [batched ×5]
+                    └─ matchesFundType() → RMF | SSF | TESG | LTF
+                        └─ save: data/fund-registry.json (TTL 7 days)
+```
 
-### Dependencies Added
+`matchesFundType()` checks multiple possible field names (`typeCode`, `type_code`, `specification`, `specificationCode`, `fund_type_code`) because the API version may use different naming. TESG aliases: `ThaiESG`, `TESG`, `THAI_ESG`.
 
-**Backend**:
-- `express` - Web server framework
-- `cors` - CORS middleware
-- `playwright` - Web scraping with Chromium
-- `node-cron` - Scheduled task execution
+#### Phase 2 — Daily NAV fetch (daily, fast)
 
-### Data Structure
+```
+loadRegistry()  ← from fund-registry.json
+    └─ getLatestNav() [batched ×5]
+        └─ tries today, yesterday, … up to 5 days back (handles weekends/holidays)
+        └─ getFundPerformance() [non-fatal if missing]
+            └─ assemble fund object with navDate
+                └─ write rmf.json, tesg.json, ltf.json, ssf.json, all.json
+```
 
-Each fund object contains:
-```javascript
+File writes are parallelised with `Promise.all`.
+
+#### Fund object structure
+
+```js
 {
-  id: "unique_id",
-  code: "FUND-CODE",
-  name: "Fund Name",
-  amc: "AMC Name",        // Normalized to: KKP, Krungsri, BBL, or TISCO
-  nav: 10.50,
-  ytd: 5.2,
-  return1y: 8.5,
-  return2y: 12.3,
-  return3y: 15.7,
-  return5y: 20.1,
-  risk: 5,
-  type: "Fund Type",
-  isNew: false
+  id:          string,    // "fund_{timestamp}_{code}"
+  code:        string,    // SEC proj_abbr_name  e.g. "KPRMF"
+  name:        string,    // English name
+  amc:         string,    // display name from AMC_MAP e.g. "KKP"
+  nav:         number,    // last_val from dailynav
+  navDate:     string,    // "YYYY-MM-DD" — actual SEC NAV date
+  ytd:         number,    // % from performance endpoint
+  return3m:    number,
+  return6m:    number,
+  return1y:    number,
+  return2y:    0,         // not available from SEC API
+  return3y:    number,
+  return5y:    number,
+  risk:        number,    // risk_spectrum_id (1–8)
+  type:        string,    // "RMF" | "SSF" | "TESG" | "LTF"
+  isNew:       false,
+  factsheetUrl: string,   // https://www.sec.or.th/…?PROJ_ID=…
 }
 ```
 
-### Scraping Strategy
+---
 
-1. Launch headless Chromium browser
-2. Navigate to settrade.com screening page
-3. Wait for table/list to load (with timeout)
-4. Extract fund data using DOM queries
-5. Parse and normalize AMC names
-6. Filter to include only selected AMCs
-7. Save to JSON files with timestamp
-8. Serve via API with cache validation
+### `server.js`
 
-### Error Handling
+Express API server. Key changes from v1:
 
-- **Network failures**: Logs error, returns cached data if available
-- **Parsing errors**: Logs error, skips problematic entries
-- **Missing cache**: Returns 503 with helpful error message
-- **Expired cache**: Serves stale data, suggests manual scrape
+- **`.env` loading** — reads `backend/.env` at startup using Node's built-in `fs.readFileSync`; no `dotenv` dependency
+- **Scrape endpoint protection** — `POST /api/scrape` checks `X-Scrape-Token` header against `SCRAPE_TOKEN` env var; warns at startup if token is unset
+- **Logic order fix** — token check runs before cache check, so `?force=true` actually bypasses the cache
+- **`DELETE /api/registry`** — removes `fund-registry.json` so the next scrape rebuilds it
+- **Extended health check** — reports `secApi.factsheetKey`, `secApi.dailyInfoKey`, `registry.funds`, `registry.lastBuilt`, and cache validity for all four fund types
 
-## Performance Considerations
+---
 
-1. **Caching**: Dual-layer caching minimizes scraping frequency
-2. **Scheduled scraping**: Off-peak time (1 AM) reduces impact
-3. **Browser reuse**: Single browser instance for both pages
-4. **Selective loading**: Only selected AMCs reduce data size
-5. **Timeout handling**: Prevents hanging on slow responses
+## Frontend
 
-## Security Notes
+### `useFundData.js`
 
-- SEC API credentials removed from codebase
-- CORS enabled for specified origins
-- `/api/scrape` endpoint should be protected in production
-- Environment variables for sensitive configuration
-- No secrets committed to repository
+Custom React hook for data fetching and caching.
 
-## Future Enhancements (Optional)
+**Cache key**: `fund_cache_v4_{fundType}` (bumped from v3 to bust old entries)
 
-1. Add authentication for `/api/scrape` endpoint
-2. Implement rate limiting for API endpoints
-3. Add database support for historical data
-4. Create admin panel for scraper configuration
-5. Add email notifications for scraper failures
-6. Implement data validation and anomaly detection
-7. Add performance metrics and monitoring
+**Mount behaviour**:
+1. Read localStorage — if valid (< 24 h old), render immediately and silently fetch from backend
+2. Silent fetch only updates state if `server.timestamp > cached.timestamp` — prevents a slow background response from overwriting newer data already displayed
+3. If no valid cache and no mock data, shows loading state and fetches synchronously
 
-## Testing Performed
+**`refresh()`**:
+- Clears localStorage for the current fund type
+- Resets the in-flight timestamp guard
+- Calls `fetchDataFromAPI(silent=false)` — shows the loading spinner
 
-✅ AMC normalization logic (19/19 tests passed)
-✅ Frontend build (successful)
-✅ Backend dependency installation
-✅ Code compilation and linting
+**`lastUpdated`** is now stored as an ISO string from the server (`result.lastUpdated`) rather than a locale time string, so the component can format it however it needs.
 
-## Migration from SEC API
+---
 
-**Removed**:
-- SEC API key configuration
-- Settings modal in UI
-- `VITE_SEC_API_KEY` environment variable
-- API key localStorage management
+### `DashboardLayout.jsx`
 
-**Added**:
-- Backend scraper service
-- `VITE_API_URL` environment variable
-- Automated data collection
-- REST API integration
+- Computes `latestNavDate` from `Math.max` of all `fund.navDate` values in the current fund list
+- Displays **"NAV as of YYYY-MM-DD"** badge (green) and **"Fetched DD Mon YYYY, HH:MM"** (grey)
+- **Update Data** button calls `refresh()` from the hook — no `window.location.reload()`
 
-## Deployment Options
+### `FundTable.jsx`
 
-### Option 1: Local Development
-```bash
-# Backend
-cd backend && npm install && npx playwright install chromium && npm start
+- Factsheet link label: **"SEC"** (was "Settrade") — URL now points to `sec.or.th`
 
-# Frontend
-npm install && npm run dev
+---
+
+## Infrastructure
+
+### `docker-compose.yml`
+
+The project architecture has been consolidated into a two-service setup:
+- **`nginx` service**: Acts as the unified gateway. It builds the React frontend, serves static assets, and reverse proxies `/api` requests to the backend. It uses the root `nginx/default.conf` for configuration.
+- **`backend` service**: Runs the Express API and scraper. It is isolated from direct external access and communicates only with the Nginx service.
+
+Environment variables from `backend/.env` are injected into the backend container to provide API keys and secrets.
+
+
+### `backend/.env.example`
+
+Documents all required and optional environment variables:
+
+```
+SEC_FACTSHEET_KEY   required  — Fund Factsheet API subscription key
+SEC_DAILYINFO_KEY   required  — Fund Daily Info API subscription key
+SCRAPE_TOKEN        required  — protects POST /api/scrape
+PORT                optional  — default 3001
+CORS_ORIGIN         optional  — restrict CORS in production
 ```
 
-### Option 2: Docker
-```bash
-docker-compose up -d
-```
+---
 
-### Option 3: Production (PM2)
-```bash
-# Backend
-cd backend && pm2 start server.js --name sarnfund-backend
+## Removed
 
-# Frontend
-npm run build
-# Serve dist/ with nginx or static server
-```
+| Item | Reason |
+|------|--------|
+| `refetch_funds_v2.sh` | Replaced by `sec-api-connector.js`; used hardcoded Settrade cookies |
+| `rmf-fetched.json` etc. | Stale 0-byte intermediary files from the old shell script |
+| `getFundInfo()` method | Unused; fund name and risk come from registry |
+| `todayDateStr()` export | Superseded by `thaiDateStr()` which also applies UTC+7 offset |
 
-## Monitoring & Maintenance
+---
 
-**Health Check**:
-```bash
-curl http://localhost:3001/api/health
-```
+## Supported AMCs (18)
 
-**Manual Scrape**:
-```bash
-cd backend && npm run scrape
-# OR
-curl -X POST http://localhost:3001/api/scrape
-```
+`KKPAM`, `KSAM`, `BBLAM`, `TISCOASSET`, `SCBAM`, `KASSET`, `KTAM`, `ONEAM`, `UOBAM`,
+`PRINCIPAL`, `EASTSPRING`, `ASSETFUND`, `DAOL`, `KWI`, `LHFUND`, `MFC`, `TALIS`, `XSPRING`
 
-**View Logs**:
-```bash
-# Docker
-docker-compose logs -f
+---
 
-# PM2
-pm2 logs sarnfund-backend
-```
+## Future enhancements
 
-## Conclusion
-
-The implementation successfully achieves all requirements:
-- ✅ Web scraper for settrade.com data
-- ✅ Filter by selected AMCs (KKP, Krungsri, BBL, TISCO)
-- ✅ 24-hour caching implemented
-- ✅ SEC API completely removed
-- ✅ RMF and ThaiESG dashboards updated
-- ✅ Docker support added
-- ✅ Comprehensive documentation created
-- ✅ Tests passing
-
-The system is production-ready with proper error handling, caching, and documentation.
+1. **Historical NAV** — store daily NAV snapshots in a SQLite file for trend charts
+2. **Push notifications** — alert when a fund's 1Y return crosses a threshold
+3. **Admin panel** — UI to trigger scrape, reset registry, view logs
+4. **Dividend history** — fetch from `FundDailyInfo/{proj_id}/dividend`
+5. **Fund comparison** — side-by-side performance chart across fund types

@@ -1,371 +1,228 @@
-# Setup and Running Guide
+# Setup Guide
 
 ## Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
-- (Optional) Docker and Docker Compose
+- Node.js 18+
+- npm
+- Docker & Docker Compose (for containerised deployment)
+- SEC Open Data API subscription keys (see below)
 
-## Development Setup
+---
 
-### Option 1: Local Development (Recommended for Development)
+## 1. Get SEC API Keys
 
-#### Step 1: Install Backend Dependencies
+SarnFund uses the **official SEC Thailand Open Data API v2**. You need two subscription keys before the scraper can run.
+
+1. Go to [secopendata.sec.or.th/sec-open-apis](https://secopendata.sec.or.th/sec-open-apis)
+2. Click **Sign up** (top-right) and create an account
+3. Go to **Products** and subscribe to **Fund Factsheet API** — copy the subscription key
+4. Go to **Products** and subscribe to **Fund Daily Info API** — copy the subscription key
+5. Put both keys in `backend/.env` (see step 2 below)
+
+Rate limits: 3,000 calls per 300 seconds per key. The connector enforces 120 ms between calls.
+
+---
+
+## 2. Configure environment
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Edit `backend/.env`:
+
+```bash
+SEC_FACTSHEET_KEY=<your Fund Factsheet API key>
+SEC_DAILYINFO_KEY=<your Fund Daily Info API key>
+SCRAPE_TOKEN=<random secret to protect the /api/scrape endpoint>
+PORT=3001
+# CORS_ORIGIN=https://yourdomain.com   # uncomment in production
+```
+
+---
+
+## 3a. Docker deployment (recommended)
+
+```bash
+# From the SarnFund root directory
+docker compose up -d
+
+# Watch startup logs
+docker compose logs -f backend
+```
+
+The backend starts on port 3001 (internal). The application is available on **http://localhost:8091**, which is managed by the unified Nginx gateway.
+
+
+### First-time data fetch
+
+The cache is empty on first start. Trigger the initial scrape:
+
+```bash
+curl -X POST "http://localhost:3001/api/scrape?force=true" \
+     -H "X-Scrape-Token: <your SCRAPE_TOKEN>"
+```
+
+The **first run** builds the fund registry (classifies every active fund from 18 AMCs as RMF/SSF/TESG/LTF). This takes **2–5 minutes** depending on API response times. Subsequent daily runs are much faster because the registry is cached for 7 days.
+
+### Common Docker commands
+
+```bash
+docker compose up -d --build   # rebuild after code changes
+docker compose logs -f         # stream logs for all services
+docker compose logs -f backend # backend only
+docker compose down            # stop all containers
+docker compose restart backend # restart backend only
+```
+
+---
+
+## 3b. Local development
+
+### Backend
 
 ```bash
 cd backend
 npm install
+npm run scrape    # builds registry + fetches NAV data (first run: ~2–5 min)
+npm start         # API server on http://localhost:3001
 ```
 
-#### Step 2: Install Playwright Browsers
+For auto-reload during development:
 
 ```bash
-cd backend
-npx playwright install chromium
+npm run dev       # uses nodemon
 ```
 
-#### Step 3: Run Initial Scrape
+### Frontend
 
-Before starting the servers, you should run an initial scrape to populate the cache:
-
-```bash
-cd backend
-npm run scrape
-```
-
-This will:
-- Connect to settrade.com
-- Scrape RMF and ThaiESG fund data
-- Filter for KKP, Krungsri, BBL, and TISCO funds
-- Save data to `backend/data/` directory
-- Cache the data for 24 hours
-
-**Note**: The initial scrape may take 1-2 minutes depending on network speed and website response time.
-
-#### Step 4: Start Backend Server
+In a separate terminal from the project root:
 
 ```bash
-cd backend
-npm start
-```
-
-The backend will run on http://localhost:3001
-
-You can verify it's running by visiting: http://localhost:3001/api/health
-
-#### Step 5: Install Frontend Dependencies
-
-In a new terminal:
-
-```bash
-cd /path/to/SarnFund
+cd frontend
 npm install
+npm run dev       # Vite dev server on http://localhost:5173
 ```
 
-#### Step 6: Start Frontend Development Server
+The Vite dev server proxies `/api/*` to `http://localhost:3001` automatically (configured in `vite.config.js`).
+
+---
+
+## Data management
+
+### Cache locations
+
+| Cache | Location | TTL |
+|-------|----------|-----|
+| Fund registry (type classification) | `backend/data/fund-registry.json` | 7 days |
+| RMF NAV data | `backend/data/rmf.json` | 24 hours |
+| ThaiESG NAV data | `backend/data/tesg.json` | 24 hours |
+| LTF NAV data | `backend/data/ltf.json` | 24 hours |
+| SSF NAV data | `backend/data/ssf.json` | 24 hours |
+| Combined snapshot | `backend/data/all.json` | 24 hours |
+| Browser cache | `localStorage` (key `fund_cache_v4_<type>`) | 24 hours |
+
+### Manual operations
 
 ```bash
-npm run dev
+# Trigger a scrape (skip cache)
+curl -X POST "http://localhost:3001/api/scrape?force=true" \
+     -H "X-Scrape-Token: <SCRAPE_TOKEN>"
+
+# Reset fund registry (forces full re-classification next scrape)
+curl -X DELETE http://localhost:3001/api/registry \
+     -H "X-Scrape-Token: <SCRAPE_TOKEN>"
+
+# Run scraper directly (development)
+cd backend && npm run scrape
 ```
 
-The frontend will run on http://localhost:5173
+### Automatic scraping
 
-### Option 2: Docker Deployment (Recommended for Production)
+The backend cron job runs daily at **01:00 AM** (server local time) and refreshes the NAV cache. Registry is only rebuilt if older than 7 days.
 
-#### Build and Start All Services
+---
 
-```bash
-docker-compose up -d
-```
+## API reference
 
-This will:
-- Build both backend and frontend images
-- Start the backend on port 3001
-- Start the frontend on port 8082
-- Set up networking between services
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/funds/rmf` | — | RMF fund data |
+| GET | `/api/funds/tesg` | — | ThaiESG fund data |
+| GET | `/api/funds/ltf` | — | LTF fund data |
+| GET | `/api/funds/ssf` | — | SSF fund data |
+| GET | `/api/funds/all` | — | All four types |
+| GET | `/api/health` | — | Service status, key config, registry, cache ages |
+| GET | `/api/stats` | — | Fund counts per type |
+| POST | `/api/scrape` | `X-Scrape-Token` | Manual scrape; add `?force=true` to skip cache |
+| DELETE | `/api/registry` | — | Clear registry cache |
 
-Access the application at: http://localhost:8082
-
-#### Check Service Status
-
-```bash
-docker-compose ps
-docker-compose logs -f
-```
-
-#### Stop Services
-
-```bash
-docker-compose down
-```
-
-## Configuration
-
-### Frontend Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_API_URL=http://localhost:3001
-```
-
-For production with Docker, the docker-compose.yml handles this automatically.
-
-### Backend Environment Variables
-
-The backend accepts the following environment variables:
-
-- `PORT` - Server port (default: 3001)
-
-## Usage
-
-### Manual Data Refresh
-
-You can manually trigger a scrape in several ways:
-
-#### 1. Via Backend Script
-
-```bash
-cd backend
-npm run scrape
-```
-
-#### 2. Via API Endpoint
-
-```bash
-curl -X POST http://localhost:3001/api/scrape
-```
-
-#### 3. Via Frontend UI
-
-Click the "Update Data" button on any dashboard page.
-
-### Accessing Dashboards
-
-- **RMF Dashboard**: http://localhost:5173/rmf (dev) or http://localhost:8082/rmf (docker)
-- **ThaiESG Dashboard**: http://localhost:5173/thaiesg (dev) or http://localhost:8082/thaiesg (docker)
-
-## Data Management
-
-### Cache Location
-
-- **Frontend**: Browser localStorage
-- **Backend**: `backend/data/` directory as JSON files
-
-### Cache Duration
-
-Data is cached for 24 hours. After expiration:
-- Frontend will attempt to fetch from backend
-- Backend will serve existing data if available
-- Manual refresh can be triggered anytime
-
-### Automatic Scraping
-
-The backend automatically scrapes data daily at 1 AM. This is configured via cron in `backend/server.js`.
+---
 
 ## Troubleshooting
 
-### Backend Issues
+### `SEC API 401 – check subscription key`
 
-#### "Cannot find module" error
+Your `SEC_FACTSHEET_KEY` or `SEC_DAILYINFO_KEY` is missing or invalid.
+
+1. Re-check your keys in `backend/.env`
+2. Confirm the product subscription is **Active** in the SEC portal
+3. For Docker: confirm `backend/.env` exists and `docker-compose.yml` has `env_file: ./backend/.env`
+
+### No funds returned after scrape
+
+The registry may have been built before your `.env` was configured.
 
 ```bash
-cd backend
-npm install
+curl -X DELETE http://localhost:3001/api/registry
+curl -X POST "http://localhost:3001/api/scrape?force=true" \
+     -H "X-Scrape-Token: <token>"
 ```
 
-#### "Playwright browser not found" error
+### `Invalid or missing scrape token` on POST /api/scrape
 
-```bash
-cd backend
-npx playwright install chromium
-```
+Set `SCRAPE_TOKEN` in `backend/.env` and restart the server. Pass the same value as `X-Scrape-Token` header.
 
-#### Port 3001 already in use
+### Rate limit warnings in logs (`421` / `429`)
 
-Change the port:
+Normal under heavy concurrent load. The connector backs off automatically (1 s → 2 s → 3 s). If it persists, increase `REQUEST_DELAY_MS` in `sec-api-connector.js`.
+
+### Stale data in browser
+
+Click **Update Data** on the dashboard — this clears the localStorage cache and re-fetches from the backend. The page does not need to reload.
+
+### Port 3001 already in use
+
 ```bash
 PORT=3002 node server.js
 ```
 
-And update frontend `.env`:
-```env
-VITE_API_URL=http://localhost:3002
-```
+Update `VITE_API_URL` in `frontend/.env` if running locally.
 
-### Frontend Issues
-
-#### API connection errors
-
-1. Verify backend is running: `curl http://localhost:3001/api/health`
-2. Check VITE_API_URL in `.env`
-3. Check browser console for CORS errors
-
-#### No data displayed
-
-1. Check if backend has cached data: `ls -la backend/data/`
-2. Run manual scrape: `cd backend && npm run scrape`
-3. Check frontend localStorage in browser DevTools
-
-### Docker Issues
-
-#### Container fails to start
-
-Check logs:
-```bash
-docker-compose logs backend
-docker-compose logs frontend
-```
-
-#### "No space left on device"
-
-Clean up Docker:
-```bash
-docker system prune -a
-```
-
-## Testing
-
-### Test AMC Normalization
+### Docker container exits immediately
 
 ```bash
-cd backend
-node test-normalization.js
+docker compose logs backend
 ```
 
-### Test API Endpoints
+Likely cause: `backend/.env` missing or malformed. Confirm the file exists with valid keys.
 
-```bash
-# Health check
-curl http://localhost:3001/api/health
+---
 
-# Get RMF data
-curl http://localhost:3001/api/funds/rmf
+## Production checklist
 
-# Get ThaiESG data
-curl http://localhost:3001/api/funds/tesg
+- [ ] `SEC_FACTSHEET_KEY` and `SEC_DAILYINFO_KEY` set in `backend/.env`
+- [ ] `SCRAPE_TOKEN` set to a strong random value
+- [ ] `CORS_ORIGIN=https://yourdomain.com` set (restrict to your domain)
+- [ ] HTTPS enabled (required for HSTS header to be effective)
+- [ ] `backend/data/` volume persisted across container restarts
+- [ ] Monitoring on `/api/health` (alerts if `cache.rmf.valid` is false)
+- [ ] Log aggregation configured (`docker compose logs` or a log driver)
 
-# Get all data
-curl http://localhost:3001/api/funds/all
-```
+---
 
-## Development Tips
+## Nginx reverse proxy
 
-### Backend Development with Hot Reload
+The project is already configured with an internal Nginx gateway in `docker-compose.yml`. If you need to put another proxy in front of it (e.g., for SSL via Certbot or Cloudflare), point your external proxy to port `8091`.
 
-```bash
-cd backend
-npm install -g nodemon  # Install nodemon globally
-npm run dev             # Start with auto-reload
-```
-
-### Frontend Development
-
-The Vite dev server has built-in hot module replacement (HMR). Changes to React components will reflect immediately.
-
-### Debugging Scraper
-
-Add console.log statements in `backend/scraper.js` or run with Node inspector:
-
-```bash
-cd backend
-node --inspect scraper.js
-```
-
-Then open Chrome DevTools (chrome://inspect) to debug.
-
-## Production Deployment
-
-### Environment Setup
-
-1. Set proper CORS origins in `backend/server.js`
-2. Use environment variables for sensitive config
-3. Set up HTTPS with reverse proxy (nginx, Caddy)
-4. Configure firewall rules
-
-### Process Management
-
-Use PM2 for process management:
-
-```bash
-npm install -g pm2
-
-# Start backend
-cd backend
-pm2 start server.js --name sarnfund-backend
-
-# Start backend with ecosystem file
-pm2 start ecosystem.config.js
-
-# Monitor
-pm2 monit
-
-# Auto-start on boot
-pm2 startup
-pm2 save
-```
-
-### Nginx Configuration Example
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    # Frontend
-    location / {
-        proxy_pass http://localhost:8082;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Backend API
-    location /api {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-## Monitoring
-
-### Health Checks
-
-Backend provides a health endpoint:
-
-```bash
-curl http://localhost:3001/api/health
-```
-
-Response includes:
-- Service status
-- Cache validity
-- Last update times
-
-### Logs
-
-- **Backend logs**: Console output or redirect to file
-- **Frontend logs**: Browser console
-- **Docker logs**: `docker-compose logs -f`
-
-## Security Considerations
-
-1. **Rate Limiting**: Add rate limiting to `/api/scrape` endpoint
-2. **Authentication**: Protect sensitive endpoints
-3. **CORS**: Configure proper CORS origins for production
-4. **HTTPS**: Always use HTTPS in production
-5. **Input Validation**: Validate all API inputs
-6. **Environment Variables**: Never commit sensitive data
-
-## Support
-
-For issues or questions:
-1. Check logs for error messages
-2. Review this guide's troubleshooting section
-3. Check GitHub issues
-4. Open a new issue with detailed information

@@ -8,7 +8,7 @@ import FundChart from './FundChart';
 
 const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockData }) => {
     // Shared State
-    const { funds, loading, error, lastUpdated, dataSource } = useFundData(fundType, initialMockData);
+    const { funds, loading, error, lastUpdated, dataSource, refresh } = useFundData(fundType, initialMockData);
 
     // UI State
     // UI State
@@ -16,6 +16,12 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
     const [selectedRisk, setSelectedRisk] = useState('All');
     const [sortBy, setSortBy] = useState('return1y');
     const [showNewOnly, setShowNewOnly] = useState(false);
+
+    // Most recent NAV date across all loaded funds (funds carry navDate from the API)
+    const latestNavDate = useMemo(() => {
+        const dates = funds.map(f => f.navDate).filter(Boolean).sort();
+        return dates.length ? dates[dates.length - 1] : null;
+    }, [funds]);
 
     // Filter Logic
     const filteredFunds = useMemo(() => {
@@ -98,9 +104,20 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                             {Icon && <Icon className="w-8 h-8 text-orange-600" />}
                             {title}
                         </h1>
-                        <p className="text-slate-500 mt-1 flex items-center gap-2">
-                            {dataSource === 'mock' ? 'Demo Data - Start backend to load real data' : 'Real-time Data Dashboard'}
-                            {lastUpdated && <span className="text-xs bg-white px-2 py-0.5 rounded border border-slate-200">Updated: {lastUpdated}</span>}
+                        <p className="text-slate-500 mt-1 flex items-center gap-2 flex-wrap">
+                            {dataSource === 'mock' ? 'Demo Data – start backend to load real data' : 'SEC Open Data'}
+                            {latestNavDate && (
+                                <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200 font-medium">
+                                    NAV as of {latestNavDate}
+                                </span>
+                            )}
+                            {lastUpdated && (
+                                <span className="text-xs bg-white px-2 py-0.5 rounded border border-slate-200">
+                                    Fetched {new Date(lastUpdated).toLocaleDateString('en-GB', {
+                                        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                                    })}
+                                </span>
+                            )}
                         </p>
                     </div>
 
@@ -112,12 +129,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                             </span>
                         )}
                         <button
-                            onClick={() => {
-                                localStorage.removeItem(`fund_cache_v3_${fundType}`);
-                                localStorage.removeItem('fund_cache_v3_rmf');
-                                localStorage.removeItem('fund_cache_v3_tesg');
-                                window.location.reload();
-                            }}
+                            onClick={refresh}
                             disabled={loading}
                             className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl shadow-sm hover:bg-slate-800 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >

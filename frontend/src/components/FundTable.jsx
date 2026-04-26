@@ -97,11 +97,11 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
 
                                             {fund.factsheetUrl ? (
                                                 <a href={fund.factsheetUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-green-600 hover:underline flex items-center gap-0.5 font-medium">
-                                                    Settrade <ExternalLink size={10} />
+                                                    SEC <ExternalLink size={10} />
                                                 </a>
                                             ) : (
                                                 <span className="text-[10px] text-slate-300 flex items-center gap-0.5 cursor-not-allowed">
-                                                    Settrade <ExternalLink size={10} />
+                                                    SEC <ExternalLink size={10} />
                                                 </span>
                                             )}
                                         </div>

@@ -1,284 +1,318 @@
-# SarnFund 📊
+# SarnFund
 
-**SarnFund** is a comprehensive mutual fund analytics dashboard for Thai tax-saving investment funds. Track, compare, and analyze performance data for RMF (Retirement Mutual Fund), ThaiESG, LTF (Long-Term Equity Fund), and SSF (Super Savings Fund) with real-time data visualization.
+**SarnFund** is a Thai mutual fund analytics dashboard for tax-saving investments. It tracks RMF, ThaiESG, LTF, and SSF funds across 18+ Asset Management Companies using the **official SEC Open Data API v2** — no scraping, no brittle cookies.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](docker-compose.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-blue)](https://reactjs.org/)
+[![Data](https://img.shields.io/badge/Data-SEC%20Open%20Data%20API%20v2-orange)](https://secopendata.sec.or.th/sec-open-apis)
 
-## 🌟 Features
+## Features
 
-- **📈 Real-time Fund Data** - Automated daily scraping from SET Trade API
-- **🎯 Multiple Fund Types** - RMF, ThaiESG, LTF, and SSF support
-- **🧮 Thai Tax Planner 2568** - Interactive tax saving calculator
-- **📊 Interactive Charts** - Performance visualization with Recharts
-- **🏢 Multi-AMC Tracking** - Coverage of 18+ Asset Management Companies
-- **⚡ Smart Caching** - 24-hour dual-layer caching (backend + frontend)
-- **🐳 Docker Ready** - Complete containerization with Docker Compose
-- **🔒 Zero Trust** - Transparent data sourcing with verification links
-- **📱 Responsive Design** - Mobile-friendly Tailwind CSS interface
+- **Official SEC API** — data sourced from the SEC Thailand Open Data API v2; no third-party scraping
+- **Four fund types** — RMF, ThaiESG (TESG), LTF, SSF
+- **18+ AMCs tracked** — KKP, Krungsri, BBL, TISCO, SCB, KAsset, KTAM, ONE, UOB, Principal, Eastspring, and more
+- **Two-phase caching** — 7-day fund registry (static metadata) + 24-hour NAV cache (daily prices)
+- **Smart frontend cache** — localStorage with server-timestamp comparison; shows stale data instantly, silently updates in background
+- **NAV date display** — shows actual NAV date per fund (`navDate`), not just the scrape timestamp
+- **Interactive charts** — performance visualization with Recharts
+- **Thai Tax Planner 2568** — built-in tax saving calculator
+- **Docker ready** — single `docker compose up -d` to run everything
+- **Rate-limit safe** — 120 ms delay between API calls, exponential backoff on 421/429
 
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      SarnFund System                         │
-└─────────────────────────────────────────────────────────────┘
-                              │
-              ┌───────────────┴───────────────┐
-              │                               │
-      ┌───────▼────────┐            ┌────────▼────────┐
-      │    Backend     │            │    Frontend     │
-      │   (Node.js)    │            │     (React)     │
-      │                │            │                 │
-      │  • Express API │◄───────────┤  • Vite Build   │
-      │  • Data Scraper│            │  • Tailwind CSS │
-      │  • Cron Jobs   │            │  • Recharts     │
-      │  • JSON Cache  │            │  • React Router │
-      └───────┬────────┘            └─────────────────┘
-              │
-              │ curl/fetch
-              │
-      ┌───────▼────────┐
-      │  SET Trade API │
-      │ (settrade.com) │
-      └────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                          SarnFund                                │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+           ┌───────────────┴───────────────┐
+           │                               │
+   ┌───────▼────────┐             ┌────────▼────────┐
+   │    Backend     │             │    Frontend     │
+   │  Node.js 22    │             │   React 18      │
+   │                │◄────────────┤                 │
+   │  Express API   │  REST/JSON  │  Vite + Tailwind│
+   │  SEC Connector │             │  Recharts       │
+   │  Cron (1 AM)   │             │  React Router   │
+   │  JSON Cache    │             │  localStorage   │
+   └───────┬────────┘             └─────────────────┘
+           │
+           │  Ocp-Apim-Subscription-Key
+           │
+   ┌───────▼────────────────┐
+   │  SEC Open Data API v2  │
+   │  api.sec.or.th         │
+   │                        │
+   │  /FundFactsheet/…      │  ← AMC list, fund list, policy, performance
+   │  /FundDailyInfo/…      │  ← Daily NAV per fund
+   └────────────────────────┘
 ```
 
-## 🚀 Quick Start
+### Two-phase scraping
 
-### Option 1: Docker (Recommended)
+| Phase | Trigger | TTL | What it does |
+|-------|---------|-----|--------------|
+| **Registry build** | First run, or weekly | 7 days | Fetches AMC list → fund lists → fund policies; classifies each fund as RMF/SSF/TESG/LTF; saves `data/fund-registry.json` |
+| **Daily NAV fetch** | Cron 1 AM, or manual | 24 hours | Reads registry; fetches latest NAV + performance for each fund; saves per-type JSON files |
+
+Both phases use **batched concurrency** (5 requests at a time) against the rate limiter.
+
+## Quick Start
+
+### Option 1 — Docker (recommended)
 
 ```bash
-# Clone the repository
-git clone https://github.com/zr0aces/SarnFund.git
-cd SarnFund
+# 1. Copy env template and fill in your SEC API keys
+cp backend/.env.example backend/.env
+#    Edit backend/.env with your subscription keys
 
-# Start all services
-docker-compose up -d
+# 2. Start all services
+docker compose up -d
 
-# Access the application
-# Frontend: http://localhost:8091
-# Backend API: http://localhost:3001/api/health
+# 3. Trigger the first data fetch
+curl -X POST "http://localhost:3001/api/scrape?force=true" \
+     -H "X-Scrape-Token: <your-SCRAPE_TOKEN>"
+
+# Access the app
+open http://localhost:8091
 ```
 
-### Option 2: Local Development
-
-**Backend:**
+### Option 2 — Local development
 
 ```bash
+# Backend
 cd backend
+cp .env.example .env      # fill in SEC keys
 npm install
-npm run scrape    # Initial data fetch
-npm start         # Start API server on port 3001
+npm run scrape            # first-time registry build + NAV fetch
+npm start                 # API on :3001
+
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev               # Vite dev server on :5173
 ```
 
-**Frontend:**
+## Getting SEC API Keys
+
+1. Go to [secopendata.sec.or.th/sec-open-apis](https://secopendata.sec.or.th/sec-open-apis)
+2. Sign up / sign in
+3. Navigate to **Products** and subscribe to:
+   - **Fund Factsheet API** → copy subscription key → `SEC_FACTSHEET_KEY`
+   - **Fund Daily Info API** → copy subscription key → `SEC_DAILYINFO_KEY`
+4. Put both keys in `backend/.env`
+
+Rate limit: **3,000 calls / 300 seconds** per key. The connector enforces a 120 ms inter-request delay with exponential backoff.
+
+## Configuration
+
+### `backend/.env`
 
 ```bash
-npm install
-npm run dev       # Start Vite dev server on port 5173
+# SEC Open Data API subscription keys (required)
+# Register at: https://secopendata.sec.or.th/sec-open-apis
+SEC_FACTSHEET_KEY=your_fund_factsheet_subscription_key_here
+SEC_DAILYINFO_KEY=your_fund_daily_info_subscription_key_here
+
+# Protects the POST /api/scrape endpoint
+SCRAPE_TOKEN=change_me_to_a_random_secret
+
+# Optional overrides
+PORT=3001
+CORS_ORIGIN=https://yourdomain.com
 ```
-
-## 🛠️ Tech Stack
-
-### Backend
-
-- **Runtime:** Node.js 18+ (Alpine)
-- **Framework:** Express.js 4.x
-- **Scheduler:** node-cron 3.x
-- **Data Source:** SET Trade API
 
 ### Frontend
 
-- **Framework:** React 18.x
-- **Build Tool:** Vite 5.x
-- **Styling:** Tailwind CSS 3.x
-- **Charts:** Recharts 2.x
-- **Routing:** React Router 6.x
-- **Icons:** Lucide React
+```bash
+VITE_API_URL=http://backend:3001   # set automatically in Docker
+```
 
-### Infrastructure
+## API Endpoints
 
-- **Containers:** Docker & Docker Compose
-- **Web Server:** Nginx (frontend)
-- **Caching:** JSON files + localStorage
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/funds/rmf` | RMF fund data |
+| GET | `/api/funds/tesg` | ThaiESG fund data |
+| GET | `/api/funds/ltf` | LTF fund data |
+| GET | `/api/funds/ssf` | SSF fund data |
+| GET | `/api/funds/all` | All four fund types combined |
+| GET | `/api/health` | Service status, key config, registry info, cache ages |
+| GET | `/api/stats` | Fund counts per type |
+| POST | `/api/scrape` | Manual scrape (requires `X-Scrape-Token` header; add `?force=true` to bypass cache check) |
+| DELETE | `/api/registry` | Clear fund registry cache (forces full rebuild on next scrape) |
 
-## 📡 API Endpoints
+### Example responses
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/funds/rmf` | GET | Get RMF fund data |
-| `/api/funds/tesg` | GET | Get ThaiESG fund data |
-| `/api/funds/ltf` | GET | Get LTF fund data |
-| `/api/funds/ssf` | GET | Get SSF fund data |
-| `/api/funds/all` | GET | Get all fund types |
-| `/api/health` | GET | Health check with cache status |
-| `/api/stats` | GET | Fund statistics (counts) |
+```bash
+# Health check
+curl http://localhost:3001/api/health
+# {
+#   "status": "ok",
+#   "secApi": { "factsheetKey": true, "dailyInfoKey": true },
+#   "registry": { "funds": 142, "lastBuilt": "2026-04-26T01:00:00.000Z" },
+#   "cache": {
+#     "rmf":  { "valid": true, "funds": 54, "lastUpdated": "..." },
+#     "tesg": { "valid": true, "funds": 28, "lastUpdated": "..." },
+#     "ltf":  { "valid": true, "funds": 18, "lastUpdated": "..." },
+#     "ssf":  { "valid": true, "funds": 42, "lastUpdated": "..." }
+#   }
+# }
 
-## 📂 Project Structure
+# Force a manual scrape
+curl -X POST "http://localhost:3001/api/scrape?force=true" \
+     -H "X-Scrape-Token: your_token"
+
+# Reset registry (re-classifies all funds on next scrape)
+curl -X DELETE http://localhost:3001/api/registry \
+     -H "X-Scrape-Token: your_token"
+```
+
+## Fund data structure
+
+```js
+{
+  id:          "fund_1714089600000_KPRMF",
+  code:        "KPRMF",
+  name:        "KKP RMF Fund",
+  amc:         "KKP",
+  nav:         12.45,          // NAV per unit (THB)
+  navDate:     "2026-04-25",   // actual SEC NAV date
+  ytd:         3.21,           // year-to-date return %
+  return3m:    1.10,
+  return6m:    2.30,
+  return1y:    8.50,
+  return3y:    22.10,
+  return5y:    41.80,
+  risk:        5,              // SEC risk spectrum 1–8
+  type:        "RMF",
+  isNew:       false,
+  factsheetUrl: "https://www.sec.or.th/th/Pages/Fund/FundProjectDetail.aspx?PROJ_ID=..."
+}
+```
+
+## Project structure
 
 ```
 SarnFund/
-├── backend/                  # Backend API and scraper
-│   ├── server.js            # Express server with cron
-│   ├── scraper.js           # Data processing logic
-│   ├── refetch_funds_v2.sh  # Shell script for API calls
-│   ├── data/                # Cached JSON files
-│   ├── Dockerfile           # Backend container
-│   └── package.json         # Backend dependencies
+├── backend/
+│   ├── sec-api-connector.js  # SEC API client — rate limiting, auth, all endpoints
+│   ├── scraper.js            # Two-phase scrape: registry build + daily NAV fetch
+│   ├── server.js             # Express API, cron scheduler, env loader
+│   ├── init-data.js          # Seed script for empty data files
+│   ├── .env.example          # Environment variable template
+│   ├── data/                 # Runtime JSON cache (git-ignored)
+│   │   ├── fund-registry.json   # Fund type mapping (7-day TTL)
+│   │   ├── rmf.json             # Latest RMF fund data
+│   │   ├── tesg.json            # Latest ThaiESG fund data
+│   │   ├── ltf.json             # Latest LTF fund data
+│   │   ├── ssf.json             # Latest SSF fund data
+│   │   └── all.json             # Combined snapshot
+│   ├── Dockerfile
+│   └── package.json
 │
-├── frontend/                # React frontend
+├── frontend/
 │   ├── src/
-│   │   ├── components/      # UI components
-│   │   ├── pages/           # Page components
-│   │   ├── hooks/           # Custom React hooks
-│   │   └── App.jsx          # Main application
-│   ├── Dockerfile           # Frontend container
-│   └── package.json         # Frontend dependencies
+│   │   ├── components/
+│   │   │   ├── DashboardLayout.jsx  # Main page shell; shows navDate + scrape time
+│   │   │   ├── FundTable.jsx        # Sortable table with SEC factsheet links
+│   │   │   ├── FundChart.jsx        # Bar chart (Recharts)
+│   │   │   └── KPICards.jsx         # Summary metrics
+│   │   ├── pages/
+│   │   │   ├── RmfPage.jsx
+│   │   │   ├── ThaiEsgPage.jsx
+│   │   │   ├── SsfPage.jsx
+│   │   │   └── LtfPage.jsx
+│   │   ├── hooks/
+│   │   │   └── useFundData.js       # Fetch + dual-layer cache (server-timestamp aware)
+│   │   ├── data/funds.js            # Mock/initial data + AMC colour palette
+│   │   └── App.jsx                  # Router
+│   ├── Dockerfile
+│   └── package.json
 │
-├── documents/               # Project documentation
-├── .github/                 # GitHub configurations
-│   └── copilot_instructions.md
-├── docker-compose.yml       # Container orchestration
-└── README.md               # This file
+├── documents/
+│   ├── SETUP_GUIDE.md
+│   └── IMPLEMENTATION_SUMMARY.md
+├── docker-compose.yml
+├── CHANGELOG.md
+└── README.md
 ```
 
-## 🎯 Supported AMCs
+## Supported AMCs
 
-SarnFund tracks funds from 18+ Asset Management Companies:
+| Code | Thai name |
+|------|-----------|
+| KKP | เกียรตินาคินภัทร |
+| Krungsri | กรุงศรี |
+| BBL | บัวหลวง |
+| TISCO | ทิสโก้ |
+| SCB | ไทยพาณิชย์ |
+| KAsset | กสิกรไทย |
+| KTAM | กรุงไทย |
+| ONE | วรรณ |
+| UOB | ยูโอบี |
+| Principal | พรินซิพัล |
+| Eastspring | อีสท์สปริง |
+| Asset Plus | แอสเซทพลัส |
+| DAOL | ดาโอ |
+| KWI | เคดับบลิวไอ |
+| LH Fund | แลนด์แอนด์เฮ้าส์ |
+| MFC | เอ็มเอฟซี |
+| TALIS | ทาลิส |
+| XSpring | เอ็กซ์สปริง |
 
-- **KKP** (เกียรตินาคินภัทร)
-- **Krungsri** (กรุงศรี)
-- **BBL** (บัวหลวง)
-- **TISCO** (ทิสโก้)
-- **SCB** (ไทยพาณิชย์)
-- **KAsset**, **KTAM**, **ONE**, **UOB**
-- **Principal**, **Eastspring**, **MFC**
-- And more...
-
-## 🔧 Configuration
-
-### Backend Environment Variables
-
-```bash
-PORT=3001                    # API server port (default: 3001)
-```
-
-### Frontend Environment Variables
-
-```bash
-VITE_API_URL=http://localhost:3001  # Backend API URL
-```
-
-## 📊 Data Flow
-
-1. **Automated Scraping** - Daily at 1:00 AM via node-cron
-2. **API Fetching** - Shell script uses curl to fetch from SET Trade
-3. **Data Processing** - Normalize AMC names and transform structure
-4. **Backend Cache** - Save as JSON files (24-hour TTL)
-5. **API Serving** - Express endpoints serve cached data
-6. **Frontend Fetch** - React hooks fetch via relative paths
-7. **Client Cache** - localStorage provides secondary cache
-8. **Visualization** - Render charts, tables, and KPI cards
-
-## 🧪 Manual Testing
-
-```bash
-# Test backend health
-curl http://localhost:3001/api/health
-
-# Fetch RMF data
-curl http://localhost:3001/api/funds/rmf
-
-# Manual data scrape
-cd backend && npm run scrape
-
-# Get fund statistics
-curl http://localhost:3001/api/stats
-```
-
-## 📖 Documentation
-
-Detailed documentation is available in the `/documents` directory:
-
-- **[Setup Guide](documents/SETUP_GUIDE.md)** - Installation and deployment
-- **[Implementation Summary](documents/IMPLEMENTATION_SUMMARY.md)** - Technical details
-- **[Copilot Instructions](.github/copilot_instructions.md)** - Development guidelines
-
-## 🐳 Docker Deployment
+## Docker deployment
 
 ```yaml
+# docker-compose.yml (abbreviated)
 services:
   backend:
     build: ./backend
-    ports: ["3001:3001"]
-    volumes: ["./backend/data:/app/data"]
-    
+    env_file: ./backend/.env      # loads SEC keys + SCRAPE_TOKEN
+    environment: [PORT=3001]
+    volumes: [./backend/data:/app/data]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+
   frontend:
     build: ./frontend
     ports: ["8091:80"]
     depends_on: [backend]
 ```
 
-### Commands
-
 ```bash
-# Build and start
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Rebuild after changes
-docker-compose up -d --build
+docker compose up -d --build   # build and start
+docker compose logs -f backend # stream backend logs
+docker compose down            # stop
 ```
 
-## 🔒 Security Considerations
+## Security
 
-- ✅ No hardcoded secrets or API keys
-- ✅ CORS configuration for production
-- ✅ Input validation on all data processing
-- ✅ Manual scrape endpoint disabled by default
-- ✅ Regular dependency updates with `npm audit`
-- ✅ Docker image security scanning
+- SEC API keys stored only in `backend/.env` (git-ignored); never in source code
+- `POST /api/scrape` requires `X-Scrape-Token` header matching `SCRAPE_TOKEN` env var
+- Security headers: `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `HSTS`
+- CORS configurable via `CORS_ORIGIN` environment variable
+- Request body size limited to 10 MB
 
-## 🤝 Contributing
+## Troubleshooting
 
-Contributions are welcome! Please follow these guidelines:
+| Problem | Fix |
+|---------|-----|
+| `SEC API 401` | Check `SEC_FACTSHEET_KEY` / `SEC_DAILYINFO_KEY` in `.env` |
+| `No data` after first start | Run `npm run scrape` (or `POST /api/scrape?force=true`); registry build on first run takes a few minutes |
+| Registry classification misses funds | `DELETE /api/registry` then re-scrape — forces fresh policy fetch |
+| Rate limit 421/429 logged | Normal under heavy load; connector backs off automatically (1 s → 2 s → 3 s) |
+| Docker container missing keys | Confirm `backend/.env` exists and `env_file` is in `docker-compose.yml` |
+| Stale browser data | Click **Update Data** button — clears localStorage cache and re-fetches |
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## License
 
-## 📝 License
+MIT — see [LICENSE](LICENSE).
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Acknowledgments
 
-## 👥 Authors
-
-- **SarnFund Team** - Initial work
-
-## 🙏 Acknowledgments
-
-- Data sourced from [SET Trade](https://www.settrade.com/)
-- Built with ❤️ for the Thai investment community
-- Inspired by the need for transparent fund analytics
-
-## 📞 Support
-
-For issues, questions, or suggestions:
-
-- Open an [Issue](https://github.com/zr0aces/SarnFund/issues)
-- Check [Documentation](documents/)
-- Review [Copilot Instructions](.github/copilot_instructions.md)
-
----
-
-**Made with ☕ and 💻 by the SarnFund Team**
+- Data provided by the [SEC Thailand Open Data API](https://secopendata.sec.or.th/)
+- Built for the Thai long-term investment community

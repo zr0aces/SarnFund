@@ -1,109 +1,93 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
-const API_BASE_URL = ''; // Always use relative path to use proxy
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 h
+const CACHE_VERSION  = 'v4';                  // bump to bust old caches
 
 export const useFundData = (fundType, initialMockData) => {
-    const [funds, setFunds] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [lastUpdated, setLastUpdated] = useState(null);
-    const [dataSource, setDataSource] = useState('loading'); // 'loading', 'cache', 'api', 'mock'
+    const [funds,       setFunds]       = useState([]);
+    const [loading,     setLoading]     = useState(false);
+    const [error,       setError]       = useState(null);
+    const [lastUpdated, setLastUpdated] = useState(null); // ISO string from server
+    const [dataSource,  setDataSource]  = useState('loading');
 
-    const fetchDataFromAPI = useCallback(async (silent = false) => {
-        setLoading(true);
-        setError(null);
+    const cacheKey = `fund_cache_${CACHE_VERSION}_${fundType}`;
+
+    // Prevents a stale silent fetch from overwriting newer data that arrived
+    // while it was in-flight.
+    const currentTimestamp = useRef(0);
+
+    const fetchDataFromAPI = useCallback(async (silent = false, cachedTimestamp = null) => {
+        if (!silent) setLoading(true);
+        if (!silent) setError(null);
 
         try {
-            const endpoint = `/api/funds/${fundType}`;
-            const response = await fetch(`${API_BASE_URL}${endpoint}`);
+            const res = await fetch(`/api/funds/${fundType}`);
+            if (!res.ok) throw new Error(`API error: ${res.status}`);
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const result = await response.json();
-
-            if (result.success && result.data && result.data.length > 0) {
-                setFunds(result.data);
-                setLastUpdated(new Date(result.timestamp).toLocaleTimeString());
-                setDataSource('api');
-
-                // Save to local cache
-                const cachePayload = {
-                    timestamp: result.timestamp,
-                    data: result.data
-                };
-                localStorage.setItem(`fund_cache_v3_${fundType}`, JSON.stringify(cachePayload));
-
-                console.log(`[useFundData] Fetched ${result.data.length} funds from API`);
-            } else {
+            const result = await res.json();
+            if (!result.success || !result.data?.length) {
                 throw new Error('No data available from API');
             }
 
-        } catch (err) {
-            console.error(`[useFundData] Error fetching from API:`, err);
+            // Skip update if the server has no newer data than what's displayed.
+            if (cachedTimestamp && result.timestamp <= cachedTimestamp) return;
+            // Skip if a newer response already arrived.
+            if (result.timestamp <= currentTimestamp.current) return;
 
-            // Show error to user
+            currentTimestamp.current = result.timestamp;
+            setFunds(result.data);
+            setLastUpdated(result.lastUpdated || new Date(result.timestamp).toISOString());
+            setDataSource('api');
+
+            localStorage.setItem(cacheKey, JSON.stringify({
+                timestamp:   result.timestamp,
+                lastUpdated: result.lastUpdated,
+                data:        result.data,
+            }));
+        } catch (err) {
             if (!silent) {
                 setError(`Unable to fetch data: ${err.message}`);
                 setDataSource('error');
             }
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
-    }, [fundType]);
+    }, [fundType, cacheKey]);
 
-    // Load initial state from Cache or Mock
+    // On mount: serve from cache immediately, then silently check server.
     useEffect(() => {
-        const cacheKey = `fund_cache_v3_${fundType}`;
-        const cached = localStorage.getItem(cacheKey);
-
-        if (cached) {
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
             try {
-                const parsed = JSON.parse(cached);
-                const age = Date.now() - parsed.timestamp;
-                if (age < CACHE_DURATION) {
-                    console.log(`[useFundData] Using valid cache for ${fundType}`);
+                const parsed = JSON.parse(raw);
+                if (Date.now() - parsed.timestamp < CACHE_DURATION) {
+                    currentTimestamp.current = parsed.timestamp;
                     setFunds(parsed.data);
-                    setLastUpdated(new Date(parsed.timestamp).toLocaleTimeString());
+                    setLastUpdated(parsed.lastUpdated || new Date(parsed.timestamp).toISOString());
                     setDataSource('cache');
+                    // Silently update if the server has newer data.
+                    fetchDataFromAPI(true, parsed.timestamp);
                     return;
-                } else {
-                    console.log(`[useFundData] Cache expired for ${fundType}`);
                 }
-            } catch (e) {
-                console.error("Cache parse error", e);
-            }
+            } catch { /* corrupted cache */ }
         }
 
-        // Use Mock/Initial Data if available
-        if (initialMockData && initialMockData.length > 0) {
-            console.log(`[useFundData] Using initial mock data for ${fundType}`);
+        if (initialMockData?.length) {
             setFunds(initialMockData);
             setDataSource('mock');
-            setLastUpdated(new Date().toLocaleTimeString());
+            setLastUpdated(null);
             return;
         }
 
-        // If no cache or mock, start with loading
-        setLastUpdated(null);
-        setDataSource('loading');
-
-        // Try to fetch from API
         fetchDataFromAPI(false);
-    }, [fundType, initialMockData, fetchDataFromAPI]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fundType]);
 
-    const refresh = useCallback(async () => {
-        await fetchDataFromAPI(true);
-    }, [fetchDataFromAPI]);
+    const refresh = useCallback(() => {
+        localStorage.removeItem(cacheKey);
+        currentTimestamp.current = 0;
+        fetchDataFromAPI(false);
+    }, [cacheKey, fetchDataFromAPI]);
 
-    return {
-        funds,
-        loading,
-        error,
-        lastUpdated,
-        dataSource,
-        refresh
-    };
+    return { funds, loading, error, lastUpdated, dataSource, refresh };
 };

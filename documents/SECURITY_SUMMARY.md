@@ -1,5 +1,8 @@
 # SarnFund System Review - Security Summary
 
+> **Note:** This report covers the v1.0.0 codebase (December 2025). For the v2.0.0
+> architecture (SEC Open Data API connector), see `IMPLEMENTATION_SUMMARY.md`.
+
 ## Security Audit Date
 **Date:** December 18, 2025  
 **Reviewed By:** Senior Full Stack Developer, QA, Technical Architecture, and UI/UX Specialist  
@@ -99,16 +102,12 @@ app.use(express.json({ limit: '10mb' })); // Prevent large payload attacks
 ```
 
 ### 5. Command Injection Prevention ✅
-Reviewed `exec()` usage in scraper:
-- ✅ Uses hardcoded, controlled script paths
-- ✅ No user input in commands
-- ✅ Working directory is controlled
+The legacy `refetch_funds_v2.sh` script has been removed. All data fetching is now handled by pure JavaScript logic in `scraper.js` and `sec-api-connector.js`.
+- ✅ No shell execution of external scripts
+- ✅ No user input in file paths or API calls
+- ✅ SEC API interactions use controlled, constant URL patterns
 - **Risk Level:** NONE
 
-```javascript
-const scriptPath = path.resolve(__dirname, 'refetch_funds_v2.sh');
-await execPromise(`sh ${scriptPath}`, { cwd: __dirname });
-```
 
 ---
 
@@ -257,5 +256,6 @@ The SarnFund system has undergone comprehensive security review and improvements
 
 ---
 
-**Last Updated:** December 18, 2025  
-**Next Review Date:** Recommended within 3 months or before major updates
+**Last Updated:** April 26, 2026 (Consolidated Nginx architecture)
+**Next Review Date:** Recommended within 6 months
+

@@ -1,3 +1,4 @@
+import { readFileSync, existsSync } from 'fs';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs/promises';
@@ -5,6 +6,20 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
 import { scrapeData } from './scraper.js';
+
+// Load .env if present (no external dependency needed – simple key=value parser)
+const envPath = new URL('.env', import.meta.url).pathname;
+if (existsSync(envPath)) {
+  for (const line of readFileSync(envPath, 'utf8').split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eq = trimmed.indexOf('=');
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
+    if (key && !process.env[key]) process.env[key] = val;
+  }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -235,32 +250,56 @@ app.get('/api/funds/all', async (req, res) => {
 });
 
 /**
- * Manually trigger scraping (protected endpoint - add authentication in production)
+ * Manually trigger scraping.
+ * Requires the SCRAPE_TOKEN env var to match the X-Scrape-Token header (or
+ * the ?token= query param). Falls back to allowing the request if no token is
+ * configured (dev mode), but logs a warning.
  */
 app.post('/api/scrape', async (req, res) => {
   try {
-    console.log('POST /api/scrape - Manual scrape triggered');
+    // ── Auth check ────────────────────────────────────────────────────────────
+    const configuredToken = process.env.SCRAPE_TOKEN;
+    const providedToken   = req.headers['x-scrape-token'] || req.query.token;
 
-    // Check if there's valid cache
-    const cached = await getCachedData('all.json');
-    if (cached) {
-      return res.json({
-        success: true,
-        message: 'Cache is still valid. Scraping not needed.',
-        nextScrapeIn: CACHE_DURATION - (Date.now() - cached.timestamp),
-        data: cached
-      });
+    if (configuredToken) {
+      if (providedToken !== configuredToken) {
+        return res.status(401).json({ success: false, message: 'Invalid or missing scrape token.' });
+      }
+    } else {
+      console.warn('WARNING: SCRAPE_TOKEN is not set. /api/scrape is unprotected.');
     }
 
-    // Trigger manual scrape is disabled in prod without auth
-    // const result = await scrapeData();
-    res.status(403).json({ success: false, message: 'Manual scraping via API is currently disabled for security.' });
+    // ── Cache check (skip with ?force=true) ──────────────────────────────────
+    if (req.query.force !== 'true') {
+      const cached = await getCachedData('all.json');
+      if (cached) {
+        return res.json({
+          success: true,
+          message: 'Cache is still valid. Use ?force=true to scrape anyway.',
+          nextScrapeIn: CACHE_DURATION - (Date.now() - cached.timestamp),
+        });
+      }
+    }
+
+    console.log('POST /api/scrape – manual scrape triggered');
+    const result = await scrapeData();
+    res.json({ success: true, message: 'Scrape completed.', data: result });
   } catch (error) {
-    console.error('Error during manual scrape:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error('Manual scrape error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * Reset the fund registry cache (forces a full re-fetch of fund types on next scrape)
+ */
+app.delete('/api/registry', async (req, res) => {
+  try {
+    const registryPath = path.join(DATA_DIR, 'fund-registry.json');
+    await fs.rm(registryPath, { force: true });
+    res.json({ success: true, message: 'Fund registry cleared. Next scrape will rebuild it.' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -269,23 +308,36 @@ app.post('/api/scrape', async (req, res) => {
  */
 app.get('/api/health', async (req, res) => {
   try {
-    const rmfCache = await getCachedData('rmf.json');
-    const tesgCache = await getCachedData('tesg.json');
+    const [rmfCache, tesgCache, ltfCache, ssfCache] = await Promise.all([
+      getCachedData('rmf.json'),
+      getCachedData('tesg.json'),
+      getCachedData('ltf.json'),
+      getCachedData('ssf.json'),
+    ]);
+
+    let registry = null;
+    try {
+      const reg = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'fund-registry.json'), 'utf8'));
+      registry = { funds: reg.funds?.length ?? 0, lastBuilt: new Date(reg.timestamp).toISOString() };
+    } catch { /* no registry yet */ }
+
+    const cacheInfo = (c) => c
+      ? { valid: true, funds: c.data?.length ?? 0, lastUpdated: new Date(c.timestamp).toISOString() }
+      : { valid: false };
 
     res.json({
       status: 'ok',
+      secApi: {
+        factsheetKey: !!process.env.SEC_FACTSHEET_KEY,
+        dailyInfoKey: !!process.env.SEC_DAILYINFO_KEY,
+      },
+      registry,
       cache: {
-        rmf: rmfCache ? {
-          valid: true,
-          age: Date.now() - rmfCache.timestamp,
-          lastUpdated: new Date(rmfCache.timestamp).toISOString()
-        } : { valid: false },
-        tesg: tesgCache ? {
-          valid: true,
-          age: Date.now() - tesgCache.timestamp,
-          lastUpdated: new Date(tesgCache.timestamp).toISOString()
-        } : { valid: false }
-      }
+        rmf:  cacheInfo(rmfCache),
+        tesg: cacheInfo(tesgCache),
+        ltf:  cacheInfo(ltfCache),
+        ssf:  cacheInfo(ssfCache),
+      },
     });
   } catch (error) {
     res.status(500).json({ status: 'error', error: error.message });
@@ -331,15 +383,23 @@ cron.schedule('0 1 * * *', async () => {
 
 // Start server
 app.listen(PORT, () => {
+  const hasKeys  = process.env.SEC_FACTSHEET_KEY && process.env.SEC_DAILYINFO_KEY;
+  const hasToken = !!process.env.SCRAPE_TOKEN;
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`API endpoints:`);
-  console.log(`  GET  /api/funds/rmf  - Get RMF fund data`);
-  console.log(`  GET  /api/funds/tesg - Get ThaiESG fund data`);
-  console.log(`  GET  /api/funds/all  - Get all fund data`);
-  console.log(`  POST /api/scrape     - Manually trigger scraping`);
-  console.log(`  GET  /api/health     - Health check`);
+  console.log(`SEC API keys:  ${hasKeys  ? 'configured ✓' : 'MISSING – set SEC_FACTSHEET_KEY and SEC_DAILYINFO_KEY in .env'}`);
+  console.log(`Scrape token:  ${hasToken ? 'configured ✓' : 'not set – /api/scrape is unprotected (set SCRAPE_TOKEN in .env)'}`);
+  console.log(`\nAPI endpoints:`);
+  console.log(`  GET    /api/funds/rmf   - RMF fund data`);
+  console.log(`  GET    /api/funds/tesg  - ThaiESG fund data`);
+  console.log(`  GET    /api/funds/ltf   - LTF fund data`);
+  console.log(`  GET    /api/funds/ssf   - SSF fund data`);
+  console.log(`  GET    /api/funds/all   - All fund data`);
+  console.log(`  POST   /api/scrape?force=true  - Force scrape`);
+  console.log(`  DELETE /api/registry    - Reset fund registry cache`);
+  console.log(`  GET    /api/health      - Health check`);
+  console.log(`  GET    /api/stats       - Fund counts`);
   console.log(`\nScheduled scraping: Daily at 1 AM`);
-  console.log(`Cache duration: 24 hours`);
+  console.log(`Cache duration: 24 hours | Registry TTL: 7 days`);
 });
 
 export default app;

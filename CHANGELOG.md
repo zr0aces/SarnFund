@@ -1,122 +1,103 @@
-# Changelog - SarnFund System Review
+# Changelog
 
-## [1.0.0] - 2025-12-18 - Comprehensive System Release
+## [2.0.0] - 2026-04-26 — SEC Open Data API v2
+
+### Migration: Settrade → SEC Official API
+
+The data source has been completely replaced. The previous approach used `curl` with
+hardcoded session cookies against the Settrade.com internal API — this was fragile
+(cookies expire), unofficial, and produced no NAV date metadata. The new connector
+uses the **SEC Thailand Open Data API v2** with proper subscription-key authentication.
 
 ### Added
 
-- ✨ `.github/copilot_instructions.md` - Complete development guide with architecture, APIs, coding standards
-- 📚 `documents/SECURITY_SUMMARY.md` - Comprehensive security audit report
-- ⚙️ `frontend/.eslintrc.cjs` - ESLint configuration for React best practices
-- 🔒 Security headers middleware (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, HSTS)
-- 🌐 Configurable CORS with environment variable support (`CORS_ORIGIN`)
-- 📏 Request body size limit (10MB) to prevent large payload attacks
-- ✅ Enhanced input validation with type checking (parseFloat, parseInt)
-- 🔗 URL encoding for external links (encodeURIComponent)
+- `backend/sec-api-connector.js` — full SEC API client
+  - `SecApiClient` class with separate rate limiters for Factsheet and Daily Info APIs
+  - `RateLimiter` using a promise-chain queue (fixes race condition in the previous timestamp-diff approach)
+  - Exponential backoff retry on HTTP 421 and 429 (1 s → 2 s → 3 s, max 3 attempts)
+  - `thaiDateStr(daysAgo)` — returns date in UTC+7 to avoid off-by-one errors at midnight Bangkok time
+  - `runBatched(tasks, concurrency)` — bounded-concurrency helper used by the scraper
+  - `matchesFundType(policy, type)` — checks multiple possible SEC API field names for fund type classification
+- `backend/.env.example` — documents `SEC_FACTSHEET_KEY`, `SEC_DAILYINFO_KEY`, `SCRAPE_TOKEN`
+- `data/fund-registry.json` — 7-day cached mapping of `proj_id → { type, riskLevel, name, amc }`
+- `DELETE /api/registry` endpoint — clears registry cache, forces full rebuild on next scrape
+- `navDate` field on every fund object — actual SEC NAV date (`YYYY-MM-DD`), not the scrape timestamp
+- `SCRAPE_TOKEN` env var — `POST /api/scrape` now requires `X-Scrape-Token` header
 
 ### Changed
 
-- 📦 Updated backend dependencies: express (4.22.1), node-cron (3.0.3), cors (2.8.5)
-- 📦 Updated frontend dependencies: React (18.3.1), Vite (5.4.21), lucide-react (0.561.0), recharts (2.15.4)
-- 🏷️ Renamed packages: `sanfund-backend` → `sarnfund-backend`, `zero-trust-funds-dashboard` → `sarnfund-dashboard`
-- 📝 Updated README.md with comprehensive documentation, architecture diagram, and deployment guides
-- 🗂️ Reorganized documentation into `/documents` directory
-- 🔄 Moved IMPLEMENTATION_SUMMARY.md and SETUP_GUIDE.md to `/documents`
-- 🎨 Fixed all branding references from SanFund to SarnFund
-- 🧹 Improved error handling in scraper with better validation and logging
-- ⚛️ Updated all React components to use new JSX transform (no React import needed)
-- 🔧 Fixed ESLint configuration and resolved all linting errors
-- 📐 Improved Vite config to properly load environment variables
+- `backend/scraper.js` — complete rewrite
+  - Two-phase scrape: weekly registry build + daily NAV fetch, both using `runBatched`
+  - Fund type classification via `FundFactsheet/fund/{proj_id}/policy` endpoint
+  - `navDate` stored per fund (from `FundDailyInfo` response)
+  - Concurrent file writes for per-type JSON outputs
+- `backend/server.js`
+  - Loads `backend/.env` at startup (no external `dotenv` dependency)
+  - `POST /api/scrape` logic order fixed — token check now runs before cache check
+  - Startup log shows key and token configuration status
+  - `GET /api/health` extended — reports `secApi` key presence, registry stats, all four cache states
+- `docker-compose.yml` — added `env_file: ./backend/.env` so SEC keys reach the container
+- `frontend/src/hooks/useFundData.js`
+  - Cache version bumped (`v3` → `v4`) to bust old localStorage entries
+  - Silent background fetch on mount; UI only updates if server `timestamp` is newer than cached value
+  - `refresh()` clears the cache then re-fetches without page reload
+  - `lastUpdated` stored as ISO string (was locale time string)
+- `frontend/src/components/DashboardLayout.jsx`
+  - Uses `refresh()` from hook instead of `window.location.reload()`
+  - Displays **"NAV as of YYYY-MM-DD"** badge derived from `fund.navDate`
+  - Displays fetch timestamp in human-readable format (`26 Apr 2026, 01:00`)
+  - Data source label changed from "Real-time Data Dashboard" to "SEC Open Data"
+- `frontend/src/components/FundTable.jsx`
+  - Factsheet link label changed from "Settrade" to "SEC" (URL now points to `sec.or.th`)
 
-### Fixed
+### Removed
 
-- 🐛 Removed all unused imports and variables across codebase
-- 🔄 Fixed React hooks dependencies in useFundData
-- 🎯 Removed unnecessary React imports from all components
-- 🔗 Fixed type safety issues with proper parseFloat/parseInt usage
-- ⚠️ Enhanced error messages for better debugging
-- 🐛 Fixed SSF Dashboard displaying ThaiESG funds by implementing correct data constants and isolation
-- 🐛 Fixed SSF Dashboard displaying ThaiESG funds by implementing correct data constants and isolation
+- `backend/refetch_funds_v2.sh` — shell script with hardcoded Settrade session cookies (superseded)
+- `backend/data/rmf-fetched.json`, `tesg-fetched.json`, `ltf-fetched.json`, `ssf-fetched.json` — stale 0-byte intermediary files
 
 ### Security
 
-- 🛡️ **CodeQL Scan Result: 0 vulnerabilities**
-- 🔐 Backend: 0 vulnerabilities (101 packages)
-- 🔐 Frontend: 2 moderate vulnerabilities (dev-only, esbuild/vite)
-- 🔒 Security Score: A - Production Ready
-- ✅ Manual code review passed
-- ✅ Input validation improved
-- ✅ CORS properly configured
-- ✅ Security headers implemented
-- ✅ Request size limits enforced
-
-### Testing
-
-- ✅ All API endpoints tested and working
-  - GET /api/health - Returns cache status
-  - GET /api/funds/rmf - Returns 8 funds
-  - GET /api/funds/tesg - Returns 5 funds  
-  - GET /api/stats - Returns fund counts
-- ✅ Frontend build successful (5.79s, 567KB gzipped)
-- ✅ Backend initialization tested (init-data.js)
-- ✅ Docker configuration validated
-- ✅ Caching mechanism verified (24-hour TTL)
-- ✅ ESLint: 0 errors, 0 warnings
-
-### Documentation
-
-- 📖 Comprehensive Copilot instructions for developers
-- 📊 Architecture diagram in README
-- 🔒 Security audit documentation
-- 📋 API endpoint documentation
-- 🐳 Docker deployment guide
-- 🚀 Quick start guides
-- 🔧 Troubleshooting section
-- 💡 Best practices and coding standards
+- `POST /api/scrape` is now protected by `SCRAPE_TOKEN` (previously open to anyone)
+- SEC API keys never embedded in source; loaded only from `backend/.env`
 
 ### Performance
 
-- ⚡ Build time: 5.79s (excellent)
-- 📦 Bundle size: 567KB gzipped
-- 🗄️ Dual-layer caching (backend + frontend, 24-hour TTL)
-- 🔄 Optimized imports and removed dead code
-
-### Breaking Changes
-
-- None - All changes are backward compatible
-
-### Migration Notes
-
-- Set `CORS_ORIGIN` environment variable in production
-- No other configuration changes required
-- Existing cache data remains compatible
-
-### Production Recommendations
-
-1. Set `CORS_ORIGIN=https://yourdomain.com` in production
-2. Enable HTTPS (required for HSTS header)
-3. Consider implementing rate limiting
-4. Set up monitoring and log aggregation
-5. Schedule regular dependency updates
+- Registry build: ~5× faster due to batched concurrent policy fetches (5 at a time vs sequential)
+- Daily NAV fetch: concurrent (5 at a time) instead of strictly sequential
+- Backend file writes: parallel `Promise.all` instead of sequential loop
 
 ---
 
-## Statistics
+## [1.0.0] - 2025-12-18 — Comprehensive System Release
 
-- **Files Changed:** 24
-- **Lines Added:** ~850
-- **Lines Removed:** ~180
-- **Net Change:** +670 lines
-- **Commits:** 4
-- **Security Issues Fixed:** 5 (CORS, headers, validation, type safety, request limits)
-- **Code Quality Issues Fixed:** 19 (linting errors)
-- **Dependencies Updated:** 15+ packages
+### Added
 
----
+- `.github/copilot_instructions.md` — development guide
+- `documents/SECURITY_SUMMARY.md` — security audit report
+- `frontend/.eslintrc.cjs` — ESLint configuration
+- Security headers middleware (`X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, HSTS)
+- Configurable CORS (`CORS_ORIGIN` environment variable)
+- Request body size limit (10 MB)
+- Input validation with `parseFloat` / `parseInt`
+- URL encoding for external links
 
-## Contributors
+### Changed
 
-- Senior Full Stack Developer, QA, Technical Architect, UI/UX Specialist
+- Updated backend dependencies: express 4.22.1, node-cron 3.0.3, cors 2.8.5
+- Updated frontend dependencies: React 18.3.1, Vite 5.4.21, lucide-react 0.561.0, recharts 2.15.4
+- Package renamed: `sanfund-backend` → `sarnfund-backend`
+- README.md — architecture diagram and deployment guides
+- Documentation reorganised into `/documents`
+- Fixed branding: SanFund → SarnFund throughout
+- React components updated to new JSX transform (no `React` import)
 
----
+### Fixed
 
-**Status:** ✅ COMPLETED - Ready for Production Deployment
+- Removed unused imports and variables
+- React hooks dependencies in `useFundData`
+- SSF Dashboard incorrectly displaying ThaiESG funds
+
+### Security
+
+- CodeQL scan: 0 vulnerabilities
+- Backend: 0 vulnerabilities (101 packages audited)

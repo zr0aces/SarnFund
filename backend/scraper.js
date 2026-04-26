@@ -1,201 +1,236 @@
-import { exec } from 'child_process';
-import util from 'util';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  SecApiClient,
+  matchesFundType,
+  runBatched,
+} from './sec-api-connector.js';
 
-const execPromise = util.promisify(exec);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, 'data');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR   = path.join(__dirname, 'data');
 
-// Selected AMCs to include
 const AMC_MAP = {
-  'KKPAM': 'KKP',
-  'KSAM': 'Krungsri',
-  'BBLAM': 'BBL',
-  'TISCOASSET': 'TISCO',
-  'SCBAM': 'SCB',
-  'KASSET': 'KAsset',
-  'KTAM': 'KTAM',
-  'ONEAM': 'ONE',
-  'UOBAM': 'UOB',
-  'PRINCIPAL': 'Principal',
-  'EASTSPRING': 'Eastspring',
-  'ASSETFUND': 'Asset Plus',
-  'DAOL': 'DAOL',
-  'KWI': 'KWI',
-  'LHFUND': 'LH Fund',
-  'MFC': 'MFC',
-  'TALIS': 'TALIS',
-  'XSPRING': 'XSpring'
+  KKPAM:      'KKP',
+  KSAM:       'Krungsri',
+  BBLAM:      'BBL',
+  TISCOASSET: 'TISCO',
+  SCBAM:      'SCB',
+  KASSET:     'KAsset',
+  KTAM:       'KTAM',
+  ONEAM:      'ONE',
+  UOBAM:      'UOB',
+  PRINCIPAL:  'Principal',
+  EASTSPRING: 'Eastspring',
+  ASSETFUND:  'Asset Plus',
+  DAOL:       'DAOL',
+  KWI:        'KWI',
+  LHFUND:     'LH Fund',
+  MFC:        'MFC',
+  TALIS:      'TALIS',
+  XSPRING:    'XSpring',
 };
 
-/**
- * Process raw JSON data into the format expected by the frontend
- */
-function processFunds(rawData) {
-  let json;
+const FUND_TYPES    = ['RMF', 'SSF', 'TESG', 'LTF'];
+const REGISTRY_PATH = path.join(DATA_DIR, 'fund-registry.json');
+const REGISTRY_TTL  = 7 * 24 * 60 * 60 * 1000; // 7 days
+const BATCH_SIZE    = 5; // concurrent API calls
+
+// ── Registry ──────────────────────────────────────────────────────────────────
+
+async function loadRegistry() {
   try {
-    json = JSON.parse(rawData);
-  } catch (e) {
-    console.error('Error parsing JSON:', e.message);
-    return [];
-  }
+    const data = JSON.parse(await fs.readFile(REGISTRY_PATH, 'utf8'));
+    if (Date.now() - (data.timestamp || 0) < REGISTRY_TTL) {
+      console.log(`Using cached fund registry (${data.funds?.length ?? 0} funds)`);
+      return data.funds || [];
+    }
+  } catch { /* no registry yet */ }
+  return null;
+}
 
-  const fundsList = json.filterFunds || json;
-
-  if (!Array.isArray(fundsList)) {
-    console.log('Invalid data format: expected array, got', typeof fundsList);
-    return [];
-  }
-
-  return fundsList
-    .map((item, index) => {
-      try {
-        // Validate required fields exist
-        if (!item || !item.overviewInfo) {
-          console.warn(`Skipping item ${index}: missing overviewInfo`);
-          return null;
-        }
-
-        const info = item.overviewInfo;
-        const perf = item.performanceInfo || {};
-
-        // Validate required fields
-        if (!info.symbol || !info.amcCode) {
-          console.warn(`Skipping item ${index}: missing symbol or amcCode`);
-          return null;
-        }
-
-        const amcCode = info.amcCode;
-        // Use mapped name if available, otherwise fallback to original code
-        const myAmc = AMC_MAP[amcCode] || amcCode;
-
-        return {
-          id: `fund_${Date.now()}_${info.symbol}`,
-          code: info.symbol,
-          name: info.nameEn || info.name || 'Unknown',
-          amc: myAmc,
-          nav: parseFloat(perf.navPerUnit) || 0,
-          ytd: parseFloat(perf.ytdPercentChange) || 0,
-          return3m: parseFloat(perf.threeMonthPercentChange) || 0,
-          return6m: parseFloat(perf.sixMonthPercentChange) || 0,
-          return1y: parseFloat(perf.oneYearPercentChange) || 0,
-          return2y: 0,
-          return3y: parseFloat(perf.threeYearPercentChange) || 0,
-          return5y: parseFloat(perf.fiveYearPercentChange) || 0,
-          risk: parseInt(info.riskLevel) || 0,
-          type: info.aimcType || '',
-          isNew: false,
-          factsheetUrl: `https://www.settrade.com/th/mutualfund/quote/${encodeURIComponent(info.symbol)}/overview`
-        };
-      } catch (error) {
-        console.warn(`Error processing item ${index}:`, error.message);
-        return null;
-      }
-    })
-    .filter(f => f !== null);
+async function saveRegistry(funds) {
+  await fs.writeFile(REGISTRY_PATH, JSON.stringify({ timestamp: Date.now(), funds }, null, 2));
 }
 
 /**
- * Main scraping function (now uses curl via shell script)
+ * Build the fund registry by:
+ *   1. Getting all AMCs from the SEC API
+ *   2. Fetching fund lists for target AMCs concurrently
+ *   3. Fetching fund policies concurrently to identify RMF/SSF/TESG/LTF
+ *
+ * Expensive on first run; cached for 7 days afterwards.
  */
-async function scrapeData() {
-  console.log('Starting API fetch (curl)...');
+async function buildRegistry(client) {
+  console.log('Building fund registry from SEC API…');
 
-  // Ensure data directory exists
+  const amcList = await client.getAmcList();
+  if (!Array.isArray(amcList)) throw new Error('Unexpected AMC list response');
+
+  const amcKeys = new Set(Object.keys(AMC_MAP).map((k) => k.toUpperCase()));
+  const targetAmcs = amcList.filter((amc) => {
+    const code = (amc.amc_id || '').toUpperCase();
+    return amcKeys.has(code);
+  });
+
+  console.log(`Found ${targetAmcs.length} of ${amcList.length} target AMCs`);
+
+  // Step 1: fetch all fund lists concurrently
+  const fundListTasks = targetAmcs.map((amc) => async () => {
+    const amcCode = (amc.amc_id || '').toUpperCase();
+    const funds   = await client.getFundsByAmc(amc.unique_id);
+    if (!Array.isArray(funds)) return null;
+    const active = funds.filter((f) => f.fund_status === 'RG');
+    console.log(`  ${amcCode}: ${active.length} active funds`);
+    return { amc, amcCode, activeFunds: active };
+  });
+
+  const amcResults = await runBatched(fundListTasks, BATCH_SIZE);
+
+  // Step 2: fetch policies for all active funds concurrently
+  const policyTasks = [];
+  for (const { amc, amcCode, activeFunds } of amcResults) {
+    const displayName = AMC_MAP[amcCode] || amcCode;
+    for (const fund of activeFunds) {
+      policyTasks.push(async () => {
+        const policy = await client.getFundPolicy(fund.proj_id);
+        return { fund, policy, displayName };
+      });
+    }
+  }
+
+  console.log(`Fetching policies for ${policyTasks.length} funds…`);
+  const policyResults = await runBatched(policyTasks, BATCH_SIZE);
+
+  // Step 3: filter to target types
+  const registry = [];
+  for (const { fund, policy, displayName } of policyResults) {
+    const fundType = FUND_TYPES.find((t) => matchesFundType(policy, t));
+    if (!fundType) continue;
+
+    registry.push({
+      proj_id:   fund.proj_id,
+      code:      fund.proj_abbr_name,
+      name:      fund.proj_name_en || fund.proj_name_th || fund.proj_abbr_name,
+      amc:       displayName,
+      type:      fundType,
+      riskLevel: policy?.risk_spectrum_id ?? 0,
+    });
+  }
+
+  console.log(`Registry built: ${registry.length} target funds`);
+  await saveRegistry(registry);
+  return registry;
+}
+
+// ── NAV + performance fetch ───────────────────────────────────────────────────
+
+async function fetchFundData(client, entry) {
+  const { proj_id, code, name, amc, type, riskLevel } = entry;
+
+  const result = await client.getLatestNav(proj_id);
+  if (!result) return null;
+  const { nav, navDate } = result;
+
+  let perf = null;
+  try {
+    perf = await client.getFundPerformance(proj_id);
+  } catch { /* non-fatal – returns 0s */ }
+
+  return {
+    id:        `fund_${Date.now()}_${code}`,
+    code,
+    name,
+    amc,
+    nav:       parseFloat(nav.last_val)  || 0,
+    navDate,                                    // actual NAV date (YYYY-MM-DD)
+    ytd:       parseFloat(perf?.ytd)     || 0,
+    return3m:  parseFloat(perf?.month_3) || 0,
+    return6m:  parseFloat(perf?.month_6) || 0,
+    return1y:  parseFloat(perf?.year_1)  || 0,
+    return2y:  0,
+    return3y:  parseFloat(perf?.year_3)  || 0,
+    return5y:  parseFloat(perf?.year_5)  || 0,
+    risk:      parseInt(riskLevel)        || 0,
+    type,
+    isNew:     false,
+    factsheetUrl: `https://www.sec.or.th/th/Pages/Fund/FundProjectDetail.aspx?PROJ_ID=${proj_id}`,
+  };
+}
+
+// ── Main scrape ───────────────────────────────────────────────────────────────
+
+export async function scrapeData() {
+  console.log('Starting SEC API scrape…');
   await fs.mkdir(DATA_DIR, { recursive: true });
 
-  try {
-    // Run the shell script that handles the curl commands
-    // The script is now in the same directory as this file
-    const scriptPath = path.resolve(__dirname, 'refetch_funds_v2.sh');
-    console.log(`Executing ${scriptPath}...`);
+  const client = new SecApiClient(
+    process.env.SEC_FACTSHEET_KEY,
+    process.env.SEC_DAILYINFO_KEY
+  );
 
-    // Run from current directory so that "data" in the script resolves correctly to backend/data
-    await execPromise(`sh ${scriptPath}`, { cwd: __dirname });
+  // Step 1: get or build registry
+  let registry = await loadRegistry();
+  if (!registry) registry = await buildRegistry(client);
 
-    console.log('Fetch completed. Processing data...');
+  // Step 2: fetch NAV + performance for every fund concurrently
+  const buckets = { RMF: [], SSF: [], TESG: [], LTF: [] };
+  let succeeded = 0, failed = 0;
 
-    // Read the fetched files
-    const rmfRaw = await fs.readFile(path.join(DATA_DIR, 'rmf-fetched.json'), 'utf8');
-    const tesgRaw = await fs.readFile(path.join(DATA_DIR, 'tesg-fetched.json'), 'utf8');
-    const ltfRaw = await fs.readFile(path.join(DATA_DIR, 'ltf-fetched.json'), 'utf8');
-    const ssfRaw = await fs.readFile(path.join(DATA_DIR, 'ssf-fetched.json'), 'utf8');
+  const navTasks = registry.map((entry) => async () => {
+    const data = await fetchFundData(client, entry);
+    return data ? { entry, data } : null;
+  });
 
-    const rmfData = processFunds(rmfRaw);
-    const tesgData = processFunds(tesgRaw);
-    const ltfData = processFunds(ltfRaw);
-    const ssfData = processFunds(ssfRaw);
+  const navResults = await runBatched(navTasks, BATCH_SIZE);
 
-    const timestamp = Date.now();
-    const selectedAMCs = Object.values(AMC_MAP);
-
-    const result = {
-      timestamp,
-      lastUpdated: new Date(timestamp).toISOString(),
-      selectedAMCs,
-      data: {
-        rmf: rmfData,
-        tesg: tesgData,
-        ltf: ltfData,
-        ssf: ssfData
-      }
-    };
-
-    // Save processed files
-    await fs.writeFile(
-      path.join(DATA_DIR, 'rmf.json'),
-      JSON.stringify({ timestamp, selectedAMCs, data: rmfData }, null, 2)
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'tesg.json'),
-      JSON.stringify({ timestamp, selectedAMCs, data: tesgData }, null, 2)
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'ltf.json'),
-      JSON.stringify({ timestamp, selectedAMCs, data: ltfData }, null, 2)
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'ssf.json'),
-      JSON.stringify({ timestamp, selectedAMCs, data: ssfData }, null, 2)
-    );
-
-    await fs.writeFile(
-      path.join(DATA_DIR, 'all.json'),
-      JSON.stringify(result, null, 2)
-    );
-
-    console.log('\n=== Fetch Summary ===');
-    console.log(`Processed RMF funds: ${rmfData.length}`);
-    console.log(`Processed TESG funds: ${tesgData.length}`);
-    console.log(`Processed LTF funds: ${ltfData.length}`);
-    console.log(`Processed SSF funds: ${ssfData.length}`);
-    console.log('=====================\n');
-
-    return result;
-
-  } catch (error) {
-    console.error('Fetch failed:', error);
-    throw error;
+  for (const r of navResults) {
+    if (r?.data) {
+      buckets[r.entry.type]?.push(r.data);
+      succeeded++;
+    } else {
+      failed++;
+    }
   }
+  // Count failures from tasks that returned null
+  failed += registry.length - navResults.length;
+
+  const timestamp   = Date.now();
+  const lastUpdated = new Date(timestamp).toISOString();
+  const selectedAMCs = Object.values(AMC_MAP);
+
+  // Step 3: write per-type and combined files
+  const typeFileMap = { RMF: 'rmf', SSF: 'ssf', TESG: 'tesg', LTF: 'ltf' };
+  await Promise.all(
+    Object.entries(typeFileMap).map(([type, key]) =>
+      fs.writeFile(
+        path.join(DATA_DIR, `${key}.json`),
+        JSON.stringify({ timestamp, lastUpdated, selectedAMCs, data: buckets[type] }, null, 2)
+      )
+    )
+  );
+
+  const result = {
+    timestamp,
+    lastUpdated,
+    selectedAMCs,
+    data: { rmf: buckets.RMF, tesg: buckets.TESG, ltf: buckets.LTF, ssf: buckets.SSF },
+  };
+  await fs.writeFile(path.join(DATA_DIR, 'all.json'), JSON.stringify(result, null, 2));
+
+  console.log('\n=== Scrape Summary ===');
+  console.log(`RMF:  ${buckets.RMF.length} funds`);
+  console.log(`SSF:  ${buckets.SSF.length} funds`);
+  console.log(`TESG: ${buckets.TESG.length} funds`);
+  console.log(`LTF:  ${buckets.LTF.length} funds`);
+  console.log(`Succeeded: ${succeeded}, Failed: ${failed}`);
+  console.log('======================\n');
+
+  return result;
 }
 
-// Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   scrapeData()
-    .then(() => {
-      console.log('Done!');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('Fatal error:', error);
-      process.exit(1);
-    });
+    .then(() => process.exit(0))
+    .catch((err) => { console.error('Fatal:', err.message); process.exit(1); });
 }
-
-export { scrapeData };

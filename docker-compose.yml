@@ -4,10 +4,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    #ports:
-    #  - "3001:3001"
     volumes:
       - ./backend/data:/app/data
+    env_file:
+      - ./backend/.env
     environment:
       - PORT=3001
     restart: unless-stopped
@@ -17,16 +17,31 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-  
+
   frontend:
-    container_name: sarnfund-frontend
+    container_name: sarnfund-frontend-builder
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    command: sh -c "cp -r /app/dist/. /app/html/"
+    volumes:
+      - frontend_dist:/app/html
+    restart: "no"
+
+  nginx:
+    container_name: sarnfund-nginx
+    image: nginx:1.27-alpine
     ports:
       - "8091:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - frontend_dist:/usr/share/nginx/html:ro
     depends_on:
-      - backend
-    environment:
-      - VITE_API_URL=http://backend:3001
+      frontend:
+        condition: service_completed_successfully
+      backend:
+        condition: service_started
     restart: unless-stopped
+
+volumes:
+  frontend_dist:

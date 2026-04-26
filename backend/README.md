@@ -1,118 +1,77 @@
-# SarnFund Backend Scraper Service
+# SarnFund Backend
 
-This backend service scrapes mutual fund data from settrade.com and provides it via a REST API.
+Express API server that fetches Thai mutual fund data from the **SEC Thailand Open Data API v2** and serves it to the frontend.
 
-## Features
+## Files
 
-- Web scraping from settrade.com for RMF and ThaiESG mutual fund data
-- 24-hour caching to minimize scraping frequency
-- Automatic daily scraping at 1 AM
-- REST API endpoints for frontend consumption
-- CORS enabled for frontend integration
+| File | Purpose |
+|------|---------|
+| `sec-api-connector.js` | SEC API client — rate limiting, retry, all endpoints |
+| `scraper.js` | Two-phase scrape: fund registry build + daily NAV fetch |
+| `server.js` | Express routes, cron scheduler, `.env` loader |
+| `init-data.js` | Seed script for empty cache files |
+| `.env.example` | Environment variable template |
 
 ## Setup
 
-1. Install dependencies:
 ```bash
-cd backend
+cp .env.example .env   # fill in SEC_FACTSHEET_KEY and SEC_DAILYINFO_KEY
 npm install
-```
-
-2. Install Playwright browsers:
-```bash
-npx playwright install chromium
-```
-
-3. Initialize data directory (creates initial mock data):
-```bash
-npm run init
-```
-
-## Running
-
-### Development Mode
-```bash
-npm run dev
-```
-
-### Production Mode
-```bash
+npm run scrape         # first-time registry build (2–5 min) + NAV fetch
 npm start
 ```
 
-### Manual Scraping
-To manually trigger a scrape:
+Get subscription keys at [secopendata.sec.or.th/sec-open-apis](https://secopendata.sec.or.th/sec-open-apis)
+— subscribe to **Fund Factsheet API** and **Fund Daily Info API**.
+
+## Scripts
+
 ```bash
-npm run scrape
+npm start       # production server
+npm run dev     # nodemon (auto-reload)
+npm run scrape  # run scraper directly
+npm run init    # seed empty data files
 ```
 
-Or via API:
-```bash
-curl -X POST http://localhost:3001/api/scrape
-```
+## Environment variables
 
-## API Endpoints
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `SEC_FACTSHEET_KEY` | Yes | — | Fund Factsheet API subscription key |
+| `SEC_DAILYINFO_KEY` | Yes | — | Fund Daily Info API subscription key |
+| `SCRAPE_TOKEN` | Recommended | — | Protects `POST /api/scrape` |
+| `PORT` | No | 3001 | Server port |
+| `CORS_ORIGIN` | No | `*` | Restrict CORS in production |
 
-### GET /api/funds/rmf
-Get RMF mutual fund data.
+## API endpoints
 
-Response:
-```json
-{
-  "success": true,
-  "cached": true,
-  "timestamp": 1234567890,
-  "data": [...]
-}
-```
-
-### GET /api/funds/tesg
-Get ThaiESG mutual fund data.
-
-### GET /api/funds/all
-Get all mutual fund data (both RMF and TESG).
-
-### POST /api/scrape
-Manually trigger scraping. Will skip if cache is still valid.
-
-### GET /api/health
-Health check endpoint with cache status.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/funds/rmf` | RMF fund data |
+| GET | `/api/funds/tesg` | ThaiESG fund data |
+| GET | `/api/funds/ltf` | LTF fund data |
+| GET | `/api/funds/ssf` | SSF fund data |
+| GET | `/api/funds/all` | All four types |
+| GET | `/api/health` | Keys, registry, cache status |
+| GET | `/api/stats` | Fund counts per type |
+| POST | `/api/scrape` | Manual scrape (`X-Scrape-Token` required; `?force=true` to bypass cache) |
+| DELETE | `/api/registry` | Clear 7-day registry cache |
 
 ## Caching
 
-- Data is cached for 24 hours
-- Cache is stored in `backend/data/` directory
-- Automatic scraping runs daily at 1 AM
-- Cache validation happens on each API request
+| Cache file | TTL | Contents |
+|------------|-----|----------|
+| `data/fund-registry.json` | 7 days | Fund type + risk classification for all active funds |
+| `data/rmf.json` | 24 h | Latest RMF NAV + performance |
+| `data/tesg.json` | 24 h | Latest ThaiESG NAV + performance |
+| `data/ltf.json` | 24 h | Latest LTF NAV + performance |
+| `data/ssf.json` | 24 h | Latest SSF NAV + performance |
+| `data/all.json` | 24 h | Combined snapshot |
 
-## Data Structure
+Daily scrape runs automatically at **01:00 AM** via `node-cron`.
 
-Each fund object contains:
-```json
-{
-  "id": "unique_id",
-  "code": "FUND-CODE",
-  "name": "Fund Name",
-  "amc": "AMC Name",
-  "nav": 10.50,
-  "ytd": 5.2,
-  "return1y": 8.5,
-  "return2y": 12.3,
-  "return3y": 15.7,
-  "return5y": 20.1,
-  "risk": 5,
-  "type": "Fund Type",
-  "isNew": false
-}
-```
+## Rate limiting
 
-## Environment Variables
-
-- `PORT` - Server port (default: 3001)
-
-## Notes
-
-- The scraper uses Playwright with Chromium
-- Scraping is resource-intensive, hence the 24-hour cache
-- The scraper respects the settrade.com website structure
-- If the website structure changes, the scraper may need updates
+- 120 ms between requests (≈ 8 calls/sec, well under the SEC limit of 3,000/300 s)
+- Exponential backoff on HTTP 421/429: 1 s → 2 s → 3 s, max 3 retries
+- Promise-chain `RateLimiter` — safe under concurrent callers
