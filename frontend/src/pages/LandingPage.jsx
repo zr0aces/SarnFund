@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Trophy, Leaf, ArrowRight, ShieldCheck, BarChart3, Calculator } from 'lucide-react';
 
 const LandingPage = () => {
-    const [stats, setStats] = useState({ rmf: 0, tesg: 0, ltf: 0, ssf: 0 });
+    const [stats, setStats] = useState({ rmf: 0, esg: 0, ssf: 0 });
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -33,7 +33,7 @@ const LandingPage = () => {
                         Smart <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Fund Analytics</span>
                     </h1>
                     <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Real-time tracking for Tax Saving Funds. Compare RMF, ThaiESG, SSF, and LTF performance with zero-trust transparency.
+                        Real-time tracking for Tax Saving Funds. Compare RMF, ThaiESG, and SSF performance with zero-trust transparency.
                     </p>
                 </div>
             </header>
@@ -78,7 +78,7 @@ const LandingPage = () => {
 
                             <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
                                 <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">{stats.tesg > 0 ? stats.tesg : 'Loading...'}</span>
+                                <span className="font-bold text-slate-800">{stats.esg > 0 ? stats.esg : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-teal-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />
@@ -103,28 +103,6 @@ const LandingPage = () => {
                                 <span className="font-bold text-slate-800">{stats.ssf > 0 ? stats.ssf : 'Loading...'}</span>
                             </div>
                             <div className="flex items-center text-purple-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
-                                Launch <ArrowRight size={18} className="ml-1" />
-                            </div>
-                        </div>
-                    </Link>
-
-                    {/* LTF Card */}
-                    <Link to="/funds/ltf" className="group bg-white rounded-2xl p-8 shadow-xl border border-slate-100 hover:border-blue-200 hover:shadow-2xl transition-all relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
-                            <BarChart3 size={140} className="text-blue-600" />
-                        </div>
-                        <div className="relative">
-                            <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <BarChart3 size={28} />
-                            </div>
-                            <h2 className="text-3xl font-bold mb-3 text-slate-900">LTF Dashboard</h2>
-                            <p className="text-slate-500 mb-6 text-base">Long Term Equity Funds. Historical tracking.</p>
-
-                            <div className="flex items-center justify-between text-sm py-3 border-t border-slate-100">
-                                <span className="text-slate-400">Funds</span>
-                                <span className="font-bold text-slate-800">{stats.ltf > 0 ? stats.ltf : 'Loading...'}</span>
-                            </div>
-                            <div className="flex items-center text-blue-600 font-medium text-sm mt-4 group-hover:gap-2 transition-all">
                                 Launch <ArrowRight size={18} className="ml-1" />
                             </div>
                         </div>

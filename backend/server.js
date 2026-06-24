@@ -82,172 +82,38 @@ async function getCachedData(filename) {
   }
 }
 
+// Active fund types — to add a new type: add its key here (must match scraper FUND_TYPES)
+// and ensure the scraper writes {type}.json to the data directory.
+const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'ssf', 'all']);
+
 /**
- * Get RMF fund data
+ * Fund data endpoints — one route handles all active types.
  */
-app.get('/api/funds/rmf', async (req, res) => {
+app.get('/api/funds/:type', async (req, res) => {
+  const { type } = req.params;
+  if (!ACTIVE_FUND_TYPES.has(type)) {
+    return res.status(404).json({ success: false, error: `Unknown fund type: ${type}` });
+  }
   try {
-    console.log('GET /api/funds/rmf');
-
-    // Check cache first
-    const cached = await getCachedData('rmf.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error and suggest manual scrape
+    console.log(`GET /api/funds/${type}`);
+    const cached = await getCachedData(`${type}.json`);
+    if (cached) return res.json({ success: true, cached: true, ...cached });
     return res.status(503).json({
       success: false,
       error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
+      message: 'Run: npm run scrape in the backend directory',
     });
-
   } catch (error) {
-    console.error('Error fetching RMF data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error(`Error fetching ${type.toUpperCase()} data:`, error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-/**
- * Get ThaiESG fund data
- */
-app.get('/api/funds/tesg', async (req, res) => {
-  try {
-    console.log('GET /api/funds/tesg');
-
-    // Check cache first
-    const cached = await getCachedData('tesg.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
-    });
-
-  } catch (error) {
-    console.error('Error fetching TESG data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-/**
- * Get LTF fund data
- */
-app.get('/api/funds/ltf', async (req, res) => {
-  try {
-    console.log('GET /api/funds/ltf');
-
-    // Check cache first
-    const cached = await getCachedData('ltf.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
-    });
-
-  } catch (error) {
-    console.error('Error fetching LTF data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-/**
- * Get SSF fund data
- */
-app.get('/api/funds/ssf', async (req, res) => {
-  try {
-    console.log('GET /api/funds/ssf');
-
-    // Check cache first
-    const cached = await getCachedData('ssf.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    // If no valid cache, return error
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.',
-      message: 'Run: npm run scrape in the backend directory'
-    });
-
-  } catch (error) {
-    console.error('Error fetching SSF data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-/**
- * Get all fund data
- */
-app.get('/api/funds/all', async (req, res) => {
-  try {
-    console.log('GET /api/funds/all');
-
-    const cached = await getCachedData('all.json');
-
-    if (cached) {
-      return res.json({
-        success: true,
-        cached: true,
-        ...cached
-      });
-    }
-
-    return res.status(503).json({
-      success: false,
-      error: 'No cached data available. Please run scraper manually or wait for scheduled scrape.'
-    });
-
-  } catch (error) {
-    console.error('Error fetching all data:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+// Backward-compat aliases
+app.get('/api/funds/tesg', (req, res) => res.redirect(301, '/api/funds/esg'));
+app.get('/api/funds/ltf', (_req, res) =>
+  res.status(410).json({ success: false, error: 'LTF funds were discontinued. No longer tracked.' })
+);
 
 /**
  * Manually trigger scraping.
@@ -308,10 +174,9 @@ app.delete('/api/registry', async (req, res) => {
  */
 app.get('/api/health', async (req, res) => {
   try {
-    const [rmfCache, tesgCache, ltfCache, ssfCache] = await Promise.all([
+    const [rmfCache, esgCache, ssfCache] = await Promise.all([
       getCachedData('rmf.json'),
-      getCachedData('tesg.json'),
-      getCachedData('ltf.json'),
+      getCachedData('esg.json'),
       getCachedData('ssf.json'),
     ]);
 
@@ -335,10 +200,9 @@ app.get('/api/health', async (req, res) => {
       },
       registry,
       cache: {
-        rmf:  cacheInfo(rmfCache),
-        tesg: cacheInfo(tesgCache),
-        ltf:  cacheInfo(ltfCache),
-        ssf:  cacheInfo(ssfCache),
+        rmf: cacheInfo(rmfCache),
+        esg: cacheInfo(esgCache),
+        ssf: cacheInfo(ssfCache),
       },
     });
   } catch (error) {
@@ -351,21 +215,19 @@ app.get('/api/health', async (req, res) => {
  */
 app.get('/api/stats', async (req, res) => {
   try {
-    const [rmf, tesg, ltf, ssf] = await Promise.all([
+    const [rmf, esg, ssf] = await Promise.all([
       getCachedData('rmf.json'),
-      getCachedData('tesg.json'),
-      getCachedData('ltf.json'),
-      getCachedData('ssf.json')
+      getCachedData('esg.json'),
+      getCachedData('ssf.json'),
     ]);
 
     res.json({
       success: true,
       stats: {
         rmf: rmf?.data?.length || 0,
-        tesg: tesg?.data?.length || 0,
-        ltf: ltf?.data?.length || 0,
-        ssf: ssf?.data?.length || 0
-      }
+        esg: esg?.data?.length || 0,
+        ssf: ssf?.data?.length || 0,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -397,8 +259,7 @@ app.listen(PORT, () => {
   console.log(`Scrape token:  ${hasToken ? 'configured ✓' : 'not set – /api/scrape is unprotected (set SCRAPE_TOKEN in .env)'}`);
   console.log(`\nAPI endpoints:`);
   console.log(`  GET    /api/funds/rmf   - RMF fund data`);
-  console.log(`  GET    /api/funds/tesg  - ThaiESG fund data`);
-  console.log(`  GET    /api/funds/ltf   - LTF fund data`);
+  console.log(`  GET    /api/funds/esg   - ThaiESG (ESG) fund data`);
   console.log(`  GET    /api/funds/ssf   - SSF fund data`);
   console.log(`  GET    /api/funds/all   - All fund data`);
   console.log(`  POST   /api/scrape?force=true  - Force scrape`);

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(rtk read *)",
+      "WebFetch(domain:secopendata.sec.or.th)",
+      "Bash(rtk grep *)",
+      "Skill(code-review)",
+      "Bash(rtk git *)",
+      "Bash(node --input-type=module --eval \"import '/home/san/workspace/SarnFund/scripts/fetch-funds.js'\")",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

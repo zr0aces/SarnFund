@@ -7,7 +7,7 @@ const ThaiEsgPage = () => {
         <DashboardLayout
             title="ThaiESG Dashboard"
             icon={Leaf}
-            fundType="tesg"
+            fundType="esg"
             AMC_COLORS={AMC_COLORS_ESG}
             initialMockData={INITIAL_ESG}
         />

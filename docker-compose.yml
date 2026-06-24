@@ -30,7 +30,7 @@ services:
 
   nginx:
     container_name: sarnfund-nginx
-    image: nginx:1.27-alpine
+    image: nginx:alpine
     ports:
       - "8091:80"
     volumes:

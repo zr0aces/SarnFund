@@ -9,6 +9,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "scrape": "node scraper.js",
+    "scrape:refresh": "node scraper.js --refresh",
     "init": "node init-data.js"
   },
   "dependencies": {

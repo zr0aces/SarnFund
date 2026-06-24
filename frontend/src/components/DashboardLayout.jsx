@@ -71,7 +71,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                         </Link>
                         <Link
                             to="/funds/thaiesg"
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'tesg' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'esg' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             ThaiESG
                         </Link>
@@ -80,12 +80,6 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                             className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ssf' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             SSF
-                        </Link>
-                        <Link
-                            to="/funds/ltf"
-                            className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${fundType === 'ltf' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                        >
-                            LTF
                         </Link>
                     </div>
 

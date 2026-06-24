@@ -11,31 +11,77 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR   = path.join(__dirname, 'data');
 
-const AMC_MAP = {
-  KKPAM:      'KKP',
-  KSAM:       'Krungsri',
-  BBLAM:      'BBL',
-  TISCOASSET: 'TISCO',
-  SCBAM:      'SCB',
-  KASSET:     'KAsset',
-  KTAM:       'KTAM',
-  ONEAM:      'ONE',
-  UOBAM:      'UOB',
-  PRINCIPAL:  'Principal',
-  EASTSPRING: 'Eastspring',
-  ASSETFUND:  'Asset Plus',
-  DAOL:       'DAOL',
-  KWI:        'KWI',
-  LHFUND:     'LH Fund',
-  MFC:        'MFC',
-  TALIS:      'TALIS',
-  XSPRING:    'XSpring',
+// Single source of truth for AMC identity — display name + name-match regex in one entry.
+// v2 AMC list has no amc_id, so we match by comp_name_en / comp_name_th.
+// Adding an AMC here is the only change needed: display and pattern stay in sync.
+const AMC_REGISTRY = {
+  KKPAM:      { display: 'KKP',        pattern: /\bkkp\b/i },
+  KSAM:       { display: 'Krungsri',   pattern: /krungsri/i },
+  BBLAM:      { display: 'BBL',        pattern: /\bbbl\b/i },
+  TISCOASSET: { display: 'TISCO',      pattern: /tisco/i },
+  SCBAM:      { display: 'SCB',        pattern: /\bscb\b/i },
+  KASSET:     { display: 'KAsset',     pattern: /kasikorn|k\s*asset/i },
+  KTAM:       { display: 'KTAM',       pattern: /krung\s*thai/i },
+  ONEAM:      { display: 'ONE',        pattern: /one\s*asset/i },
+  UOBAM:      { display: 'UOB',        pattern: /\buob\b/i },
+  PRINCIPAL:  { display: 'Principal',  pattern: /principal/i },
+  EASTSPRING: { display: 'Eastspring', pattern: /eastspring/i },
+  ASSETFUND:  { display: 'Asset Plus', pattern: /asset\s*plus/i },
+  DAOL:       { display: 'DAOL',       pattern: /\bdaol\b/i },
+  KWI:        { display: 'KWI',        pattern: /\bkwi\b/i },
+  LHFUND:     { display: 'LH Fund',    pattern: /land\s*(and|&)\s*house|lh\s*fund/i },
+  MFC:        { display: 'MFC',        pattern: /\bmfc\b/i },
+  TALIS:      { display: 'TALIS',      pattern: /talis/i },
+  XSPRING:    { display: 'XSpring',    pattern: /xspring/i },
 };
 
-const FUND_TYPES    = ['RMF', 'SSF', 'TESG', 'LTF'];
-const REGISTRY_PATH = path.join(DATA_DIR, 'fund-registry.json');
-const REGISTRY_TTL  = 7 * 24 * 60 * 60 * 1000; // 7 days
-const BATCH_SIZE    = 5; // concurrent API calls
+function matchAmcCode(compNameEn = '', compNameTh = '') {
+  const combined = `${compNameEn} ${compNameTh}`;
+  for (const [code, { pattern }] of Object.entries(AMC_REGISTRY)) {
+    if (pattern.test(combined)) return code;
+  }
+  return null;
+}
+
+/**
+ * Detect SSF / ESG (ThaiESG) directly from the v2 profiles endpoint field.
+ * RMF and LTF are NOT in fund_class_tax_incentive_type — they need a specs call.
+ */
+function fundTypeFromTaxIncentive(profile) {
+  const raw = (profile.fund_class_tax_incentive_type || '').trim();
+  const t = raw.toUpperCase().replace(/\s+/g, '');
+  if (t === 'SSF') return 'SSF';
+  if (t === 'THAESG' || t === 'THAIESG' || t === 'TESG' || t === 'ESG') return 'ESG';
+  return null;
+}
+
+/**
+ * Map v2 performance rows to the flat shape the frontend expects.
+ * reference_period values vary (Thai/English); match flexibly.
+ */
+function parsePerformanceV2(rows) {
+  const out = { ytd: 0, month_3: 0, month_6: 0, year_1: 0, year_3: 0, year_5: 0 };
+  for (const row of rows || []) {
+    const p = row.reference_period || '';
+    const v = numVal(row.performance_value);
+    if (/ytd|ต้นปี|year.to.date/i.test(p))        out.ytd     = v;
+    else if (/3\s*(m|month|เดือน)/i.test(p))       out.month_3 = v;
+    else if (/6\s*(m|month|เดือน)/i.test(p))       out.month_6 = v;
+    else if (/^1\s*(y|year|ปี)/i.test(p))          out.year_1  = v;
+    else if (/3\s*(y|year|ปี)/i.test(p))           out.year_3  = v;
+    else if (/5\s*(y|year|ปี)/i.test(p))           out.year_5  = v;
+  }
+  return out;
+}
+
+// To add a new fund type: add its name here and handle detection in fundTypeFromTaxIncentive()
+// or via a spec_code in sec-api-connector.js FUND_SPEC_CODES.
+const FUND_TYPES = ['RMF', 'SSF', 'ESG'];
+const REGISTRY_PATH  = path.join(DATA_DIR, 'fund-registry.json');
+const PROGRESS_PATH  = path.join(DATA_DIR, '.registry-progress.json');
+const REGISTRY_TTL   = 7 * 24 * 60 * 60 * 1000;
+const PROGRESS_TTL   = 24 * 60 * 60 * 1000;  // discard stale progress after 24h
+const BATCH_SIZE     = 5;
 
 // ── Registry ──────────────────────────────────────────────────────────────────
 
@@ -43,8 +89,10 @@ async function loadRegistry() {
   try {
     const data = JSON.parse(await fs.readFile(REGISTRY_PATH, 'utf8'));
     if (Date.now() - (data.timestamp || 0) < REGISTRY_TTL) {
-      console.log(`Using cached fund registry (${data.funds?.length ?? 0} funds)`);
-      return data.funds || [];
+      // Normalize legacy TESG → ESG from registries built before the rename
+      const funds = (data.funds || []).map((f) => f.type === 'TESG' ? { ...f, type: 'ESG' } : f);
+      console.log(`Using cached fund registry (${funds.length} funds)`);
+      return funds;
     }
   } catch { /* no registry yet */ }
   return null;
@@ -54,79 +102,157 @@ async function saveRegistry(funds) {
   await fs.writeFile(REGISTRY_PATH, JSON.stringify({ timestamp: Date.now(), funds }, null, 2));
 }
 
+// Deduplicate registry entries by proj_id + class (same fund fetched from overlapping AMC data)
+function deduplicateRegistry(entries) {
+  const seen = new Set();
+  return entries.filter((e) => {
+    const key = `${e.proj_id}|${e.class ?? ''}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// Progress checkpoint for spec-lookup phase — survives crashes / rate-limit kills
+async function loadProgress() {
+  try {
+    const data = JSON.parse(await fs.readFile(PROGRESS_PATH, 'utf8'));
+    if (Date.now() - (data.timestamp || 0) > PROGRESS_TTL) return null;
+    return data;
+  } catch { return null; }
+}
+
+async function saveProgress(partialRegistry, pendingProfiles) {
+  await fs.writeFile(
+    PROGRESS_PATH,
+    JSON.stringify({ timestamp: Date.now(), partialRegistry, pendingProfiles }, null, 2)
+  );
+}
+
+async function clearProgress() {
+  try { await fs.unlink(PROGRESS_PATH); } catch { /* already gone */ }
+}
+
 /**
- * Build the fund registry by:
- *   1. Getting all AMCs from the SEC API
- *   2. Fetching fund lists for target AMCs concurrently
- *   3. Fetching fund policies concurrently to identify RMF/SSF/TESG/LTF
+ * Build the fund registry using SEC API v2:
  *
- * Expensive on first run; cached for 7 days afterwards.
+ * Phase 1 — AMC matching
+ *   getAmcList() → match 18 target AMCs by name (no amc_id in v2)
+ *
+ * Phase 2 — Fund profiles (replaces getFundsByAmc + getFundPolicy)
+ *   getFundProfiles({ company_info: unique_id, fund_status: 'Registered' })
+ *   SSF and TESG are detected from fund_class_tax_incentive_type in the profile.
+ *
+ * Phase 3 — Spec lookups for RMF / LTF
+ *   getFundSpecifications(proj_id) → check spec_code against FUND_SPEC_CODES
  */
 async function buildRegistry(client) {
-  console.log('Building fund registry from SEC API…');
+  console.log('Building fund registry from SEC API v2…');
 
-  const amcList = await client.getAmcList();
-  if (!Array.isArray(amcList)) throw new Error('Unexpected AMC list response');
+  let partialRegistry = [];
+  let unknownProfiles;
 
-  const amcKeys = new Set(Object.keys(AMC_MAP).map((k) => k.toUpperCase()));
-  const targetAmcs = amcList.filter((amc) => {
-    const code = (amc.amc_id || '').toUpperCase();
-    return amcKeys.has(code);
-  });
+  // Resume from checkpoint if a previous run was interrupted (rate-limit, crash, etc.)
+  const progress = await loadProgress();
+  if (progress?.pendingProfiles?.length > 0) {
+    console.log(
+      `Resuming from checkpoint: ${progress.partialRegistry.length} entries done, ` +
+      `${progress.pendingProfiles.length} spec lookups remaining…`
+    );
+    partialRegistry = progress.partialRegistry;
+    unknownProfiles = progress.pendingProfiles;
+  } else {
+    // Phase 1: get AMC list and match target AMCs by name
+    const amcList = await client.getAmcList();
+    if (!Array.isArray(amcList) || amcList.length === 0)
+      throw new Error('AMC list returned empty — aborting to protect existing registry');
 
-  console.log(`Found ${targetAmcs.length} of ${amcList.length} target AMCs`);
+    const targetAmcs = [];
+    for (const amc of amcList) {
+      const code = matchAmcCode(amc.comp_name_en, amc.comp_name_th);
+      if (code) targetAmcs.push({ ...amc, amcCode: code });
+    }
+    console.log(`Found ${targetAmcs.length} of ${amcList.length} target AMCs`);
+    if (targetAmcs.length === 0)
+      throw new Error(`No target AMCs matched from ${amcList.length} SEC AMCs — check AMC_REGISTRY patterns`);
 
-  // Step 1: fetch all fund lists concurrently
-  const fundListTasks = targetAmcs.map((amc) => async () => {
-    const amcCode = (amc.amc_id || '').toUpperCase();
-    const funds   = await client.getFundsByAmc(amc.unique_id);
-    if (!Array.isArray(funds)) return null;
-    const active = funds.filter((f) => f.fund_status === 'RG');
-    console.log(`  ${amcCode}: ${active.length} active funds`);
-    return { amc, amcCode, activeFunds: active };
-  });
-
-  const amcResults = await runBatched(fundListTasks, BATCH_SIZE);
-
-  // Step 2: fetch policies for all active funds concurrently
-  const policyTasks = [];
-  for (const { amc, amcCode, activeFunds } of amcResults) {
-    const displayName = AMC_MAP[amcCode] || amcCode;
-    for (const fund of activeFunds) {
-      policyTasks.push(async () => {
-        const policy = await client.getFundPolicy(fund.proj_id);
-        return { fund, policy, displayName };
+    // Phase 2: fetch profiles for each target AMC (Registered funds only)
+    const profileTasks = targetAmcs.map((amc) => async () => {
+      const profiles = await client.getFundProfiles({
+        company_info: amc.unique_id,
+        fund_status: 'Registered',
       });
+      const displayName = AMC_REGISTRY[amc.amcCode]?.display || amc.amcCode;
+      console.log(`  ${amc.amcCode}: ${profiles.length} registered funds`);
+      return profiles.map((p) => ({ ...p, amcCode: amc.amcCode, displayName }));
+    });
+
+    const amcResults = await runBatched(profileTasks, BATCH_SIZE);
+    const allProfiles = amcResults.flat();
+
+    // Phase 3 prep: split known (SSF/TESG from profile) vs unknown (need spec lookup)
+    unknownProfiles = [];
+    for (const profile of allProfiles) {
+      const fundType = fundTypeFromTaxIncentive(profile);
+      if (fundType) {
+        partialRegistry.push(profileToEntry(profile, fundType));
+      } else {
+        unknownProfiles.push(profile);
+      }
+    }
+
+    // Save checkpoint before the expensive spec-lookup phase
+    if (unknownProfiles.length > 0) {
+      await saveProgress(partialRegistry, unknownProfiles);
     }
   }
 
-  console.log(`Fetching policies for ${policyTasks.length} funds…`);
-  const policyResults = await runBatched(policyTasks, BATCH_SIZE);
+  // Phase 3: spec lookups for potential RMF/LTF, checkpointed after each batch
+  if (unknownProfiles.length > 0) {
+    console.log(`Fetching specifications for ${unknownProfiles.length} potential RMF/LTF funds…`);
+    for (let i = 0; i < unknownProfiles.length; i += BATCH_SIZE) {
+      const batch = unknownProfiles.slice(i, i + BATCH_SIZE);
+      const batchTasks = batch.map((profile) => async () => {
+        const specs = await client.getFundSpecifications(profile.proj_id);
+        const fundType = FUND_TYPES.find((t) => specs.some((s) => matchesFundType(s, t)));
+        return fundType ? profileToEntry(profile, fundType) : null;
+      });
+      const batchResults = await runBatched(batchTasks, BATCH_SIZE);
+      for (const entry of batchResults) {
+        if (entry) partialRegistry.push(entry);
+      }
 
-  // Step 3: filter to target types
-  const registry = [];
-  for (const { fund, policy, displayName } of policyResults) {
-    const fundType = FUND_TYPES.find((t) => matchesFundType(policy, t));
-    if (!fundType) continue;
-
-    // class_abbr_name added to fund-by-AMC response in API v2 (e.g. "A", "D", "I")
-    const classAbbr = (fund.class_abbr_name && fund.class_abbr_name !== '-')
-      ? fund.class_abbr_name : null;
-
-    registry.push({
-      proj_id:   fund.proj_id,
-      code:      fund.proj_abbr_name,
-      name:      fund.proj_name_en || fund.proj_name_th || fund.proj_abbr_name,
-      amc:       displayName,
-      type:      fundType,
-      class:     classAbbr,
-      riskLevel: policy?.risk_spectrum_id ?? 0,
-    });
+      const remaining = unknownProfiles.slice(i + BATCH_SIZE);
+      if (remaining.length > 0) {
+        await saveProgress(partialRegistry, remaining);
+        console.log(`  ${i + batch.length}/${unknownProfiles.length} specs checked…`);
+      }
+    }
   }
 
+  await clearProgress();
+  const registry = deduplicateRegistry(partialRegistry);
+  if (registry.length < partialRegistry.length)
+    console.log(`Deduplication removed ${partialRegistry.length - registry.length} duplicate entries`);
   console.log(`Registry built: ${registry.length} target funds`);
   await saveRegistry(registry);
   return registry;
+}
+
+function profileToEntry(profile, fundType) {
+  // fund_class_name is 'main' for single-class funds; store null in that case
+  const cls = (profile.fund_class_name && profile.fund_class_name !== 'main')
+    ? profile.fund_class_name.trim() : null;
+  return {
+    proj_id:   profile.proj_id,
+    code:      (profile.proj_abbr_name || '').trim(),
+    name:      (profile.proj_name_en || profile.proj_name_th || profile.proj_abbr_name || '').trim(),
+    amc:       (profile.displayName || '').trim(),
+    type:      fundType,
+    class:     cls,
+    // riskLevel: available at /v2/fund/factsheet/risk-spectrum (separate call)
+    riskLevel: 0,
+  };
 }
 
 // ── NAV + performance fetch ───────────────────────────────────────────────────
@@ -134,36 +260,38 @@ async function buildRegistry(client) {
 async function fetchFundData(client, entry) {
   const { proj_id, code, name, amc, type, class: fundClass, riskLevel } = entry;
 
-  const result = await client.getLatestNav(proj_id);
+  const result = await client.getLatestNav(proj_id, 5, fundClass);
   if (!result) return null;
   const { nav, navDate } = result;
 
   let perf = null;
   try {
-    perf = await client.getFundPerformance(proj_id);
-  } catch { /* non-fatal – performance data returns as 0s */ }
+    const perfRows = await client.getFundPerformance(proj_id);
+    perf = parsePerformanceV2(perfRows);
+  } catch (err) { console.warn(`Performance fetch failed for ${proj_id}:`, err.message); }
 
-  // API v2 returns "-" for empty values — numVal() handles null, "-", and NaN.
+  // v2 NAV: sell_price / buy_price are top-level (not nested under amc_info)
+  // change_val / change_percent not available in v2 daily-info/nav
   return {
     id:               `fund_${Date.now()}_${code}`,
     code,
     name,
     amc,
-    class:            fundClass,                   // unit class e.g. "A", "D", "I" (v2)
-    nav:              numVal(nav.last_val),         // NAV per unit (THB)
-    navDate,                                        // actual NAV date from SEC (YYYY-MM-DD)
-    navChange:        numVal(nav.change_val),       // absolute day-over-day change (v2)
-    navChangePercent: numVal(nav.change_percent),   // percentage day-over-day change (v2)
-    netAsset:         numVal(nav.net_asset),        // total net assets in THB (v2)
-    sellPrice:        numVal(nav.amc_info?.sell_price),  // AMC offer price (v2)
-    buyPrice:         numVal(nav.amc_info?.buy_price),   // AMC redemption price (v2)
-    ytd:              numVal(perf?.ytd),
-    return3m:         numVal(perf?.month_3),
-    return6m:         numVal(perf?.month_6),
-    return1y:         numVal(perf?.year_1),
-    return2y:         0,                            // not available from SEC API
-    return3y:         numVal(perf?.year_3),
-    return5y:         numVal(perf?.year_5),
+    class:            fundClass,
+    nav:              numVal(nav.last_val),
+    navDate,
+    navChange:        0,                       // not available in SEC API v2
+    navChangePercent: 0,                       // not available in SEC API v2
+    netAsset:         numVal(nav.net_asset),
+    sellPrice:        numVal(nav.sell_price),  // v2: top-level (was amc_info.sell_price)
+    buyPrice:         numVal(nav.buy_price),   // v2: top-level (was amc_info.buy_price)
+    ytd:              perf?.ytd     ?? 0,
+    return3m:         perf?.month_3 ?? 0,
+    return6m:         perf?.month_6 ?? 0,
+    return1y:         perf?.year_1  ?? 0,
+    return2y:         0,                       // not available from SEC API
+    return3y:         perf?.year_3  ?? 0,
+    return5y:         perf?.year_5  ?? 0,
     risk:             numVal(riskLevel),
     type,
     isNew:            false,
@@ -174,7 +302,7 @@ async function fetchFundData(client, entry) {
 // ── Main scrape ───────────────────────────────────────────────────────────────
 
 export async function scrapeData() {
-  console.log('Starting SEC API scrape…');
+  console.log('Starting SEC API v2 scrape…');
   await fs.mkdir(DATA_DIR, { recursive: true });
 
   const client = new SecApiClient(
@@ -191,7 +319,7 @@ export async function scrapeData() {
   if (!registry) registry = await buildRegistry(client);
 
   // Step 2: fetch NAV + performance for every fund concurrently
-  const buckets = { RMF: [], SSF: [], TESG: [], LTF: [] };
+  const buckets = Object.fromEntries(FUND_TYPES.map((t) => [t, []]));
   let succeeded = 0, failed = 0;
 
   const navTasks = registry.map((entry) => async () => {
@@ -202,26 +330,30 @@ export async function scrapeData() {
   const navResults = await runBatched(navTasks, BATCH_SIZE);
 
   for (const r of navResults) {
-    if (r?.data) {
-      buckets[r.entry.type]?.push(r.data);
-      succeeded++;
-    } else {
-      failed++;
+    // Filter funds with no valid NAV (zero means no price data available)
+    if (!r.data.nav || r.data.nav === 0) {
+      console.warn(`Skipping ${r.data.code} — no NAV data`);
+      continue;
     }
+    buckets[r.entry.type]?.push(r.data);
+    succeeded++;
   }
-  // Count failures from tasks that returned null
-  failed += registry.length - navResults.length;
+  failed = registry.length - navResults.length;
+
+  // Sort each bucket by fund code for consistent, diffable output
+  for (const bucket of Object.values(buckets)) {
+    bucket.sort((a, b) => a.code.localeCompare(b.code));
+  }
 
   const timestamp   = Date.now();
   const lastUpdated = new Date(timestamp).toISOString();
-  const selectedAMCs = Object.values(AMC_MAP);
+  const selectedAMCs = Object.values(AMC_REGISTRY).map(({ display }) => display);
 
-  // Step 3: write per-type and combined files
-  const typeFileMap = { RMF: 'rmf', SSF: 'ssf', TESG: 'tesg', LTF: 'ltf' };
+  // Step 3: write per-type and combined files (file key = type lowercase)
   await Promise.all(
-    Object.entries(typeFileMap).map(([type, key]) =>
+    FUND_TYPES.map((type) =>
       fs.writeFile(
-        path.join(DATA_DIR, `${key}.json`),
+        path.join(DATA_DIR, `${type.toLowerCase()}.json`),
         JSON.stringify({ timestamp, lastUpdated, selectedAMCs, data: buckets[type] }, null, 2)
       )
     )
@@ -231,15 +363,14 @@ export async function scrapeData() {
     timestamp,
     lastUpdated,
     selectedAMCs,
-    data: { rmf: buckets.RMF, tesg: buckets.TESG, ltf: buckets.LTF, ssf: buckets.SSF },
+    data: Object.fromEntries(FUND_TYPES.map((t) => [t.toLowerCase(), buckets[t]])),
   };
   await fs.writeFile(path.join(DATA_DIR, 'all.json'), JSON.stringify(result, null, 2));
 
   console.log('\n=== Scrape Summary ===');
-  console.log(`RMF:  ${buckets.RMF.length} funds`);
-  console.log(`SSF:  ${buckets.SSF.length} funds`);
-  console.log(`TESG: ${buckets.TESG.length} funds`);
-  console.log(`LTF:  ${buckets.LTF.length} funds`);
+  for (const type of FUND_TYPES) {
+    console.log(`${type}: ${buckets[type].length} funds`);
+  }
   console.log(`Succeeded: ${succeeded}, Failed: ${failed}`);
   console.log('======================\n');
 
@@ -247,6 +378,12 @@ export async function scrapeData() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+  if (process.argv.includes('--refresh') || process.argv.includes('--force')) {
+    try {
+      await fs.unlink(REGISTRY_PATH);
+      console.log('Registry cache cleared — will rebuild from SEC API.');
+    } catch { /* file didn't exist */ }
+  }
   scrapeData()
     .then(() => process.exit(0))
     .catch((err) => { console.error('Fatal:', err.message); process.exit(1); });
