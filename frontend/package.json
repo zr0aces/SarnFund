@@ -1,7 +1,7 @@
 {
   "name": "sarnfund-dashboard",
   "private": true,
-  "version": "2026.6.3",
+  "version": "2026.6.5",
   "license": "MIT",
   "type": "module",
   "scripts": {
