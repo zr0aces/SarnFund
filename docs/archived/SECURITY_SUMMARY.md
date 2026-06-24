@@ -1,3 +1,5 @@
+<!-- Archived 2026-06-24: content merged into docs/architecture.md, docs/deployment.md, and docs/coding-standards.md -->
+
 # SarnFund System Review - Security Summary
 
 > **Note:** This report covers the v1.0.0 codebase (December 2025). For the v2.0.0
@@ -259,4 +261,3 @@ The SarnFund system has undergone comprehensive security review and improvements
 
 **Last Updated:** April 26, 2026 (Consolidated Nginx architecture)
 **Next Review Date:** Recommended within 6 months
-

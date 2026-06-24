@@ -1,3 +1,5 @@
+<!-- Archived 2026-06-24: content merged into docs/development.md and docs/deployment.md -->
+
 # Setup Guide
 
 ## Prerequisites

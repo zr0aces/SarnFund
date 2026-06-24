@@ -73,7 +73,7 @@ uses the **SEC Thailand Open Data API v2** with proper subscription-key authenti
 ### Added
 
 - `.github/copilot_instructions.md` — development guide
-- `documents/SECURITY_SUMMARY.md` — security audit report
+- `docs/archived/SECURITY_SUMMARY.md` — security audit report
 - `frontend/.eslintrc.cjs` — ESLint configuration
 - Security headers middleware (`X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, HSTS)
 - Configurable CORS (`CORS_ORIGIN` environment variable)

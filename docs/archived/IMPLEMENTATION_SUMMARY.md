@@ -1,3 +1,5 @@
+<!-- Archived 2026-06-24: content merged into docs/architecture.md and docs/configuration.md -->
+
 # Implementation Summary
 
 ## Overview
@@ -170,7 +172,7 @@ Custom React hook for data fetching and caching.
 
 ---
 
-### `DashboardLayout.jsx`
+## `DashboardLayout.jsx`
 
 - Computes `latestNavDate` from the maximum `fund.navDate` across the current fund list
 - Displays **"NAV as of YYYY-MM-DD"** badge (green) and **"Fetched DD Mon YYYY, HH:MM"** badge (grey)
