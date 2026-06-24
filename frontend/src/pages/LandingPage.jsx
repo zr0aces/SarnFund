@@ -18,9 +18,9 @@ import {
 
 const TAX_TIPS = [
   "RMF: Max deduction up to 30% of taxable income, capped at 500k Baht.",
-  "SSF: Max deduction up to 30% of taxable income, capped at 200k Baht.",
   "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht.",
-  "Combine RMF + SSF + Provident Fund capped at 500k Baht total.",
+  "Solar Rooftop 2569: New deduction up to 200k Baht for on-grid home solar installation.",
+  "Combine RMF + Provident Fund + Pension Insurance capped at 500k Baht total.",
   "ThaiESG has its own separate limit of 300k Baht (not in the 500k cap)!",
   "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!"
 ];
