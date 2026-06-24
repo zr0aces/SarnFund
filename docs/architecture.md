@@ -29,41 +29,41 @@ sequenceDiagram
     autonumber
     rect rgb(240, 248, 255)
     Note over Backend, SEC: Phase 1: Fund Registry (Weekly)
-    Backend->>SEC: GET /fund/amc (List all AMCs)
-    Backend->>SEC: GET /fund/amc/{unique_id} (List active funds per AMC)
-    Backend->>SEC: GET /fund/{proj_id}/policy (Verify fund specifications)
-    Backend->>Backend: Classify as RMF, SSF, TESG, or LTF
-    Backend->>Backend: Save registry to backend/data/fund-registry.json
+    Backend->>SEC: GET /v2/fund/general-info/amcs (List all AMCs)
+    Backend->>SEC: GET /v2/fund/general-info/profiles (Fetch fund profiles per AMC)
+    Backend->>SEC: GET /v2/fund/general-info/specifications (Verify specifications)
+    Backend->>Backend: Classify as RMF, SSF, ESG, ESGX, or ETF
+    Backend->>Backend: Save registry to data/fund-registry.json
     end
     
     rect rgb(245, 245, 245)
     Note over Backend, SEC: Phase 2: Daily NAV & Performance (Daily at 1 AM)
-    Backend->>Backend: Load backend/data/fund-registry.json
-    Backend->>SEC: GET /{proj_id}/dailynav/{YYYY-MM-DD} (NAV & AUM)
-    Backend->>SEC: GET /fund/{proj_id}/performance (YTD & returns)
+    Backend->>Backend: Load data/fund-registry.json
+    Backend->>SEC: GET /v2/fund/daily-info/nav (NAV, AUM, offering/redemption)
+    Backend->>SEC: GET /v2/fund/factsheet/performance (YTD & returns)
     Backend->>Backend: Assemble fund schema objects
-    Backend->>Backend: Save JSON cache files (rmf.json, tesg.json, etc.)
+    Backend->>Backend: Save JSON cache files (rmf.json, esg.json, etc.)
     end
 ```
 
 ### 1. Phase 1 — Fund Registry Build (Weekly)
 - **TTL**: 7 days.
-- **Purpose**: Dynamically maps and classifies active funds from 18 AMCs into their respective tax-saving categories: RMF, SSF, ThaiESG (TESG), or LTF.
+- **Purpose**: Dynamically maps and classifies active funds from 18 AMCs into their respective tax-saving categories: RMF, SSF, ESG (ThaiESG), ESGX, or ETF.
 - **Mechanism**:
   1. Requests all AMCs and filters against the target map of 18 companies.
-  2. Queries all active (`RG`) funds for each AMC.
-  3. Queries the policy details for each active fund in batches of 5.
-  4. Matches against the fund types using keywords (e.g., `THAI_ESG`, `TESG`, `SSF`, `RMF`, `LTF`).
-  5. Caches the result in `backend/data/fund-registry.json`.
+  2. Queries all active (`Registered` / `IPO`) fund profiles for each AMC.
+  3. Detects SSF and ESG/ESGX tax incentives from the profile fields.
+  4. For remaining profiles, queries specification details in batches of 5 to detect RMF or ETF types.
+  5. Caches the deduplicated result in `data/fund-registry.json`.
 
 ### 2. Phase 2 — Daily NAV Fetch (Daily)
 - **TTL**: 24 hours (run automatically by backend cron job daily at 01:00 AM server time).
-- **Purpose**: Fetches daily Net Asset Value (NAV), Day-over-Day Changes, Assets Under Management (AUM), offering/redemption prices, and YTD performance.
+- **Purpose**: Fetches daily Net Asset Value (NAV), Assets Under Management (AUM), offering/redemption prices, and YTD / multi-year performance.
 - **Mechanism**:
-  1. Reads `backend/data/fund-registry.json`.
+  1. Reads `data/fund-registry.json`.
   2. For each registered fund, queries the latest daily NAV (trying today, yesterday, and up to 5 days back to handle weekends and holidays).
-  3. Queries performance statistics (YTD, 3M, 6M, 1Y, 3Y, 5Y).
-  4. Assembles standard fund schema JSON files and saves them to `backend/data/` (e.g. `rmf.json`, `tesg.json`, `ssf.json`, `ltf.json`, `all.json`).
+  3. Queries performance statistics (YTD, 3M, 6M, 1Y, 3Y, 5Y) filtering specifically for the `ผลตอบแทนกองทุนรวม` (Fund Return) type.
+  4. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `all.json`).
 
 ## Local Storage & Cache Synchronization
 

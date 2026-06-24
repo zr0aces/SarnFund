@@ -93,6 +93,12 @@ async function getCachedData(filename) {
 // and ensure the scraper writes {type}.json to the data directory.
 const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'all']);
 
+// Backward-compat aliases — must be before /:type or Express shadows them
+app.get('/api/funds/tesg', (req, res) => res.redirect(301, '/api/funds/esg'));
+app.get('/api/funds/ltf', (_req, res) =>
+  res.status(410).json({ success: false, error: 'LTF funds were discontinued. No longer tracked.' })
+);
+
 /**
  * Fund data endpoints — one route handles all active types.
  */
@@ -115,12 +121,6 @@ app.get('/api/funds/:type', async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
-
-// Backward-compat aliases
-app.get('/api/funds/tesg', (req, res) => res.redirect(301, '/api/funds/esg'));
-app.get('/api/funds/ltf', (_req, res) =>
-  res.status(410).json({ success: false, error: 'LTF funds were discontinued. No longer tracked.' })
-);
 
 /**
  * Manually trigger scraping.
@@ -258,7 +258,7 @@ cron.schedule('0 1 * * *', async () => {
   } catch (error) {
     console.error('Scheduled scrape failed:', error);
   }
-});
+}, { timezone: 'Asia/Bangkok' });
 
 // Start server
 app.listen(PORT, () => {

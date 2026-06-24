@@ -195,10 +195,13 @@ loadRegistry()
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/api/funds/rmf` | — | RMF fund data |
-| GET | `/api/funds/tesg` | — | ThaiESG fund data |
-| GET | `/api/funds/ltf` | — | LTF fund data |
+| GET | `/api/funds/esg` | — | ThaiESG fund data |
+| GET | `/api/funds/esgx` | — | ThaiESGX fund data |
 | GET | `/api/funds/ssf` | — | SSF fund data |
-| GET | `/api/funds/all` | — | All four types combined |
+| GET | `/api/funds/etf` | — | ETF fund data |
+| GET | `/api/funds/all` | — | All fund types combined |
+| GET | `/api/funds/tesg` | — | **301 → `/api/funds/esg`** (legacy alias) |
+| GET | `/api/funds/ltf` | — | **410 Gone** — LTF discontinued |
 | GET | `/api/health` | — | Keys, registry, cache status |
 | GET | `/api/stats` | — | Fund counts per type |
 | POST | `/api/scrape` | `X-Scrape-Token` | Manual scrape; `?force=true` bypasses cache |

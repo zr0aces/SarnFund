@@ -19,7 +19,13 @@
       "Bash(kill -0 2277067)",
       "Bash(kill -0 2304478)",
       "Bash(rtk npm *)",
-      "Bash(rtk lint *)"
+      "Bash(rtk lint *)",
+      "WebSearch",
+      "Bash(bash *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git *)",
+      "Bash(xxd)"
     ]
   }
 }

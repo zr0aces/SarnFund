@@ -39,3 +39,27 @@ cd frontend && npm run build
 
 ## Preview Frontend Build
 cd frontend && npm run preview
+
+## Version Management (CalVer)
+
+### Propagate Version from VERSION File to Manifests
+```bash
+node scripts/sync-version.mjs
+```
+
+### Verify Version Consistency (CI Check)
+```bash
+node scripts/sync-version.mjs --check
+```
+
+### Bump Version (Auto Bump)
+```bash
+node scripts/release.mjs             # Bumps based on CalVer rules and syncs manifests
+node scripts/release.mjs --tag       # Bumps, syncs, stages, commits, and tags
+node scripts/release.mjs --build     # Bumps, syncs, and triggers docker compose build
+```
+
+### Set Custom Version Explicitly
+```bash
+node scripts/release.mjs 2026.6.5    # Bumps to exactly 2026.6.5 (supports v prefix too)
+```

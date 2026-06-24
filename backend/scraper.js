@@ -347,7 +347,7 @@ async function fetchFundData(client, entry) {
     risk:             numVal(riskLevel),
     type,
     isNew:            false,
-    factsheetUrl: `https://www.sec.or.th/th/Pages/Fund/FundProjectDetail.aspx?PROJ_ID=${proj_id}`,
+    factsheetUrl: `https://market.sec.or.th/public/mrap/MRAPView.aspx?FTYPE=M&PID=${proj_id}`,
   };
 }
 
