@@ -343,17 +343,6 @@
 
                         <div class="input-group">
                             <div class="flex justify-between mb-1">
-                                <label class="text-sm font-medium text-gray-600">กองทุน SSF</label>
-                                <span class="text-xs text-gray-400">ไม่เกิน 30% / 200k</span>
-                            </div>
-                            <div class="relative">
-                                <input type="number" id="ssf" oninput="updateData('ssf', this.value)" placeholder="0"
-                                    class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
-                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <div class="flex justify-between mb-1">
                                 <label class="text-sm font-medium text-gray-600">ประกันบำนาญ</label>
                                 <span class="text-xs text-gray-400">ไม่เกิน 15% / 200k</span>
                             </div>
@@ -596,7 +585,6 @@
             healthInsurance: 0,
             healthInsuranceParents: 0,
             providentFund: 0,
-            ssf: 0,
             rmf: 0,
             tesg: 0,
             pensionInsurance: 0,
@@ -665,12 +653,11 @@
 
             // Retirement Group
             const limitProvident = Math.min(data.providentFund, totalIncome * 0.15);
-            const limitSSF = Math.min(data.ssf, totalIncome * 0.30, 200000);
             const limitRMF = Math.min(data.rmf, totalIncome * 0.30, 500000);
             const limitPension = Math.min(data.pensionInsurance, totalIncome * 0.15, 200000);
 
             // Retirement Cap 500,000
-            const retirementSum = limitProvident + limitSSF + limitRMF + limitPension;
+            const retirementSum = limitProvident + limitRMF + limitPension;
             const cappedRetirement = Math.min(retirementSum, 500000);
             deductions += cappedRetirement;
 
