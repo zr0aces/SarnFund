@@ -1,5 +1,5 @@
 # Backend Dockerfile
-FROM node:22-alpine
+FROM node:24-alpine
 
 
 # Install curl for healthcheck

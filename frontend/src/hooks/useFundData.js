@@ -4,17 +4,43 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 h
 const CACHE_VERSION  = 'v4';                  // bump to bust old caches
 
 export const useFundData = (fundType, initialMockData) => {
-    const [funds,       setFunds]       = useState([]);
+    const cacheKey = `fund_cache_${CACHE_VERSION}_${fundType}`;
+
+    const getInitialCache = useCallback(() => {
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Date.now() - parsed.timestamp < CACHE_DURATION) {
+                    return parsed;
+                }
+            } catch { /* corrupted cache */ }
+        }
+        return null;
+    }, [cacheKey]);
+
+    const initialCache = getInitialCache();
+
+    const [funds,       setFunds]       = useState(() => {
+        if (initialCache) return initialCache.data;
+        if (initialMockData?.length) return initialMockData;
+        return [];
+    });
     const [loading,     setLoading]     = useState(false);
     const [error,       setError]       = useState(null);
-    const [lastUpdated, setLastUpdated] = useState(null); // ISO string from server
-    const [dataSource,  setDataSource]  = useState('loading');
-
-    const cacheKey = `fund_cache_${CACHE_VERSION}_${fundType}`;
+    const [lastUpdated, setLastUpdated] = useState(() => {
+        if (initialCache) return initialCache.lastUpdated || new Date(initialCache.timestamp).toISOString();
+        return null;
+    });
+    const [dataSource,  setDataSource]  = useState(() => {
+        if (initialCache) return 'cache';
+        if (initialMockData?.length) return 'mock';
+        return 'loading';
+    });
 
     // Prevents a stale silent fetch from overwriting newer data that arrived
     // while it was in-flight.
-    const currentTimestamp = useRef(0);
+    const currentTimestamp = useRef(initialCache ? initialCache.timestamp : 0);
 
     const fetchDataFromAPI = useCallback(async (silent = false, cachedTimestamp = null) => {
         if (!silent) setLoading(true);
@@ -56,30 +82,17 @@ export const useFundData = (fundType, initialMockData) => {
 
     // On mount: serve from cache immediately, then silently check server.
     useEffect(() => {
-        const raw = localStorage.getItem(cacheKey);
-        if (raw) {
-            try {
-                const parsed = JSON.parse(raw);
-                if (Date.now() - parsed.timestamp < CACHE_DURATION) {
-                    currentTimestamp.current = parsed.timestamp;
-                    setFunds(parsed.data);
-                    setLastUpdated(parsed.lastUpdated || new Date(parsed.timestamp).toISOString());
-                    setDataSource('cache');
-                    // Silently update if the server has newer data.
-                    fetchDataFromAPI(true, parsed.timestamp);
-                    return;
-                }
-            } catch { /* corrupted cache */ }
+        const cached = getInitialCache();
+        if (cached) {
+            currentTimestamp.current = cached.timestamp;
+            // Silently update if the server has newer data.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            fetchDataFromAPI(true, cached.timestamp);
+        } else if (initialMockData?.length) {
+            // Already initialized in useState, no action needed
+        } else {
+            fetchDataFromAPI(false);
         }
-
-        if (initialMockData?.length) {
-            setFunds(initialMockData);
-            setDataSource('mock');
-            setLastUpdated(null);
-            return;
-        }
-
-        fetchDataFromAPI(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fundType]);
 

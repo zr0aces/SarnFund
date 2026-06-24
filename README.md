@@ -14,7 +14,7 @@ Thai mutual fund analytics dashboard for tax-saving investments tracking RMF, Th
 ## Quick Start
 
 ### Prerequisites
-- Node.js 22+ & npm
+- Node.js 24+ & npm
 - Docker & Docker Compose
 - SEC Open Data API Subscription Keys
 

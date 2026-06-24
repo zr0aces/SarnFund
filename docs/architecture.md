@@ -6,7 +6,7 @@ High-level architecture, components, and data flows of the SarnFund system.
 
 The system is structured as a multi-container Docker Compose application consisting of three main services:
 
-- **Frontend Builder (Vite + React)**: A one-shot node:22-alpine service that builds the frontend React single-page application (SPA) using Vite and outputs static files to a shared volume (`frontend_dist`). It exits cleanly once compilation completes.
+- **Frontend Builder (Vite + React)**: A one-shot node:24-alpine service that builds the frontend React single-page application (SPA) using Vite and outputs static files to a shared volume (`frontend_dist`). It exits cleanly once compilation completes.
 - **Nginx Gateway (Reverse Proxy)**: Acts as the single entry point (port 8091). Serves the compiled static frontend files and proxies API requests `/api/*` to the backend Express server. Includes gzip compression and client-side caching configurations.
 - **Backend Service (Node.js + Express)**: An internal Express API server running on port 3001 (not exposed directly to the host). It serves the cached fund data, runs a daily cron job at 1:00 AM to fetch NAV updates, and provides a protected endpoint to trigger manual scrapes.
 - **SEC Thailand Open Data API v2**: The official external API endpoints (`api.sec.or.th`) from which the backend gathers all mutual fund data.

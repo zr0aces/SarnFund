@@ -1,7 +1,7 @@
 # Builds the React app. The compiled output lands in /app/dist.
 # docker-compose runs: cp -r /app/dist/. /app/html/
 # which populates the shared "frontend_dist" volume for nginx to serve.
-FROM node:22-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 

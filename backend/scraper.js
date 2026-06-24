@@ -356,6 +356,7 @@ export async function scrapeData() {
   const navResults = await runBatched(navTasks, BATCH_SIZE);
 
   for (const r of navResults) {
+    if (!r || !r.data) continue;
     // Filter funds with no valid NAV (zero means no price data available)
     if (!r.data.nav || r.data.nav === 0) {
       console.warn(`Skipping ${r.data.code} — no NAV data`);
@@ -364,7 +365,7 @@ export async function scrapeData() {
     buckets[r.entry.type]?.push(r.data);
     succeeded++;
   }
-  failed = registry.length - navResults.length;
+  failed = registry.length - succeeded;
 
   // Sort each bucket by fund code for consistent, diffable output
   for (const bucket of Object.values(buckets)) {
