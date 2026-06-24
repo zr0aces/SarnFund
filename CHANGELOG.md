@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1] - 2026-06-24
+
+### Fixed
+- Performance metrics duplication bug: modified `parsePerformanceV2` in `scraper.js` to only extract records where `performance_type_desc` matches `"ผลตอบแทนกองทุนรวม"` (Fund Return). This prevents benchmark returns, peer group averages, and standard deviation metrics (which are identical across multiple funds in the same categories) from overwriting actual fund returns.
+- Environment variables loading: added manual `.env` file parsing to `scraper.js` so it can be run standalone via `npm run scrape` without requiring variables to be pre-set in the environment.
+
 ## [2.0.0] - 2026-04-26 — SEC Open Data API v2
 
 ### Migration: Settrade → SEC Official API

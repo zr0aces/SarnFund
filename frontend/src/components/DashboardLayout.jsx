@@ -57,7 +57,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-slate-800 pb-16 md:pb-0">
             {/* Sticky Top Navigation */}
-            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
                 <div className="container mx-auto px-4 md:px-8 py-3 flex justify-between items-center gap-4">
                     <Link to="/" className="flex items-center gap-2 group text-slate-600 hover:text-orange-600 transition-colors shrink-0">
                         <div className="p-1.5 rounded-lg bg-slate-100 group-hover:bg-orange-50 text-slate-500 group-hover:text-orange-600 transition-colors">
@@ -101,12 +101,12 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                         <p className="text-slate-500 mt-1 flex items-center gap-2 flex-wrap text-xs sm:text-sm">
                             {dataSource === 'mock' ? 'Demo Data – start backend to load real data' : 'SEC Open Data'}
                             {latestNavDate && (
-                                <span className="font-display bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200 font-medium">
+                                <span className="font-display bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-transparent font-medium">
                                     NAV {latestNavDate}
                                 </span>
                             )}
                             {lastUpdated && (
-                                <span className="bg-white px-2 py-0.5 rounded border border-slate-200 hidden sm:inline">
+                                <span className="bg-white px-2 py-0.5 rounded border border-transparent hidden sm:inline shadow-sm">
                                     {new Date(lastUpdated).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                                 </span>
                             )}
@@ -140,7 +140,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                 {/* Filters */}
                 <div className="mb-5 flex flex-col gap-3 font-sans">
                     {/* AMC Filter — horizontal scrollable, no wrap */}
-                    <div className="flex gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200 overflow-x-auto no-scrollbar items-center">
+                    <div className="flex gap-1 bg-white p-1 rounded-xl shadow-sm border border-transparent overflow-x-auto no-scrollbar items-center">
                         <button
                             onClick={() => setSelectedAmc('All')}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-display font-bold transition-all whitespace-nowrap shrink-0 ${selectedAmc === 'All' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
@@ -162,7 +162,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                     {/* Risk Filter */}
                     <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
                         <span className="text-xs font-display font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap shrink-0">Risk:</span>
-                        <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200 shrink-0">
+                        <div className="flex bg-white p-1 rounded-xl shadow-sm border border-transparent shrink-0">
                             {['All', '1', '2', '3', '4', '5', '6', '7', '8'].map((risk) => (
                                 <button
                                     key={risk}
@@ -200,7 +200,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                 />
             </main>
 
-            <footer className="py-4 border-t border-slate-200 bg-white mt-auto">
+            <footer className="py-4 border-t border-slate-100 bg-white mt-auto">
                 <div className="container mx-auto text-center text-slate-400 text-sm">
                     <p>&copy; {new Date().getFullYear()} ZeroTrust Investment Tools. All rights reserved.</p>
                 </div>
@@ -208,7 +208,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
 
             {/* Mobile Bottom Navigation — fixed, iOS safe area aware */}
             <nav
-                className="fixed bottom-0 left-0 right-0 md:hidden z-50 bg-white/95 backdrop-blur-md border-t border-slate-200"
+                className="fixed bottom-0 left-0 right-0 md:hidden z-50 bg-white/95 backdrop-blur-md border-t border-slate-100"
                 style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
             >
                 <div className="flex">

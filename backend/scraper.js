@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { readFileSync, existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {
@@ -7,6 +8,27 @@ import {
   numVal,
   runBatched,
 } from './sec-api-connector.js';
+
+// Load .env if present (checks parent directory first, then local directory)
+const envPaths = [
+  new URL('../.env', import.meta.url).pathname,
+  new URL('.env', import.meta.url).pathname
+];
+
+for (const envPath of envPaths) {
+  if (existsSync(envPath)) {
+    for (const line of readFileSync(envPath, 'utf8').split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eq = trimmed.indexOf('=');
+      if (eq === -1) continue;
+      const key = trimmed.slice(0, eq).trim();
+      const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
+      if (key && !process.env[key]) process.env[key] = val;
+    }
+    break; // Load first valid .env found
+  }
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR   = path.join(__dirname, 'data');
@@ -79,6 +101,10 @@ function esgSubtype(profile) {
 function parsePerformanceV2(rows) {
   const out = { ytd: 0, month_3: 0, month_6: 0, year_1: 0, year_3: 0, year_5: 0 };
   for (const row of rows || []) {
+    const typeDesc = row.performance_type_desc || '';
+    // Only parse actual fund returns, not benchmark returns, peer averages, or volatility/risk metrics
+    if (!/ผลตอบแทนกองทุนรวม|Fund Return/i.test(typeDesc)) continue;
+
     const p = row.reference_period || '';
     const v = numVal(row.performance_value);
     if (/ytd|ต้นปี|year.to.date/i.test(p))        out.ytd     = v;

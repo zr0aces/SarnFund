@@ -162,7 +162,7 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-grid-pattern pointer-events-none opacity-60"></div>
 
       {/* Left Panel: Brand & Info (1/4 Width on Desktop, compact strip on mobile) */}
-      <aside className="lg:w-1/4 flex flex-col justify-between bg-white border border-slate-200/80 rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-sm z-10 shrink-0">
+      <aside className="lg:w-1/4 flex flex-col justify-between bg-white border border-transparent rounded-3xl p-4 sm:p-6 relative overflow-hidden shadow-sm z-10 shrink-0">
 
         {/* Glow decoration */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-100/40 rounded-full blur-3xl pointer-events-none"></div>
@@ -196,7 +196,7 @@ const LandingPage = () => {
 
           {/* Stats Summary — compact row on mobile */}
           <div className="flex lg:flex-col gap-2 lg:space-y-0 lg:gap-0 lg:space-y-4">
-            <div className="flex flex-1 lg:flex-none items-center justify-between p-2.5 lg:p-3 rounded-xl bg-slate-50/50 border border-slate-100">
+            <div className="flex flex-1 lg:flex-none items-center justify-between p-2.5 lg:p-3 rounded-xl bg-slate-50/50 border border-transparent">
               <div className="flex items-center gap-2">
                 <Database size={14} className="text-slate-400 shrink-0" />
                 <span className="text-xs text-slate-500 hidden sm:inline">Tracked Funds</span>
@@ -206,7 +206,7 @@ const LandingPage = () => {
               </span>
             </div>
 
-            <div className="flex flex-1 lg:flex-none items-center justify-between p-2.5 lg:p-3 rounded-xl bg-slate-50/50 border border-slate-100">
+            <div className="flex flex-1 lg:flex-none items-center justify-between p-2.5 lg:p-3 rounded-xl bg-slate-50/50 border border-transparent">
               <div className="flex items-center gap-2 font-medium">
                 <Activity size={14} className="text-slate-400 shrink-0" />
                 <span className="text-xs text-slate-500 hidden sm:inline">SEC API</span>
@@ -220,7 +220,7 @@ const LandingPage = () => {
         </div>
 
         {/* Tax Tip — hidden on mobile, visible on desktop */}
-        <div className="hidden lg:block mt-8 lg:mt-0 p-4 rounded-2xl bg-slate-50/60 border border-slate-100/80 relative overflow-hidden">
+        <div className="hidden lg:block mt-8 lg:mt-0 p-4 rounded-2xl bg-slate-50/60 border border-transparent relative overflow-hidden">
           <div className="absolute top-0 right-0 p-2 opacity-5">
             <Sparkles size={40} className="text-orange-500" />
           </div>
@@ -265,7 +265,7 @@ const LandingPage = () => {
               <CardWrapper
                 key={card.id}
                 {...extraProps}
-                className={`group flex flex-col justify-between p-3 sm:p-5 bg-white border border-slate-150 hover:-translate-y-0.5 hover:shadow-md rounded-2xl transition-all duration-300 overflow-hidden relative shadow-sm ${card.glowClass}`}
+                className={`group flex flex-col justify-between p-3 sm:p-5 bg-white border border-transparent hover:-translate-y-0.5 hover:shadow-md rounded-2xl transition-all duration-300 overflow-hidden relative shadow-sm ${card.glowClass}`}
               >
                 {/* Background glow */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-slate-50 to-transparent pointer-events-none rounded-bl-full"></div>

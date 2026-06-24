@@ -19,7 +19,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {
     return (
         <>
             {/* ── Mobile: single compact row card ── */}
-            <div className="flex md:hidden bg-white rounded-2xl shadow-sm border border-slate-100 mb-5 font-sans overflow-hidden">
+            <div className="flex md:hidden bg-white rounded-2xl shadow-sm border border-transparent mb-5 font-sans overflow-hidden">
                 {/* Top Performer */}
                 <div className="flex-1 flex items-center gap-3 px-4 py-3 relative overflow-hidden min-w-0">
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-[0.06]">
@@ -75,7 +75,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {
 
             {/* ── Desktop: original two-card grid ── */}
             <div className="hidden md:grid md:grid-cols-2 gap-6 mb-8 font-sans">
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-transparent flex items-center justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <Trophy size={64} color={AMC_COLORS[stats.bestFund?.amc || 'All'] || '#ccc'} />
                     </div>
@@ -101,7 +101,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS }) => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center">
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-transparent flex items-center hover:shadow-md transition-shadow">
                     <div className="mr-4 bg-emerald-50 p-3 rounded-full">
                         <TrendingUp className="text-emerald-600 w-6 h-6" />
                     </div>

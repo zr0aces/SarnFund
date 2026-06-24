@@ -25,7 +25,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
     };
 
     const sortControl = (
-        <div className="flex items-center gap-2 text-sm bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+        <div className="flex items-center gap-2 text-sm bg-slate-50 px-3 py-1.5 rounded-lg border border-transparent">
             <Filter size={14} className="text-slate-400" />
             <span className="text-slate-500 font-display font-bold text-xs uppercase tracking-wider hidden sm:inline">Sort:</span>
             <select
@@ -44,8 +44,8 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
     );
 
     return (
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden font-sans">
-            <div className="p-4 sm:p-6 border-b border-slate-100 flex justify-between items-center gap-4">
+        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-transparent overflow-hidden font-sans">
+            <div className="p-4 sm:p-6 border-b border-slate-50 flex justify-between items-center gap-4">
                 <h3 className="text-base sm:text-lg font-display font-bold text-slate-800 flex items-center gap-2">
                     {showNewOnly ? 'New Arrivals' : 'Performance Table'}
                     {showNewOnly && <span className="bg-orange-100 text-orange-600 text-xs px-2 py-0.5 rounded-full font-sans">{funds.length}</span>}
@@ -69,6 +69,11 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-1.5">
                                         <span className="font-display font-extrabold text-slate-800">{fund.code}</span>
+                                        {fund.class && (
+                                            <span className="px-1.5 py-0.2 bg-slate-100 text-slate-500 text-[9px] font-bold rounded font-display shrink-0">
+                                                {fund.class}
+                                            </span>
+                                        )}
                                         {fund.isNew && (
                                             <span className="px-1 py-0.5 bg-orange-100 text-orange-600 text-[9px] font-bold rounded uppercase border border-orange-200">
                                                 New
@@ -129,7 +134,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                 <div className="overflow-x-auto hidden sm:block">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-slate-50 text-slate-400 text-[11px] font-display font-bold uppercase tracking-wider border-b border-slate-100">
+                            <tr className="bg-slate-50/50 text-slate-400 text-[11px] font-display font-bold uppercase tracking-wider border-b border-slate-100/50">
                                 <th className="p-4">Fund Name</th>
                                 <th className="p-4 hidden lg:table-cell">Policy</th>
                                 <th className="p-4 text-center">Risk</th>
@@ -148,6 +153,11 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                         <div className="flex flex-col">
                                             <div className="flex items-center gap-2">
                                                 <span className="font-display font-extrabold text-slate-800 text-base">{fund.code}</span>
+                                                {fund.class && (
+                                                    <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded font-display">
+                                                        {fund.class}
+                                                    </span>
+                                                )}
                                                 {fund.isNew && (
                                                     <span className="px-1.5 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded uppercase border border-orange-200 font-sans">
                                                         New
@@ -184,12 +194,12 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                         </div>
                                     </td>
                                     <td className="p-4 hidden lg:table-cell">
-                                        <span className="px-2 py-1 rounded-md bg-slate-100 text-xs font-semibold text-slate-500 border border-slate-200 font-display">
+                                        <span className="px-2.5 py-0.5 rounded-full bg-slate-50 text-slate-500 font-display font-medium text-[11px] border border-slate-100">
                                             {fund.policy || fund.type}
                                         </span>
                                     </td>
                                     <td className="p-4 text-center">
-                                        <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-650 font-display font-bold text-xs">
+                                        <div className="inline-flex items-center justify-center px-2 py-1 rounded-lg bg-slate-50 text-slate-500 font-display font-semibold text-xs">
                                             {fund.risk}
                                         </div>
                                     </td>
