@@ -104,10 +104,30 @@
                     <p class="text-slate-400 text-sm">วางแผนลดหย่อนภาษี อัปเดตปีภาษี 2569 — โซล่าเซลล์ & Thai ESG สุดท้าย</p>
                 </div>
             </div>
-            <button onclick="resetData()" class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition"
-                title="รีเซ็ตค่า">
-                <i data-lucide="refresh-ccw" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400 hidden sm:flex items-center gap-1.5 mr-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    บันทึกอัตโนมัติ
+                </span>
+                <button onclick="copyToClipboard()" class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition group"
+                    title="คัดลอกข้อมูลสรุป (Text)">
+                    <i data-lucide="copy" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
+                </button>
+                <button onclick="exportJSON()" class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition group"
+                    title="ดาวน์โหลดไฟล์ JSON">
+                    <i data-lucide="download" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
+                </button>
+                <label class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition group cursor-pointer"
+                    title="นำเข้าไฟล์ JSON">
+                    <i data-lucide="upload" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
+                    <input type="file" id="importFile" class="hidden" accept=".json" onchange="importJSON(event)">
+                </label>
+                <div class="w-px h-6 bg-white/10 mx-1"></div>
+                <button onclick="resetData()" class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition group"
+                    title="รีเซ็ตค่า">
+                    <i data-lucide="refresh-ccw" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -611,13 +631,195 @@
             lucide.createIcons();
         }
 
+        const STORAGE_KEY = 'thai_tax_planner_2569_data';
+        let toastTimeout;
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = toast.querySelector('i');
+            
+            toastMsg.innerText = message;
+            if (isError) {
+                toastIcon.setAttribute('data-lucide', 'alert-circle');
+                toastIcon.className = "w-4 h-4 text-rose-400";
+            } else {
+                toastIcon.setAttribute('data-lucide', 'check-circle');
+                toastIcon.className = "w-4 h-4 text-emerald-400";
+            }
+            lucide.createIcons();
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    for (const key in data) {
+                        if (parsed.hasOwnProperty(key)) {
+                            data[key] = parseFloat(parsed[key]) || 0;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load from localStorage", e);
+            }
+        }
+
+        function populateInputs() {
+            for (const key in data) {
+                const el = document.getElementById(key);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = !!data[key];
+                    } else {
+                        if (data[key] === 0) {
+                            el.value = '';
+                        } else {
+                            el.value = data[key];
+                        }
+                    }
+                }
+            }
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.error("Failed to save to localStorage", e);
+            }
+        }
+
+        function copyToClipboard() {
+            let lines = [];
+            lines.push("=== ข้อมูลผู้วางแผนภาษี 2569 ===");
+            
+            const fieldLabels = {
+                salary: 'เงินเดือน (ทั้งปี)',
+                bonus: 'โบนัส (ทั้งปี)',
+                otherIncome: 'รายได้อื่นๆ (40(1), 40(2))',
+                withholdingTax: 'ภาษีหัก ณ ที่จ่าย',
+                spouse: 'คู่สมรส (ไม่มีเงินได้)',
+                children: 'จำนวนบุตร (คน)',
+                parents: 'จำนวนบิดามารดา (คน)',
+                disabledCare: 'อุปการะคนพิการ (คน)',
+                socialSecurity: 'ประกันสังคม',
+                lifeInsurance: 'ประกันชีวิตทั่วไป',
+                healthInsurance: 'ประกันสุขภาพ',
+                healthInsuranceParents: 'ประกันสุขภาพพ่อแม่',
+                providentFund: 'PVD / กบข.',
+                rmf: 'กองทุน RMF',
+                tesg: 'Thai ESG',
+                pensionInsurance: 'ประกันบำนาญ',
+                thaiesgx: 'Thai ESGX',
+                solarRooftop: 'โซล่าเซลล์ติดตั้งที่อยู่อาศัย',
+                interestHomeLoan: 'ดอกเบี้ยบ้าน',
+                donationEducation: 'บริจาคการศึกษา/กีฬา (2 เท่า)',
+                donationGeneral: 'บริจาคทั่วไป / พรรคการเมือง'
+            };
+
+            for (const key in fieldLabels) {
+                const val = data[key];
+                if (val !== undefined && val !== 0) {
+                    if (key === 'spouse') {
+                        lines.push(`${fieldLabels[key]}: มี`);
+                    } else {
+                        const formatted = typeof val === 'number' ? val.toLocaleString('th-TH') : val;
+                        const unit = (key === 'children' || key === 'parents' || key === 'disabledCare') ? ' คน' : ' บาท';
+                        lines.push(`${fieldLabels[key]}: ${formatted}${unit}`);
+                    }
+                }
+            }
+            
+            const totalIncome = data.salary + data.bonus + data.otherIncome;
+            lines.push("");
+            lines.push("=== สรุปผลคำนวณ ===");
+            lines.push(`รายได้รวมทั้งปี: ${totalIncome.toLocaleString('th-TH')} บาท`);
+            
+            const taxPayableText = document.getElementById('display-taxPayable').innerText;
+            const taxPayable = parseFloat(taxPayableText.replace(/,/g, '')) || 0;
+            const netPayable = taxPayable - data.withholdingTax;
+            lines.push(`ภาษีคำนวณได้: ${taxPayable.toLocaleString('th-TH')} บาท`);
+            lines.push(`หัก ณ ที่จ่ายแล้ว: ${data.withholdingTax.toLocaleString('th-TH')} บาท`);
+            if (netPayable >= 0) {
+                lines.push(`ภาษีที่ต้องชำระเพิ่ม: ${netPayable.toLocaleString('th-TH')} บาท`);
+            } else {
+                lines.push(`ภาษีที่ขอคืนได้: ${Math.abs(netPayable).toLocaleString('th-TH')} บาท`);
+            }
+
+            const text = lines.join('\n');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("คัดลอกข้อมูลสรุปไปยังคลิปบอร์ดแล้ว");
+            }).catch(err => {
+                console.error("Copy failed", err);
+                showToast("ไม่สามารถคัดลอกข้อมูลได้", true);
+            });
+        }
+
+        function exportJSON() {
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `thai-tax-2569-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("ดาวน์โหลดไฟล์ JSON เรียบร้อยแล้ว");
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (typeof parsed !== 'object' || parsed === null) {
+                        throw new Error("ข้อมูลไม่ถูกต้อง");
+                    }
+                    
+                    for (const key in data) {
+                        if (parsed.hasOwnProperty(key)) {
+                            data[key] = parseFloat(parsed[key]) || 0;
+                        }
+                    }
+                    
+                    populateInputs();
+                    calculateTax();
+                    saveToLocalStorage();
+                    showToast("นำเข้าข้อมูล JSON เรียบร้อยแล้ว");
+                } catch (err) {
+                    console.error("Import failed", err);
+                    showToast("การนำเข้าข้อมูลล้มเหลว: รูปแบบไฟล์ไม่ถูกต้อง", true);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
         function updateData(field, value) {
             data[field] = parseFloat(value) || 0;
             calculateTax();
+            saveToLocalStorage();
         }
 
         function resetData() {
             if (confirm('ต้องการล้างข้อมูลทั้งหมดใช่หรือไม่?')) {
+                localStorage.removeItem(STORAGE_KEY);
                 location.reload();
             }
         }
@@ -792,9 +994,17 @@
             }
         }
 
-        // Initial Calc
+        // Load & Populate & Initial Calc
+        loadFromLocalStorage();
+        populateInputs();
         calculateTax();
     </script>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-slate-800/95 text-white px-4 py-2.5 rounded-lg shadow-xl border border-slate-700 text-sm font-sans flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">บันทึกข้อมูลแล้ว</span>
+    </div>
 
 <!-- Mobile sticky tax bar (hidden on desktop) -->
 <div id="mobile-sticky-bar"
