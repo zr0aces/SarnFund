@@ -83,10 +83,10 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                     {/* Mobile: current page title */}
                     <span className="md:hidden font-display font-bold text-slate-800 text-sm truncate">{title}</span>
 
-                    <a href="/ThaiTax2568.html" target="_blank" rel="noopener noreferrer"
+                    <a href="/ThaiTax2569.html" target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-xs font-display font-semibold text-slate-400 uppercase tracking-wider hover:text-orange-600 transition-colors shrink-0">
                         <Calculator className="w-4 h-4" />
-                        <span className="hidden md:inline">Thai Tax 2568</span>
+                        <span className="hidden md:inline">Thai Tax 2569</span>
                     </a>
                 </div>
             </nav>
