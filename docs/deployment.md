@@ -7,12 +7,20 @@ Guide for deploying and operating SarnFund.
 SarnFund runs as a multi-container Docker Compose stack. All configuration is driven by the single root-level `.env` file.
 
 ### Quick Start
+Before running, copy the deployment compose example:
+```bash
+cp docs/deployment/docker-compose.yml.example docker-compose.yml
+```
+*(Make sure to replace `your-username` in `docker-compose.yml` with your actual GitHub user or organization name).*
+
+Then start the stack:
 ```bash
 # 1. Copy env template and fill in SEC API keys
 cp .env.example .env
 
-# 2. Build and start all services in detached mode
-docker compose up -d --build
+# 2. Set the version environment variable and start the containers (pulls from GHCR)
+export APP_VERSION=$(cat VERSION)
+docker compose up -d
 
 # 3. Trigger the initial data scrape (takes 2-5 minutes)
 curl -X POST "http://localhost:8091/api/scrape?force=true" \
@@ -40,9 +48,13 @@ docker compose logs -f nginx    # Nginx logs only
 docker compose down
 ```
 
-### Rebuild Frontend After Code Edits
+### Update Deployment to New Version
+When a new version is released:
+1. Update the `VERSION` file locally to match the target release tag.
+2. Set the version env variable, pull updated images from GHCR, and recreate the stack:
 ```bash
-docker compose build frontend && docker compose up -d
+export APP_VERSION=$(cat VERSION)
+docker compose pull && docker compose up -d
 ```
 
 ### Upgrade Nginx Version

@@ -1,9 +1,7 @@
 services:
   backend:
     container_name: sarnfund-backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/your-username/sarnfund-backend:${APP_VERSION:-latest}
     volumes:
       - ./data:/app/data
     env_file:
@@ -20,9 +18,7 @@ services:
 
   frontend:
     container_name: sarnfund-frontend-builder
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/your-username/sarnfund-frontend-builder:${APP_VERSION:-latest}
     command: sh -c "cp -r /app/dist/. /app/html/"
     volumes:
       - frontend_dist:/app/html
