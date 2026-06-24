@@ -55,9 +55,11 @@ cd frontend && npm run preview # preview production build locally
 ### Local development (no Docker)
 
 ```bash
+# Setup Env (at project root)
+cp .env.example .env   # fill in SEC_FACTSHEET_KEY, SEC_DAILYINFO_KEY, SCRAPE_TOKEN at root
+
 # Backend
 cd backend
-cp .env.example .env   # fill in SEC_FACTSHEET_KEY, SEC_DAILYINFO_KEY, SCRAPE_TOKEN
 npm install
 npm run scrape         # first-time registry build (2–5 min) + NAV fetch
 npm start              # API on :3001
@@ -178,9 +180,9 @@ loadRegistry()
 |------|---------|
 | `backend/sec-api-connector.js` | All SEC API calls: `_get`, `_post`, rate limiter, `numVal`, `matchesFundType`, `runBatched` |
 | `backend/scraper.js` | Two-phase scrape logic; fund registry; NAV + performance fetch |
-| `backend/server.js` | Express routes, cron (01:00 AM daily), inline `.env` loader |
+| `backend/server.js` | Express routes, cron (01:00 AM daily), inline `.env` loader (checks root/local paths) |
 | `backend/init-data.js` | Seeds initial data (called by `npm run init`) |
-| `backend/.env.example` | Template for all required and optional env vars |
+| `.env.example` | Template for all required and optional env vars at root level |
 | `nginx/default.conf` | Nginx routing: static files + `/api/` proxy + gzip + asset caching |
 | `docker-compose.yml` | Three-service orchestration with named volume `frontend_dist` |
 | `frontend/src/hooks/useFundData.js` | Dual-layer cache (localStorage + server-timestamp guard) |

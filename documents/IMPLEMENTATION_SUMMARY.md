@@ -142,7 +142,7 @@ File writes are parallelised with `Promise.all`.
 
 Express API server. Key design decisions:
 
-- **`.env` loading** — reads `backend/.env` at startup using Node's built-in `fs.readFileSync`; no `dotenv` dependency
+- **`.env` loading** — checks for and reads `.env` from both parent root and local directory at startup using Node's built-in `fs.readFileSync`; no external `dotenv` dependency
 - **Scrape endpoint protection** — `POST /api/scrape` checks `X-Scrape-Token` header against `SCRAPE_TOKEN` env var; warns at startup if token is unset
 - **Logic order** — token check runs before cache check, so `?force=true` correctly bypasses the cache
 - **`DELETE /api/registry`** — removes `fund-registry.json` so the next scrape rebuilds it

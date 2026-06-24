@@ -8,14 +8,16 @@ Express API server that fetches Thai mutual fund data from the **SEC Thailand Op
 |------|---------|
 | `sec-api-connector.js` | SEC API client — rate limiting, primary/secondary key failover, all endpoints, `numVal` helper |
 | `scraper.js` | Two-phase scrape: fund registry build + daily NAV fetch |
-| `server.js` | Express routes, cron scheduler (01:00 AM daily), inline `.env` loader |
+| `server.js` | Express routes, cron scheduler (01:00 AM daily), inline `.env` loader (checks root/local paths) |
 | `init-data.js` | Seed script for empty cache files |
-| `.env.example` | Environment variable template |
 
 ## Setup
 
 ```bash
+# In the SarnFund root directory:
 cp .env.example .env   # fill in all four SEC subscription keys + SCRAPE_TOKEN
+
+# In the backend directory:
 npm install
 npm run scrape         # first-time registry build (2–5 min) + NAV fetch
 npm start

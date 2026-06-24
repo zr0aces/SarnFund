@@ -7,17 +7,24 @@ import { fileURLToPath } from 'url';
 import cron from 'node-cron';
 import { scrapeData } from './scraper.js';
 
-// Load .env if present (no external dependency needed – simple key=value parser)
-const envPath = new URL('.env', import.meta.url).pathname;
-if (existsSync(envPath)) {
-  for (const line of readFileSync(envPath, 'utf8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eq = trimmed.indexOf('=');
-    if (eq === -1) continue;
-    const key = trimmed.slice(0, eq).trim();
-    const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
-    if (key && !process.env[key]) process.env[key] = val;
+// Load .env if present (checks parent directory first, then local directory)
+const envPaths = [
+  new URL('../.env', import.meta.url).pathname,
+  new URL('.env', import.meta.url).pathname
+];
+
+for (const envPath of envPaths) {
+  if (existsSync(envPath)) {
+    for (const line of readFileSync(envPath, 'utf8').split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eq = trimmed.indexOf('=');
+      if (eq === -1) continue;
+      const key = trimmed.slice(0, eq).trim();
+      const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
+      if (key && !process.env[key]) process.env[key] = val;
+    }
+    break; // Load first valid .env found
   }
 }
 

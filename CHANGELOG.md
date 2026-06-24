@@ -18,7 +18,7 @@ uses the **SEC Thailand Open Data API v2** with proper subscription-key authenti
   - `thaiDateStr(daysAgo)` — returns date in UTC+7 to avoid off-by-one errors at midnight Bangkok time
   - `runBatched(tasks, concurrency)` — bounded-concurrency helper used by the scraper
   - `matchesFundType(policy, type)` — checks multiple possible SEC API field names for fund type classification
-- `backend/.env.example` — documents `SEC_FACTSHEET_KEY`, `SEC_DAILYINFO_KEY`, `SCRAPE_TOKEN`
+- `.env.example` (at root) — documents `SEC_FACTSHEET_KEY`, `SEC_DAILYINFO_KEY`, `SCRAPE_TOKEN`
 - `data/fund-registry.json` — 7-day cached mapping of `proj_id → { type, riskLevel, name, amc }`
 - `DELETE /api/registry` endpoint — clears registry cache, forces full rebuild on next scrape
 - `navDate` field on every fund object — actual SEC NAV date (`YYYY-MM-DD`), not the scrape timestamp
@@ -32,11 +32,11 @@ uses the **SEC Thailand Open Data API v2** with proper subscription-key authenti
   - `navDate` stored per fund (from `FundDailyInfo` response)
   - Concurrent file writes for per-type JSON outputs
 - `backend/server.js`
-  - Loads `backend/.env` at startup (no external `dotenv` dependency)
+  - Loads `.env` (at root) at startup (no external `dotenv` dependency)
   - `POST /api/scrape` logic order fixed — token check now runs before cache check
   - Startup log shows key and token configuration status
   - `GET /api/health` extended — reports `secApi` key presence, registry stats, all four cache states
-- `docker-compose.yml` — added `env_file: ./backend/.env` so SEC keys reach the container
+- `docker-compose.yml` — added `env_file: ./.env` so SEC keys reach the container
 - `frontend/src/hooks/useFundData.js`
   - Cache version bumped (`v3` → `v4`) to bust old localStorage entries
   - Silent background fetch on mount; UI only updates if server `timestamp` is newer than cached value
@@ -58,7 +58,7 @@ uses the **SEC Thailand Open Data API v2** with proper subscription-key authenti
 ### Security
 
 - `POST /api/scrape` is now protected by `SCRAPE_TOKEN` (previously open to anyone)
-- SEC API keys never embedded in source; loaded only from `backend/.env`
+- SEC API keys never embedded in source; loaded only from root `.env`
 
 ### Performance
 

@@ -75,8 +75,8 @@ Both phases use **batched concurrency** (5 requests at a time) against the rate 
 
 ```bash
 # 1. Copy env template and fill in your SEC API keys
-cp backend/.env.example backend/.env
-#    Edit backend/.env — at minimum set SEC_FACTSHEET_KEY, SEC_DAILYINFO_KEY, SCRAPE_TOKEN
+cp .env.example .env
+#    Edit the root .env — at minimum set SEC_FACTSHEET_KEY, SEC_DAILYINFO_KEY, SCRAPE_TOKEN
 
 # 2. Build and start all services
 docker compose up -d --build
@@ -92,9 +92,11 @@ open http://localhost:8091
 ### Option 2 — Local development
 
 ```bash
+# Root setup (first time)
+cp .env.example .env      # fill in SEC keys
+
 # Backend
 cd backend
-cp .env.example .env      # fill in SEC keys
 npm install
 npm run scrape            # first-time registry build + NAV fetch (~2–5 min)
 npm start                 # API on :3001
@@ -114,7 +116,7 @@ Each API product gives you a **Primary Key** and a **Secondary Key**. Use both �
 3. Navigate to **Products** and subscribe to:
    - **Fund Factsheet API** → copy Primary Key → `SEC_FACTSHEET_KEY`, copy Secondary Key → `SEC_FACTSHEET_KEY_2`
    - **Fund Daily Info API** → copy Primary Key → `SEC_DAILYINFO_KEY`, copy Secondary Key → `SEC_DAILYINFO_KEY_2`
-4. Put all four keys in `backend/.env`
+4. Put all four keys in the root `.env`
 
 Rate limit: **3,000 calls / 300 seconds** per key. The connector enforces a 120 ms inter-request delay with exponential backoff.
 
@@ -122,7 +124,7 @@ Rate limit: **3,000 calls / 300 seconds** per key. The connector enforces a 120 
 
 ## Configuration
 
-### `backend/.env`
+### `.env` (at Root App Level)
 
 ```bash
 # Fund Factsheet API — primary and secondary subscription keys
@@ -221,12 +223,12 @@ Each fund object returned by the API:
 
 ```
 SarnFund/
+├── .env.example              # Environment variable template
 ├── backend/
 │   ├── sec-api-connector.js  # SEC API client — rate limiting, auth, all endpoints
 │   ├── scraper.js            # Two-phase scrape: registry build + daily NAV fetch
 │   ├── server.js             # Express API, cron scheduler, env loader
 │   ├── init-data.js          # Seed script for empty data files
-│   ├── .env.example          # Environment variable template
 │   ├── data/                 # Runtime JSON cache (git-ignored)
 │   │   ├── fund-registry.json   # Fund type mapping (7-day TTL)
 │   │   ├── rmf.json             # Latest RMF fund data
@@ -309,7 +311,7 @@ The `frontend` service is a one-shot builder — it runs `npm run build`, copies
 
 ## Security
 
-- SEC API keys stored only in `backend/.env` (git-ignored); never in source code
+- SEC API keys stored only in the root `.env` (git-ignored); never in source code
 - Primary + Secondary key pair per API product; secondary used automatically on 401
 - `POST /api/scrape` requires `X-Scrape-Token` header matching `SCRAPE_TOKEN` env var
 - Security headers: `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `HSTS`
@@ -326,7 +328,7 @@ The `frontend` service is a one-shot builder — it runs `npm run build`, copies
 | No data after first start | Run the scrape: `curl -X POST "http://localhost:8091/api/scrape?force=true" -H "X-Scrape-Token: ..."` — registry build on first run takes 2–5 min |
 | Registry misses fund types | `curl -X DELETE http://localhost:8091/api/registry` then re-scrape — forces fresh policy fetch |
 | Rate limit 421/429 in logs | Normal under heavy load; connector backs off automatically (1 s → 2 s → 3 s) |
-| Docker container missing keys | Confirm `backend/.env` exists; check `env_file: ./backend/.env` in `docker-compose.yml` |
+| Docker container missing keys | Confirm `.env` exists at root; check `env_file: ./.env` in `docker-compose.yml` |
 | Stale browser data | Click **Update Data** button — clears localStorage cache and re-fetches |
 | `frontend` builder keeps restarting | It shouldn't — `restart: "no"` is set. Check `docker compose logs frontend` |
 
