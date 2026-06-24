@@ -22,7 +22,7 @@ const TAX_TIPS = [
   "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht.",
   "Combine RMF + SSF + Provident Fund capped at 500k Baht total.",
   "ThaiESG has its own separate limit of 300k Baht (not in the 500k cap)!",
-  "Thai Tax 2568: Plan early to optimize withholding tax rates across brackets."
+  "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!"
 ];
 
 const LandingPage = () => {
@@ -141,10 +141,10 @@ const LandingPage = () => {
     {
       id: 'tax',
       type: 'external',
-      path: '/ThaiTax2568.html',
+      path: '/ThaiTax2569.html',
       badge: 'TAX ENGINE',
       icon: Calculator,
-      title: 'Tax Planner 2568',
+      title: 'Tax Planner 2569',
       desc: 'Optimize your withholding rates and project tax deductions dynamically.',
       sparklineD: 'M0,26 L20,26 L20,18 L50,18 L50,11 L80,11 L80,4 L100,4',
       colorClass: 'text-rose-600',
