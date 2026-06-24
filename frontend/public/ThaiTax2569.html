@@ -89,7 +89,7 @@
     </style>
 </head>
 
-<body class="bg-white min-h-screen pb-12">
+<body class="bg-white min-h-screen pb-20 lg:pb-12">
 
     <!-- Header -->
     <header class="bg-slate-900 text-white p-6 shadow-lg sticky top-0 z-50">
@@ -470,7 +470,7 @@
         </div>
 
         <!-- Right Column: Results -->
-        <div class="lg:col-span-5">
+        <div id="results-anchor" class="lg:col-span-5">
             <div class="sticky top-24 space-y-6">
 
                 <!-- Main Result Card -->
@@ -767,11 +767,50 @@
             } else {
                 document.getElementById('tax-tips').innerText = "คุณยังไม่ต้องเสียภาษี หรือยังไม่ได้ระบุรายได้";
             }
+
+            // Update mobile sticky bar
+            const mobileAmount = document.getElementById('mobile-status-amount');
+            const mobileLabel = document.getElementById('mobile-status-label');
+            const mobileRateBadge = document.getElementById('mobile-rate-badge');
+
+            if (taxStatus >= 0) {
+                mobileLabel.innerText = 'ต้องชำระเพิ่ม';
+                mobileAmount.className = 'text-xl font-display font-bold text-red-400';
+                mobileAmount.innerText = formatMoney(taxStatus) + ' ฿';
+            } else {
+                mobileLabel.innerText = 'ขอคืนภาษีได้';
+                mobileAmount.className = 'text-xl font-display font-bold text-emerald-400';
+                mobileAmount.innerText = formatMoney(Math.abs(taxStatus)) + ' ฿';
+            }
+
+            if (maxRate > 0) {
+                mobileRateBadge.classList.remove('hidden');
+                mobileRateBadge.innerText = maxRate + '%';
+            } else {
+                mobileRateBadge.classList.add('hidden');
+            }
         }
 
         // Initial Calc
         calculateTax();
     </script>
+
+<!-- Mobile sticky tax bar (hidden on desktop) -->
+<div id="mobile-sticky-bar"
+    class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white z-50 shadow-2xl border-t border-slate-700"
+    style="height:56px;"
+    onclick="document.getElementById('results-anchor').scrollIntoView({behavior:'smooth'})">
+    <div class="max-w-6xl mx-auto h-full flex items-center justify-between px-4 cursor-pointer">
+        <div class="flex items-center gap-3">
+            <span id="mobile-status-label" class="text-xs text-slate-400">ภาษีที่ต้องชำระ</span>
+            <span id="mobile-status-amount" class="text-xl font-display font-bold text-orange-400">0 ฿</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span id="mobile-rate-badge" class="text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full hidden">0%</span>
+            <i data-lucide="chevron-up" class="w-5 h-5 text-slate-400"></i>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>
