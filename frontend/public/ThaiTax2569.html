@@ -382,55 +382,13 @@
                         <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
                             <i data-lucide="gift" class="w-5 h-5"></i>
                         </div>
-                        <span class="font-semibold text-gray-700">4. กระตุ้นเศรษฐกิจ & บริจาค</span>
+                        <span class="font-semibold text-gray-700">4. บ้าน & บริจาค</span>
                     </div>
                     <i id="icon-donation" data-lucide="chevron-down"
                         class="w-5 h-5 text-gray-400 transition-transform"></i>
                 </button>
                 <div id="section-donation" class="p-5 fade-in hidden">
                     <div class="space-y-4">
-
-                        <!-- Easy E-Receipt -->
-                        <div class="input-group bg-blue-50 p-2 rounded border border-blue-100">
-                            <div class="flex justify-between mb-1">
-                                <label class="text-sm font-bold text-blue-700 flex items-center">
-                                    Easy E-Receipt 2.0 <span class="badge-new">16 ม.ค.-28 ก.พ. 68</span>
-                                </label>
-                                <span class="text-xs text-blue-600">สูงสุด 50,000 บาท (ต้องมี e-Tax Invoice)</span>
-                            </div>
-                            <div class="relative">
-                                <input type="number" id="easyEReceipt" oninput="updateData('easyEReceipt', this.value)"
-                                    placeholder="0"
-                                    class="w-full p-3 pr-10 bg-white border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
-                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
-                            </div>
-                        </div>
-
-                        <!-- Tourism -->
-                        <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                            <div class="text-sm font-bold text-yellow-800 mb-2 flex items-center">
-                                เที่ยวดีมีคืน 2569 <span class="badge-new bg-yellow-500 text-white ml-2">ถึง 15 ธ.ค.
-                                    69</span>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="input-group mb-0">
-                                    <label class="text-xs text-gray-600 mb-1 block">เที่ยวเมืองหลัก (จ่ายจริง)</label>
-                                    <input type="number" id="tourismMain"
-                                        oninput="updateData('tourismMain', this.value)" placeholder="0"
-                                        class="w-full p-2 text-sm bg-white border border-yellow-200 rounded">
-                                </div>
-                                <div class="input-group mb-0">
-                                    <label class="text-xs text-gray-600 mb-1 block">เที่ยวเมืองรอง (จ่ายจริง x
-                                        1.5)</label>
-                                    <input type="number" id="tourismSecondary"
-                                        oninput="updateData('tourismSecondary', this.value)" placeholder="0"
-                                        class="w-full p-2 text-sm bg-white border border-yellow-200 rounded">
-                                </div>
-                            </div>
-                            <div class="text-xs text-yellow-700 mt-2 text-right">
-                                *ระบบจะคำนวณโควต้าให้อัตโนมัติ (รวมกันไม่เกิน 30,000)
-                            </div>
-                        </div>
 
                         <div class="input-group">
                             <div class="flex justify-between mb-1">
@@ -588,10 +546,7 @@
             rmf: 0,
             tesg: 0,
             pensionInsurance: 0,
-            easyEReceipt: 0,
             interestHomeLoan: 0,
-            tourismMain: 0,
-            tourismSecondary: 0,
             donationGeneral: 0,
             donationEducation: 0
         };
@@ -667,18 +622,6 @@
 
             // Stimulus
             deductions += Math.min(data.interestHomeLoan, 100000);
-            deductions += Math.min(data.easyEReceipt, 50000); // Easy E-Receipt 2.0
-
-            // Tourism (Teaw Dee Mee Kuen 2569)
-            // Rule: Main max 20k, Secondary 1.5x. Combined max 30k.
-            const tourMain = Math.min(data.tourismMain, 20000);
-            const tourSec = data.tourismSecondary * 1.5;
-            const totalTour = Math.min(tourMain + tourSec, 30000);
-            // Re-check logic: usually Main city spending is capped at 20k within the 30k total
-            // If Main=20k, Secondary=0 => 20k
-            // If Main=0, Secondary=20k => 30k
-            // If Main=20k, Secondary=10k => Main 20k + Secondary 15k = 35k -> Cap 30k.
-            deductions += totalTour;
 
             // 3. ก่อนบริจาค
             let netBeforeDonation = Math.max(0, totalIncome - expenses - deductions);
