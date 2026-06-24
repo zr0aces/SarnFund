@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
-data/*.json
+data/
 .env
 .env.local
 .git

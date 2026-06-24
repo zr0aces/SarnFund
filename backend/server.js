@@ -84,7 +84,7 @@ async function getCachedData(filename) {
 
 // Active fund types — to add a new type: add its key here (must match scraper FUND_TYPES)
 // and ensure the scraper writes {type}.json to the data directory.
-const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'ssf', 'all']);
+const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'all']);
 
 /**
  * Fund data endpoints — one route handles all active types.
@@ -174,10 +174,12 @@ app.delete('/api/registry', async (req, res) => {
  */
 app.get('/api/health', async (req, res) => {
   try {
-    const [rmfCache, esgCache, ssfCache] = await Promise.all([
+    const [rmfCache, esgCache, esgxCache, ssfCache, etfCache] = await Promise.all([
       getCachedData('rmf.json'),
       getCachedData('esg.json'),
+      getCachedData('esgx.json'),
       getCachedData('ssf.json'),
+      getCachedData('etf.json'),
     ]);
 
     let registry = null;
@@ -200,9 +202,11 @@ app.get('/api/health', async (req, res) => {
       },
       registry,
       cache: {
-        rmf: cacheInfo(rmfCache),
-        esg: cacheInfo(esgCache),
-        ssf: cacheInfo(ssfCache),
+        rmf:  cacheInfo(rmfCache),
+        esg:  cacheInfo(esgCache),
+        esgx: cacheInfo(esgxCache),
+        ssf:  cacheInfo(ssfCache),
+        etf:  cacheInfo(etfCache),
       },
     });
   } catch (error) {
@@ -215,18 +219,22 @@ app.get('/api/health', async (req, res) => {
  */
 app.get('/api/stats', async (req, res) => {
   try {
-    const [rmf, esg, ssf] = await Promise.all([
+    const [rmf, esg, esgx, ssf, etf] = await Promise.all([
       getCachedData('rmf.json'),
       getCachedData('esg.json'),
+      getCachedData('esgx.json'),
       getCachedData('ssf.json'),
+      getCachedData('etf.json'),
     ]);
 
     res.json({
       success: true,
       stats: {
-        rmf: rmf?.data?.length || 0,
-        esg: esg?.data?.length || 0,
-        ssf: ssf?.data?.length || 0,
+        rmf:  rmf?.data?.length  || 0,
+        esg:  esg?.data?.length  || 0,
+        esgx: esgx?.data?.length || 0,
+        ssf:  ssf?.data?.length  || 0,
+        etf:  etf?.data?.length  || 0,
       },
     });
   } catch (error) {
@@ -259,8 +267,10 @@ app.listen(PORT, () => {
   console.log(`Scrape token:  ${hasToken ? 'configured ✓' : 'not set – /api/scrape is unprotected (set SCRAPE_TOKEN in .env)'}`);
   console.log(`\nAPI endpoints:`);
   console.log(`  GET    /api/funds/rmf   - RMF fund data`);
-  console.log(`  GET    /api/funds/esg   - ThaiESG (ESG) fund data`);
+  console.log(`  GET    /api/funds/esg   - ThaiESG fund data`);
+  console.log(`  GET    /api/funds/esgx  - ThaiESGX fund data`);
   console.log(`  GET    /api/funds/ssf   - SSF fund data`);
+  console.log(`  GET    /api/funds/etf   - ETF fund data`);
   console.log(`  GET    /api/funds/all   - All fund data`);
   console.log(`  POST   /api/scrape?force=true  - Force scrape`);
   console.log(`  DELETE /api/registry    - Reset fund registry cache`);

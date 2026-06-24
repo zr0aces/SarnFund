@@ -48,6 +48,31 @@ export const AMC_COLORS_ESG = {
     All: '#059669'
 };
 
+// ESGX Funds Mock Data - Removed to force API fetch
+export const INITIAL_ESGX = [];
+
+export const AMC_COLORS_ESGX = {
+    KKP: '#6F42C1',
+    Krungsri: '#F59E0B',
+    BBL: '#1E3A8A',
+    TISCO: '#CC0000',
+    SCB: '#4F3589',
+    KAsset: '#00A950',
+    KTAM: '#0D94D2',
+    ONE: '#FDB813',
+    UOB: '#002664',
+    Principal: '#0055A4',
+    Eastspring: '#ED1C24',
+    'Asset Plus': '#F58220',
+    DAOL: '#E6007E',
+    KWI: '#EE3124',
+    'LH Fund': '#6D6E71',
+    MFC: '#F26522',
+    TALIS: '#8B572A',
+    XSpring: '#231F20',
+    All: '#0891B2'
+};
+
 // SSF Funds Mock Data - Removed to force API fetch
 export const INITIAL_SSF = [];
 
@@ -70,5 +95,30 @@ export const AMC_COLORS_SSF = {
     MFC: '#F26522',
     TALIS: '#8B572A',
     XSpring: '#231F20',
-    All: '#7C3AED' // Purple for SSF
+    All: '#7C3AED'
+};
+
+// ETF Funds Mock Data - Removed to force API fetch
+export const INITIAL_ETF = [];
+
+export const AMC_COLORS_ETF = {
+    KKP: '#6F42C1',
+    Krungsri: '#F59E0B',
+    BBL: '#1E3A8A',
+    TISCO: '#CC0000',
+    SCB: '#4F3589',
+    KAsset: '#00A950',
+    KTAM: '#0D94D2',
+    ONE: '#FDB813',
+    UOB: '#002664',
+    Principal: '#0055A4',
+    Eastspring: '#ED1C24',
+    'Asset Plus': '#F58220',
+    DAOL: '#E6007E',
+    KWI: '#EE3124',
+    'LH Fund': '#6D6E71',
+    MFC: '#F26522',
+    TALIS: '#8B572A',
+    XSpring: '#231F20',
+    All: '#B45309'
 };

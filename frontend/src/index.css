@@ -7,3 +7,29 @@
     @apply antialiased text-slate-800 bg-gray-50;
   }
 }
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+  }
+}
+
+@keyframes sparkline-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-sparkline {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: sparkline-draw 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+

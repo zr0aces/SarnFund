@@ -9,13 +9,25 @@
         href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNiIgZmlsbD0iI0Y5NzMxNiIvPgogIDxwYXRoIGQ9Ik0xMiA1Mmg0MCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMTggNDR2OE0zMiAzMnYyME00NiAxNnYzNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        display: ['Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@200;300;400;500;600;700&display=swap');
 
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Prompt', sans-serif;
         }
 
         /* Custom Scrollbar */
@@ -85,8 +97,8 @@
             <div class="flex items-center gap-3">
                 <i data-lucide="calculator" class="w-8 h-8 text-orange-500"></i>
                 <div>
-                    <h1 class="text-2xl font-bold">Thai Tax Planner 2568 <span
-                            class="text-xs bg-orange-500/20 text-orange-200 border border-orange-500/30 px-2 py-0.5 rounded-full ml-2 align-middle">Updated
+                    <h1 class="text-2xl font-display font-bold">Thai Tax Planner 2568 <span
+                            class="text-xs font-sans bg-orange-500/20 text-orange-200 border border-orange-500/30 px-2 py-0.5 rounded-full ml-2 align-middle">Updated
                             Dec
                             2025</span></h1>
                     <p class="text-slate-400 text-sm">วางแผนลดหย่อนภาษี อัปเดต Thai ESG & Easy E-Receipt 2.0</p>
@@ -450,8 +462,7 @@
                             <div class="flex justify-between mb-1">
                                 <label class="text-sm font-medium text-gray-600">บริจาคการศึกษา/กีฬา (2 เท่า)</label>
                                 <span class="text-xs text-gray-400">ลดหย่อนได้ 2 เท่า สูงสุด 10% ของสุทธิ</span>
-                            </div>
-                            <div class="relative">
+<div class="relative">
                                 <input type="number" id="donationEducation"
                                     oninput="updateData('donationEducation', this.value)" placeholder="0"
                                     class="w-full p-3 pr-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none">
@@ -482,28 +493,28 @@
 
                 <!-- Main Result Card -->
                 <div
-                    class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl shadow-lg border-none overflow-hidden">
+                    class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl shadow-lg border-none overflow-hidden font-sans">
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-4 text-gray-300">
                             <i data-lucide="trending-up" class="w-5 h-5"></i>
-                            <span class="font-semibold uppercase tracking-wider text-sm">สรุปภาษี 2568</span>
+                            <span class="font-display font-semibold uppercase tracking-wider text-sm">สรุปภาษี 2568</span>
                         </div>
 
                         <div class="mb-6">
                             <div class="flex justify-between text-sm text-gray-400 mb-2">
                                 <span>ภาษีที่คำนวณได้</span>
-                                <span id="display-taxPayable">0</span>
+                                <span id="display-taxPayable" class="font-display font-bold">0</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400 mb-4 pb-4 border-b border-gray-700">
                                 <span>หัก ณ ที่จ่ายแล้ว</span>
-                                <span id="display-withholding" class="text-orange-400">0</span>
+                                <span id="display-withholding" class="text-orange-400 font-display font-bold">0</span>
                             </div>
 
                             <div>
-                                <p id="display-status-text" class="text-sm text-gray-300 mb-1">ชำระภาษีเพิ่ม (Net
+                                <p id="display-status-text" class="text-sm font-display font-semibold text-gray-350 mb-1">ชำระภาษีเพิ่ม (Net
                                     Payable)</p>
                                 <div id="display-taxStatus"
-                                    class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">
+                                    class="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">
                                     0 <span class="text-lg text-gray-400 font-normal">บาท</span>
                                 </div>
                             </div>
@@ -512,17 +523,17 @@
                         <div class="space-y-3 pt-4 border-t border-gray-700 bg-black/20 -mx-6 -mb-6 p-6">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">รายได้รวมทั้งปี</span>
-                                <span id="display-totalIncome" class="font-medium">0</span>
+                                <span id="display-totalIncome" class="font-display font-medium">0</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">หัก ค่าใช้จ่าย</span>
-                                <span id="display-expenses" class="text-orange-300 font-medium">-0</span>
+                                <span id="display-expenses" class="text-orange-300 font-display font-medium">-0</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-400">หัก ค่าลดหย่อนรวม</span>
-                                <span id="display-deductions" class="text-orange-300 font-medium">-0</span>
+                                <span id="display-deductions" class="text-orange-300 font-display font-medium">-0</span>
                             </div>
-                            <div class="flex justify-between text-lg font-bold pt-2 border-t border-gray-700 mt-2">
+                            <div class="flex justify-between text-lg font-display font-bold pt-2 border-t border-gray-700 mt-2">
                                 <span class="text-white">เงินได้สุทธิ (Net Taxable)</span>
                                 <span id="display-netTaxable" class="text-white">0</span>
                             </div>
@@ -745,11 +756,11 @@
             if (taxStatus >= 0) {
                 statusTextEl.innerText = 'ชำระภาษีเพิ่ม (Net Payable)';
                 statusEl.innerHTML = `${formatMoney(taxStatus)} <span class="text-lg text-gray-400 font-normal">บาท</span>`;
-                statusEl.className = "text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500";
+                statusEl.className = "text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500";
             } else {
                 statusTextEl.innerText = 'ขอคืนภาษีได้ (Refund)';
                 statusEl.innerHTML = `${formatMoney(Math.abs(taxStatus))} <span class="text-lg text-gray-400 font-normal">บาท</span>`;
-                statusEl.className = "text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500";
+                statusEl.className = "text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500";
             }
 
             // Render Brackets

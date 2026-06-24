@@ -8,7 +8,18 @@
       "Skill(code-review)",
       "Bash(rtk git *)",
       "Bash(node --input-type=module --eval \"import '/home/san/workspace/SarnFund/scripts/fetch-funds.js'\")",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(node scripts/fetch-funds.js --refresh)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(rtk wc *)",
+      "Read(//tmp/**)",
+      "Bash(kill -0 2252314)",
+      "Bash(node -e ' *)",
+      "Bash(node --input-type=module)",
+      "Bash(kill -0 2277067)",
+      "Bash(kill -0 2304478)",
+      "Bash(rtk npm *)",
+      "Bash(rtk lint *)"
     ]
   }
 }

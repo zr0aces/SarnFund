@@ -24,31 +24,78 @@
  */
 
 const BASE_URL = 'https://api.sec.or.th';
-const REQUEST_DELAY_MS = 120;
 const MAX_RETRIES = 10;
-// Default wait when rate-limited and no Retry-After header — just over the 300s window
-const RATE_LIMIT_FALLBACK_MS = 310_000;
+
+// SEC API rate limit: 5 000 requests per 300-second rolling window per key.
+const RATE_LIMIT_MAX   = 5_000;
+const RATE_LIMIT_WINDOW_MS = 300_000;
+// Minimum gap between consecutive requests (300s / 5000 = 60ms).
+// Prevents hammering even when the window has capacity.
+const MIN_DELAY_MS = Math.ceil(RATE_LIMIT_WINDOW_MS / RATE_LIMIT_MAX); // 60 ms
+// Wait when the API returns 429/421 and Retry-After is absent or zero.
+const RATE_LIMIT_FALLBACK_MS = RATE_LIMIT_WINDOW_MS + 10_000; // 310 s
 
 // Spec codes checked against v2 /general-info/specifications items
 export const FUND_SPEC_CODES = {
   RMF:  ['RMF'],
   SSF:  ['SSF'],
-  TESG: ['ThaiESG', 'TESG', 'THAI_ESG', 'Thai ESG'],
+  ESG:  ['ThaiESG', 'TESG', 'THAI_ESG', 'Thai ESG'],
+  ESGX: ['ThaiESGX', 'TESGX', 'THAI_ESGX', 'Thai ESGX', 'THAIESGX'],
   LTF:  ['LTF'],
+  ETF:  ['ETFC', 'ETF'],
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Promise-chain rate limiter — no race condition on concurrent callers
+/**
+ * Sliding-window rate limiter (promise-chain serialised — no concurrent access).
+ *
+ * Tracks the timestamps of every request made in the last RATE_LIMIT_WINDOW_MS.
+ * Before each request it:
+ *   1. Evicts timestamps older than the window.
+ *   2. If the window is full (≥ RATE_LIMIT_MAX), waits until the oldest entry ages out.
+ *   3. Records the new timestamp.
+ *   4. Enforces a minimum inter-request delay (MIN_DELAY_MS) to avoid bursty traffic.
+ *
+ * Callers use the same await-pattern as before: `await rateLimiter.wait()`.
+ */
 class RateLimiter {
-  constructor(delayMs) {
-    this._delay = delayMs;
-    this._queue = Promise.resolve();
+  constructor(maxRequests = RATE_LIMIT_MAX, windowMs = RATE_LIMIT_WINDOW_MS) {
+    this._max    = maxRequests;
+    this._window = windowMs;
+    this._ts     = []; // sorted timestamps of requests within the current window
+    this._queue  = Promise.resolve();
   }
+
   wait() {
-    const slot = this._queue;
-    this._queue = this._queue.then(() => sleep(this._delay));
+    const slot   = this._queue;
+    this._queue  = this._queue.then(() => this._acquire());
     return slot;
+  }
+
+  async _acquire() {
+    while (true) {
+      const now = Date.now();
+      // Evict timestamps that have fallen outside the rolling window
+      while (this._ts.length > 0 && now - this._ts[0] >= this._window) {
+        this._ts.shift();
+      }
+      if (this._ts.length < this._max) {
+        this._ts.push(Date.now());
+        await sleep(MIN_DELAY_MS);
+        return;
+      }
+      // Window is saturated — wait until the oldest request expires
+      const waitMs = this._window - (now - this._ts[0]) + 50; // +50 ms safety margin
+      console.warn(`Rate limiter: window full (${this._ts.length}/${this._max} in ${this._window / 1000}s), waiting ${Math.round(waitMs / 1000)}s…`);
+      await sleep(waitMs);
+    }
+  }
+
+  /** Current request count within the active window (for diagnostics). */
+  get count() {
+    const now = Date.now();
+    return this._ts.filter(t => now - t < this._window).length;
   }
 }
 
@@ -71,8 +118,8 @@ export class SecApiClient {
     this._fsKey2 = factsheetKey2 || null;
     this._diKey  = dailyInfoKey;
     this._diKey2 = dailyInfoKey2 || null;
-    this._fsRL   = new RateLimiter(REQUEST_DELAY_MS);
-    this._diRL   = new RateLimiter(REQUEST_DELAY_MS);
+    this._fsRL   = new RateLimiter(); // Factsheet API: 5000 req / 300s
+    this._diRL   = new RateLimiter(); // Daily Info API: 5000 req / 300s
   }
 
   async _get(url, primaryKey, secondaryKey, rateLimiter, attempt = 0) {
@@ -96,7 +143,9 @@ export class SecApiClient {
 
     if ((res.status === 421 || res.status === 429) && attempt < MAX_RETRIES) {
       const retryAfterSec = parseInt(res.headers.get('Retry-After') || '0', 10);
-      const backoff = retryAfterSec > 0 ? retryAfterSec * 1000 : RATE_LIMIT_FALLBACK_MS;
+      // Only trust Retry-After if it's at least 5 s — the API sometimes sends "1"
+      // which is too short for a 300-second rate-limit window.
+      const backoff = retryAfterSec >= 5 ? retryAfterSec * 1000 : RATE_LIMIT_FALLBACK_MS;
       const waitSec = Math.round(backoff / 1000);
       console.warn(`Rate limit (${res.status}), waiting ${waitSec}s before retry ${attempt + 1}/${MAX_RETRIES}…`);
       await sleep(backoff);

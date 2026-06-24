@@ -5,7 +5,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend/data:/app/data
+      - ./data:/app/data
+        #- backend_data:/app/data
     env_file:
       - ./backend/.env
     environment:
@@ -45,3 +46,4 @@ services:
 
 volumes:
   frontend_dist:
+  backend_data:

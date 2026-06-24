@@ -15,7 +15,7 @@ const DATA_DIR   = path.join(__dirname, 'data');
 // v2 AMC list has no amc_id, so we match by comp_name_en / comp_name_th.
 // Adding an AMC here is the only change needed: display and pattern stay in sync.
 const AMC_REGISTRY = {
-  KKPAM:      { display: 'KKP',        pattern: /\bkkp\b/i },
+  KKPAM:      { display: 'KKP',        pattern: /kiatnakin|\bkkp\b/i },
   KSAM:       { display: 'Krungsri',   pattern: /krungsri/i },
   BBLAM:      { display: 'BBL',        pattern: /\bbbl\b/i },
   TISCOASSET: { display: 'TISCO',      pattern: /tisco/i },
@@ -44,15 +44,32 @@ function matchAmcCode(compNameEn = '', compNameTh = '') {
 }
 
 /**
- * Detect SSF / ESG (ThaiESG) directly from the v2 profiles endpoint field.
- * RMF and LTF are NOT in fund_class_tax_incentive_type — they need a specs call.
+ * Detect SSF / ESG / ESGX from the v2 profiles endpoint field.
+ * RMF and ETF are NOT in fund_class_tax_incentive_type — they need a specs call.
+ *
+ * The API returns full Thai descriptions, not short codes:
+ *   SSF:     "กองทุนรวมเพื่อการออม (Super Savings Fund : SSF)"
+ *   ThaiESG: "กองทุนรวมไทยเพื่อความยั่งยืน (Thailand ESG Fund : Thai ESG)"
+ * Use substring matching against the uppercased value.
  */
 function fundTypeFromTaxIncentive(profile) {
   const raw = (profile.fund_class_tax_incentive_type || '').trim();
-  const t = raw.toUpperCase().replace(/\s+/g, '');
-  if (t === 'SSF') return 'SSF';
-  if (t === 'THAESG' || t === 'THAIESG' || t === 'TESG' || t === 'ESG') return 'ESG';
+  if (!raw) return null;
+  const upper = raw.toUpperCase();
+  if (upper.includes('SSF')) return 'SSF';
+  // Check ESGX before ESG so 'THAIESGX' substring doesn't fall into the ESG branch
+  if (upper.includes('THAIESGX') || upper.includes('THAI ESGX')) return 'ESGX';
+  if (upper.includes('THAIESG') || upper.includes('THAI ESG') || upper.includes('THAILAND ESG')) return esgSubtype(profile);
   return null;
+}
+
+// When the API returns a Thai ESG incentive, check fund name/class for 'ESGX' suffix
+// to distinguish ThaiESG from ThaiESGX (SEC uses the same incentive type for both).
+function esgSubtype(profile) {
+  const code = (profile.proj_abbr_name || '').toUpperCase();
+  const cls  = (profile.fund_class_name || '').toUpperCase();
+  if (/ESGX|TESGX/.test(code) || /ESGX|TESGX/.test(cls)) return 'ESGX';
+  return 'ESG';
 }
 
 /**
@@ -76,7 +93,10 @@ function parsePerformanceV2(rows) {
 
 // To add a new fund type: add its name here and handle detection in fundTypeFromTaxIncentive()
 // or via a spec_code in sec-api-connector.js FUND_SPEC_CODES.
-const FUND_TYPES = ['RMF', 'SSF', 'ESG'];
+const FUND_TYPES = ['RMF', 'SSF', 'ESG', 'ESGX', 'ETF'];
+// ESG/ESGX: many funds have null incentive_type — require spec lookup (TESG/TESGX spec_code).
+// Funds with the "Thai ESG" incentive string are caught in Phase 2; null-incentive ones fall here.
+const SPEC_LOOKUP_TYPES = ['RMF', 'ESG', 'ESGX', 'ETF'];
 const REGISTRY_PATH  = path.join(DATA_DIR, 'fund-registry.json');
 const PROGRESS_PATH  = path.join(DATA_DIR, '.registry-progress.json');
 const REGISTRY_TTL   = 7 * 24 * 60 * 60 * 1000;
@@ -102,13 +122,14 @@ async function saveRegistry(funds) {
   await fs.writeFile(REGISTRY_PATH, JSON.stringify({ timestamp: Date.now(), funds }, null, 2));
 }
 
-// Deduplicate registry entries by proj_id + class (same fund fetched from overlapping AMC data)
+// Deduplicate by proj_id only: one fund project = one registry entry.
+// Phase-2 entries (classified by tax_incentive_type) appear first in the list and are kept;
+// Phase-3 entries for the same proj_id are silently dropped.
 function deduplicateRegistry(entries) {
   const seen = new Set();
   return entries.filter((e) => {
-    const key = `${e.proj_id}|${e.class ?? ''}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
+    if (seen.has(e.proj_id)) return false;
+    seen.add(e.proj_id);
     return true;
   });
 }
@@ -167,36 +188,41 @@ async function buildRegistry(client) {
     if (!Array.isArray(amcList) || amcList.length === 0)
       throw new Error('AMC list returned empty — aborting to protect existing registry');
 
-    const targetAmcs = [];
-    for (const amc of amcList) {
-      const code = matchAmcCode(amc.comp_name_en, amc.comp_name_th);
-      if (code) targetAmcs.push({ ...amc, amcCode: code });
-    }
-    console.log(`Found ${targetAmcs.length} of ${amcList.length} target AMCs`);
-    if (targetAmcs.length === 0)
+    const matchedCount = amcList.filter(
+      (amc) => matchAmcCode(amc.comp_name_en, amc.comp_name_th)
+    ).length;
+    console.log(`Found ${matchedCount} target AMCs among ${amcList.length} total SEC AMCs`);
+    if (matchedCount === 0)
       throw new Error(`No target AMCs matched from ${amcList.length} SEC AMCs — check AMC_REGISTRY patterns`);
 
-    // Phase 2: fetch profiles for each target AMC (Registered funds only)
-    const profileTasks = targetAmcs.map((amc) => async () => {
-      const profiles = await client.getFundProfiles({
-        company_info: amc.unique_id,
-        fund_status: 'Registered',
-      });
-      const displayName = AMC_REGISTRY[amc.amcCode]?.display || amc.amcCode;
-      console.log(`  ${amc.amcCode}: ${profiles.length} registered funds`);
-      return profiles.map((p) => ({ ...p, amcCode: amc.amcCode, displayName }));
+    // Phase 2: fetch profiles for ALL AMCs (Registered + IPO).
+    // ThaiESG/ThaiESGX/SSF are detected from fund_class_tax_incentive_type across all AMCs.
+    // IPO status captures newly launched funds not yet marked Registered.
+    const profileTasks = amcList.map((amc) => async () => {
+      const amcCode     = matchAmcCode(amc.comp_name_en, amc.comp_name_th);
+      const displayName = amcCode
+        ? AMC_REGISTRY[amcCode].display
+        : (amc.comp_name_en || amc.comp_name_th || 'Unknown').trim();
+      const [registered, ipo] = await Promise.all([
+        client.getFundProfiles({ company_info: amc.unique_id, fund_status: 'Registered' }),
+        client.getFundProfiles({ company_info: amc.unique_id, fund_status: 'IPO' }),
+      ]);
+      const total = registered.length + ipo.length;
+      if (total > 0) console.log(`  ${displayName}: ${registered.length} registered + ${ipo.length} IPO`);
+      return [...registered, ...ipo].map((p) => ({ ...p, amcCode, displayName }));
     });
 
     const amcResults = await runBatched(profileTasks, BATCH_SIZE);
     const allProfiles = amcResults.flat();
 
-    // Phase 3 prep: split known (SSF/TESG from profile) vs unknown (need spec lookup)
+    // Phase 3 prep: classify by tax incentive (all AMCs) vs unknown (target AMCs only for spec lookup)
     unknownProfiles = [];
     for (const profile of allProfiles) {
       const fundType = fundTypeFromTaxIncentive(profile);
       if (fundType) {
         partialRegistry.push(profileToEntry(profile, fundType));
-      } else {
+      } else if (profile.amcCode) {
+        // Only target AMC unknowns get the expensive spec lookup (for RMF/ETF)
         unknownProfiles.push(profile);
       }
     }
@@ -207,14 +233,14 @@ async function buildRegistry(client) {
     }
   }
 
-  // Phase 3: spec lookups for potential RMF/LTF, checkpointed after each batch
+  // Phase 3: spec lookups for potential RMF/ETF (target AMCs only), checkpointed after each batch
   if (unknownProfiles.length > 0) {
-    console.log(`Fetching specifications for ${unknownProfiles.length} potential RMF/LTF funds…`);
+    console.log(`Fetching specifications for ${unknownProfiles.length} potential RMF/ETF funds…`);
     for (let i = 0; i < unknownProfiles.length; i += BATCH_SIZE) {
       const batch = unknownProfiles.slice(i, i + BATCH_SIZE);
       const batchTasks = batch.map((profile) => async () => {
-        const specs = await client.getFundSpecifications(profile.proj_id);
-        const fundType = FUND_TYPES.find((t) => specs.some((s) => matchesFundType(s, t)));
+        const specs    = await client.getFundSpecifications(profile.proj_id);
+        const fundType = SPEC_LOOKUP_TYPES.find((t) => specs.some((s) => matchesFundType(s, t)));
         return fundType ? profileToEntry(profile, fundType) : null;
       });
       const batchResults = await runBatched(batchTasks, BATCH_SIZE);
