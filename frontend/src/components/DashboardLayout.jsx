@@ -1,3 +1,4 @@
+/* global __APP_VERSION__ */
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { RefreshCw, ArrowLeft, Calculator, BarChart3, Leaf, Sprout, Wallet, TrendingUp } from 'lucide-react';
@@ -202,7 +203,7 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
 
             <footer className="py-4 border-t border-slate-100 bg-white mt-auto">
                 <div className="container mx-auto text-center text-slate-400 text-sm">
-                    <p>&copy; {new Date().getFullYear()} ZeroTrust Investment Tools. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} ZeroTrust Investment Tools. All rights reserved. | v{__APP_VERSION__}</p>
                 </div>
             </footer>
 
