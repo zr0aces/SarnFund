@@ -28,47 +28,64 @@ async function main() {
   const tagMode = args.includes('--tag');
   const buildMode = args.includes('--build');
 
-  // 1. Read and validate current VERSION
-  if (!existsSync(VERSION_FILE)) {
-    console.error(`ERROR: VERSION file not found at ${VERSION_FILE}`);
-    process.exit(1);
-  }
+  // Find target version argument (non-flag)
+  const versionArg = args.find(arg => !arg.startsWith('--'));
 
-  const rawVersion = (await fs.readFile(VERSION_FILE, 'utf8')).trim();
-  const calVerRegex = /^(\d{4})\.(1[0-2]|[1-9])\.(\d+)$/;
-  const match = rawVersion.match(calVerRegex);
-  if (!match) {
-    console.error(`ERROR: Version "${rawVersion}" in VERSION file does not match CalVer format YYYY.M.MINOR`);
-    process.exit(1);
-  }
+  let newVersion;
 
-  const [, fileYearStr, fileMonthStr, fileMinorStr] = match;
-  const fileYear = parseInt(fileYearStr, 10);
-  const fileMonth = parseInt(fileMonthStr, 10);
-  const fileMinor = parseInt(fileMinorStr, 10);
-
-  // 2. Get current system year and month (BKK / Local Time)
-  const now = new Date();
-  const sysYear = now.getFullYear();
-  const sysMonth = now.getMonth() + 1; // getMonth is 0-indexed
-
-  let newYear = fileYear;
-  let newMonth = fileMonth;
-  let newMinor = fileMinor;
-
-  if (sysYear === fileYear && sysMonth === fileMonth) {
-    // Current month is same as VERSION month -> increment MINOR
-    newMinor = fileMinor + 1;
-    console.log(`Bumping minor increment in current month (${sysYear}.${sysMonth}): ${fileMinor} -> ${newMinor}`);
+  if (versionArg) {
+    // Strip leading 'v' if present (e.g. v2026.6.3 -> 2026.6.3)
+    const cleanVersion = versionArg.startsWith('v') ? versionArg.slice(1) : versionArg;
+    const calVerRegex = /^\d{4}\.(1[0-2]|[1-9])\.\d+$/;
+    if (!calVerRegex.test(cleanVersion)) {
+      console.error(`ERROR: Provided version "${versionArg}" is not a valid CalVer YYYY.M.MINOR (e.g., 2026.6.3)`);
+      process.exit(1);
+    }
+    newVersion = cleanVersion;
+    console.log(`Bumping to explicitly provided version: ${newVersion}`);
   } else {
-    // New month/year -> reset MINOR to 1 and update YYYY.M
-    newYear = sysYear;
-    newMonth = sysMonth;
-    newMinor = 1;
-    console.log(`New month detected: shifting from ${fileYear}.${fileMonth}.${fileMinor} to ${newYear}.${newMonth}.${newMinor}`);
-  }
+    // 1. Read and validate current VERSION
+    if (!existsSync(VERSION_FILE)) {
+      console.error(`ERROR: VERSION file not found at ${VERSION_FILE}`);
+      process.exit(1);
+    }
 
-  const newVersion = `${newYear}.${newMonth}.${newMinor}`;
+    const rawVersion = (await fs.readFile(VERSION_FILE, 'utf8')).trim();
+    const calVerRegex = /^(\d{4})\.(1[0-2]|[1-9])\.(\d+)$/;
+    const match = rawVersion.match(calVerRegex);
+    if (!match) {
+      console.error(`ERROR: Version "${rawVersion}" in VERSION file does not match CalVer format YYYY.M.MINOR`);
+      process.exit(1);
+    }
+
+    const [, fileYearStr, fileMonthStr, fileMinorStr] = match;
+    const fileYear = parseInt(fileYearStr, 10);
+    const fileMonth = parseInt(fileMonthStr, 10);
+    const fileMinor = parseInt(fileMinorStr, 10);
+
+    // 2. Get current system year and month (BKK / Local Time)
+    const now = new Date();
+    const sysYear = now.getFullYear();
+    const sysMonth = now.getMonth() + 1; // getMonth is 0-indexed
+
+    let newYear = fileYear;
+    let newMonth = fileMonth;
+    let newMinor = fileMinor;
+
+    if (sysYear === fileYear && sysMonth === fileMonth) {
+      // Current month is same as VERSION month -> increment MINOR
+      newMinor = fileMinor + 1;
+      console.log(`Bumping minor increment in current month (${sysYear}.${sysMonth}): ${fileMinor} -> ${newMinor}`);
+    } else {
+      // New month/year -> reset MINOR to 1 and update YYYY.M
+      newYear = sysYear;
+      newMonth = sysMonth;
+      newMinor = 1;
+      console.log(`New month detected: shifting from ${fileYear}.${fileMonth}.${fileMinor} to ${newYear}.${newMonth}.${newMinor}`);
+    }
+
+    newVersion = `${newYear}.${newMonth}.${newMinor}`;
+  }
 
   // 3. Write new version to VERSION file
   await fs.writeFile(VERSION_FILE, newVersion + '\n');
@@ -97,12 +114,26 @@ async function main() {
       execSync('git add backend/package-lock.json frontend/package-lock.json', { stdio: 'inherit', cwd: ROOT_DIR });
 
       execSync(`git commit -m "chore: bump version to v${newVersion}"`, { stdio: 'inherit', cwd: ROOT_DIR });
+      
+      // Delete local tag if it already exists to prevent tag conflicts
+      try {
+        execSync(`git tag -d "v${newVersion}" 2>/dev/null`, { stdio: 'ignore', cwd: ROOT_DIR });
+      } catch {}
+
       execSync(`git tag -a "v${newVersion}" -m "Release v${newVersion}"`, { stdio: 'inherit', cwd: ROOT_DIR });
-      console.log(`✓ Git commit and tag v${newVersion} created successfully.`);
+      console.log(`\n✓ Git commit and tag v${newVersion} created successfully.`);
+      console.log('\n👉 To push the commits and tags to GitHub, run:');
+      console.log(`   git push origin main && git push origin v${newVersion}`);
     } catch (err) {
       console.error('ERROR: Git staging/tagging failed.', err.message);
       process.exit(1);
     }
+  } else {
+    console.log('\n👉 Git tag mode was not active. To manually stage, commit, tag and push, run:');
+    console.log(`   git add VERSION backend/package.json frontend/package.json`);
+    console.log(`   git commit -m "chore: bump version to v${newVersion}"`);
+    console.log(`   git tag -a "v${newVersion}" -m "Release v${newVersion}"`);
+    console.log(`   git push origin main && git push origin v${newVersion}`);
   }
 
   // 6. Docker Build
