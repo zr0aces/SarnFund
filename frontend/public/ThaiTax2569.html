@@ -370,6 +370,37 @@
                                 <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
                             </div>
                         </div>
+
+                        <!-- ThaiESGX (LTF exchange continuation) -->
+                        <div class="input-group col-span-full bg-purple-50 p-2 rounded border border-purple-100">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-bold text-purple-700 flex items-center">
+                                    Thai ESGX <span class="badge-new" style="background-color:#7c3aed">LTF Exchange</span>
+                                </label>
+                                <span class="text-xs text-purple-600">ต่อเนื่องจากการแลกเปลี่ยน LTF ปี 2568 สูงสุด 50,000 บาท/ปี (2569-2572)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="thaiesgx" oninput="updateData('thaiesgx', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-white border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                        </div>
+
+                        <!-- Solar Rooftop -->
+                        <div class="input-group col-span-full bg-teal-50 p-2 rounded border border-teal-100">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-bold text-teal-700 flex items-center">
+                                    โซล่าเซลล์ติดตั้งที่อยู่อาศัย <span class="badge-new" style="background-color:#0d9488">NEW 2569</span>
+                                </label>
+                                <span class="text-xs text-teal-600">ค่าซื้อ+ติดตั้งระบบ Solar Rooftop ≤ 10kW สูงสุด 200,000 บาท (ผ่าน 2571)</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="solarRooftop" oninput="updateData('solarRooftop', this.value)" placeholder="0"
+                                    class="w-full p-3 pr-10 bg-white border border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none">
+                                <span class="absolute right-3 top-3 text-gray-400 text-sm">฿</span>
+                            </div>
+                            <p class="text-xs text-teal-500 mt-1">* ต้องมี e-Tax Invoice ชื่อตรงกับทะเบียนมิเตอร์ไฟฟ้า / ลดหย่อนได้ครั้งเดียว</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -546,6 +577,8 @@
             rmf: 0,
             tesg: 0,
             pensionInsurance: 0,
+            thaiesgx: 0,
+            solarRooftop: 0,
             interestHomeLoan: 0,
             donationGeneral: 0,
             donationEducation: 0
@@ -619,6 +652,14 @@
             // Thai ESG (NEW: 300k, Separate Limit)
             const limitTESG = Math.min(data.tesg, totalIncome * 0.30, 300000);
             deductions += limitTESG;
+
+            // ThaiESGX (LTF exchange continuation 2569-2572: 50,000/yr, separate limit)
+            const limitTHAIESGX = Math.min(data.thaiesgx, 50000);
+            deductions += limitTHAIESGX;
+
+            // Solar Rooftop (Royal Decree No.805, eff. Mar 2026, max 200k through 2028)
+            const limitSolar = Math.min(data.solarRooftop, 200000);
+            deductions += limitSolar;
 
             // Stimulus
             deductions += Math.min(data.interestHomeLoan, 100000);
