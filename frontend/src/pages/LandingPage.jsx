@@ -15,25 +15,13 @@ import {
   Database,
   ExternalLink
 } from 'lucide-react';
+import tipsData from '../data/tips.json';
 
-const TAX_TIPS = [
-  "RMF: Max deduction up to 30% of taxable income, capped at 500k Baht.",
-  "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht.",
-  "Solar Rooftop 2569: New deduction up to 200k Baht for on-grid home solar installation.",
-  "Combine RMF + Provident Fund + Pension Insurance capped at 500k Baht total.",
-  "ThaiESG has its own separate limit of 300k Baht (not in the 500k cap)!",
-  "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!",
-  "SSF: Purchases are discontinued starting 2025. Existing holdings must still be held for 10 full years.",
-  "ETF: Buy and sell directly on the stock exchange during trading hours. No holding lockups apply.",
-  "e-Donation: Double deduction (200%) for educational and hospital donations, verified via EDOC.",
-  "Solar Rooftop: Save on electricity and get up to 200k Baht tax deduction for home installations in 2569."
-];
+const TAX_TIPS = tipsData.general;
 
 const LandingPage = () => {
   const [stats, setStats] = useState({ rmf: 0, esg: 0, esgx: 0, ssf: 0, etf: 0 });
   const [loading, setLoading] = useState(true);
-  const [activeTipIndex, setActiveTipIndex] = useState(0);
-  const [fadeTip, setFadeTip] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -50,18 +38,6 @@ const LandingPage = () => {
       }
     };
     fetchStats();
-  }, []);
-
-  // Cycle tips with fade effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFadeTip(true);
-      setTimeout(() => {
-        setActiveTipIndex((prev) => (prev + 1) % TAX_TIPS.length);
-        setFadeTip(false);
-      }, 300);
-    }, 8000);
-    return () => clearInterval(interval);
   }, []);
 
   const totalFundsCount = Object.values(stats).reduce((a, b) => a + b, 0);
@@ -224,16 +200,21 @@ const LandingPage = () => {
         </div>
 
         {/* Tax Tip — hidden on mobile, visible on desktop */}
-        <div className="hidden lg:block mt-8 lg:mt-0 p-4 rounded-2xl bg-slate-50/60 border border-transparent relative overflow-hidden">
+        <div className="hidden lg:block mt-6 lg:mt-0 p-4 rounded-2xl bg-slate-50/60 border border-transparent relative overflow-hidden flex-shrink-0">
           <div className="absolute top-0 right-0 p-2 opacity-5">
             <Sparkles size={40} className="text-orange-500" />
           </div>
-          <div className="flex items-center gap-1.5 text-orange-600/90 text-xs font-display font-bold uppercase tracking-wider mb-2">
+          <div className="flex items-center gap-1.5 text-orange-600/90 text-xs font-display font-bold uppercase tracking-wider mb-3">
             <Sparkles size={13} />
-            Quick Planner Tip
+            Quick Planner Tips
           </div>
-          <div className={`text-xs text-slate-600 leading-relaxed min-h-[48px] transition-opacity duration-300 ${fadeTip ? 'opacity-0' : 'opacity-100'}`}>
-            {TAX_TIPS[activeTipIndex]}
+          <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1.5 custom-scrollbar">
+            {TAX_TIPS.map((tip, idx) => (
+              <div key={idx} className="flex gap-2 text-[11px] text-slate-600 leading-relaxed border-b border-slate-100/80 pb-2.5 last:border-0 last:pb-0 last:mb-0">
+                <span className="text-orange-500 select-none font-bold font-display">{idx + 1}.</span>
+                <span>{tip}</span>
+              </div>
+            ))}
           </div>
         </div>
       </aside>

@@ -1,0 +1,53 @@
+{
+  "general": [
+    "RMF: Max deduction up to 30% of taxable income, capped at 500k Baht.",
+    "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht.",
+    "Solar Rooftop 2569: New deduction up to 200k Baht for on-grid home solar installation.",
+    "Combine RMF + Provident Fund + Pension Insurance capped at 500k Baht total.",
+    "ThaiESG has its own separate limit of 300k Baht (not in the 500k cap)!",
+    "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!",
+    "SSF: Purchases are discontinued starting 2025. Existing holdings must still be held for 10 full years.",
+    "ETF: Buy and sell directly on the stock exchange during trading hours. No holding lockups apply.",
+    "e-Donation: Double deduction (200%) for educational and hospital donations, verified via EDOC.",
+    "Solar Rooftop: Save on electricity and get up to 200k Baht tax deduction for home installations in 2569.",
+    "Provident Fund (PVD): Employers match contributions, giving you instant return before tax savings.",
+    "Social Security: Deduct up to 9,000 Baht per year based on monthly contributions.",
+    "Life Insurance: Deduct premiums up to 100k Baht. Must have at least 10-year maturity period.",
+    "Health Insurance: Deduct premiums up to 25k Baht. Combined with general life insurance capped at 100k Baht.",
+    "Parent Care: Deduct 30k Baht per dependent parent aged 60+ earning less than 30k Baht annually."
+  ],
+  "categories": {
+    "rmf": [
+      "RMF: Max deduction up to 30% of taxable income, capped at 500k Baht (combined with other retirement funds).",
+      "RMF: Must invest at least every other year and hold until age 55 & at least 5 years to keep tax status.",
+      "RMF: Switches between RMF funds are tax-free if transferred directly. Do not withdraw early!",
+      "RMF: No dividends are paid. All gains are automatically reinvested for maximum long-term compound growth.",
+      "RMF: Outstanding for long-term target planning since they force savings discipline until age 55."
+    ],
+    "esg": [
+      "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht (separate from the 500k retirement cap).",
+      "ThaiESG: Holding period is 5 full years (purchased date-to-date). No minimum annual investment required.",
+      "ThaiESG 2569: The 300k limit is active for 2569; it is set to decrease to 100k in 2570!",
+      "ThaiESG: Focuses on sustainability, local governance, and carbon-reduction projects in Thailand.",
+      "ThaiESG: Excellent choice for high-income earners who have already maxed out their 500k retirement cap."
+    ],
+    "esgx": [
+      "ESGX: Part of the ThaiESG 300k Baht separate cap. Focuses on high-impact environmental projects.",
+      "ESGX: Typically features shorter holding structures or extra incentives. Validate exact terms before buying.",
+      "ESGX: Tracks companies with prime sustainability ratings and active carbon-neutral transitions.",
+      "ESGX: A premium sub-class aimed at focused ESG/sustainability transition leaders."
+    ],
+    "ssf": [
+      "SSF: Discontinued for new purchases starting Jan 2025. Old purchases must still fulfill the 10-year lockup!",
+      "SSF: Holding period is 10 years *date-to-date* (from the exact purchase date).",
+      "SSF: Max deduction was up to 30% of taxable income, capped at 200k Baht (part of the 500k retirement cap).",
+      "SSF: No continuity rule. You can skip years without losing privileges on previous investments."
+    ],
+    "etf": [
+      "ETF: No tax deduction benefits, but tradeable in real-time on the Stock Exchange of Thailand (SET).",
+      "ETF: Offers lower management fees than traditional mutual funds. Great for passive index tracking.",
+      "ETF: Highly liquid and pays regular dividends depending on the underlying fund policy.",
+      "ETF: Trades using real-time bidding spreads just like single shares during market hours."
+    ]
+  }
+}

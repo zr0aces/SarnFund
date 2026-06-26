@@ -1,35 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Trophy, TrendingUp, ArrowUpRight, Sparkles } from 'lucide-react';
+import tipsData from '../data/tips.json';
 
-const CATEGORY_TIPS = {
-    rmf: [
-        "RMF: Max deduction up to 30% of taxable income, capped at 500k Baht (combined with other retirement funds).",
-        "RMF: Must invest at least every other year and hold until age 55 & at least 5 years to keep tax status.",
-        "RMF: Switches between different RMF funds are tax-free if transferred directly. Do not withdraw early!",
-        "RMF: No dividends are paid. All gains are automatically reinvested for maximum long-term compound growth."
-    ],
-    esg: [
-        "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht (separate from the 500k retirement cap).",
-        "ThaiESG: Holding period is 5 full years (purchased date-to-date). No minimum annual investment required.",
-        "ThaiESG 2569: The 300k limit is active for 2569; it is set to decrease to 100k in 2570!",
-        "ThaiESG: Focuses on sustainability, local governance, and carbon-reduction projects in Thailand."
-    ],
-    esgx: [
-        "ESGX: Part of the ThaiESG 300k Baht separate cap. Focuses on high-impact environmental projects.",
-        "ESGX: Typically features shorter holding structures or extra incentives. Validate exact terms before buying.",
-        "ESGX: Tracks companies with prime sustainability ratings and active carbon-neutral transitions."
-    ],
-    ssf: [
-        "SSF: Discontinued for new purchases starting Jan 2025. Old purchases must still fulfill the 10-year lockup!",
-        "SSF: Holding period is 10 years *date-to-date* (from the exact purchase date).",
-        "SSF: Max deduction was up to 30% of taxable income, capped at 200k Baht (part of the 500k retirement cap)."
-    ],
-    etf: [
-        "ETF: No tax deduction benefits, but tradeable in real-time on the Stock Exchange of Thailand (SET).",
-        "ETF: Offers lower management fees than traditional mutual funds. Great for passive index tracking.",
-        "ETF: Highly liquid and pays regular dividends depending on the underlying fund policy."
-    ]
-};
+const CATEGORY_TIPS = tipsData.categories;
 
 const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundType }) => {
     const [activeTipIndex, setActiveTipIndex] = useState(0);
