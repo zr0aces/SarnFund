@@ -22,7 +22,11 @@ const TAX_TIPS = [
   "Solar Rooftop 2569: New deduction up to 200k Baht for on-grid home solar installation.",
   "Combine RMF + Provident Fund + Pension Insurance capped at 500k Baht total.",
   "ThaiESG has its own separate limit of 300k Baht (not in the 500k cap)!",
-  "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!"
+  "Thai Tax 2569: Thai ESG วงเงิน 300k สุดท้าย — ลดเหลือ 100k ปี 2570!",
+  "SSF: Purchases are discontinued starting 2025. Existing holdings must still be held for 10 full years.",
+  "ETF: Buy and sell directly on the stock exchange during trading hours. No holding lockups apply.",
+  "e-Donation: Double deduction (200%) for educational and hospital donations, verified via EDOC.",
+  "Solar Rooftop: Save on electricity and get up to 200k Baht tax deduction for home installations in 2569."
 ];
 
 const LandingPage = () => {

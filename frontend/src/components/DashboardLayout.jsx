@@ -178,12 +178,14 @@ const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockD
                 </div>
 
                 <KPICards
+                    key={fundType}
                     funds={funds}
                     showNewOnly={showNewOnly}
                     setShowNewOnly={setShowNewOnly}
                     sortBy={sortBy}
                     getSortLabel={getSortLabel}
                     AMC_COLORS={AMC_COLORS}
+                    fundType={fundType}
                 />
                 <FundChart
                     funds={filteredFunds}
