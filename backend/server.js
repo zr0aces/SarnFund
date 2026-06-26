@@ -9,8 +9,8 @@ import { scrapeData } from './scraper.js';
 
 // Load .env if present (checks parent directory first, then local directory)
 const envPaths = [
-  new URL('../.env', import.meta.url).pathname,
-  new URL('.env', import.meta.url).pathname
+  fileURLToPath(new URL('../.env', import.meta.url)),
+  fileURLToPath(new URL('.env', import.meta.url))
 ];
 
 for (const envPath of envPaths) {

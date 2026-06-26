@@ -11,8 +11,8 @@ import {
 
 // Load .env if present (checks parent directory first, then local directory)
 const envPaths = [
-  new URL('../.env', import.meta.url).pathname,
-  new URL('.env', import.meta.url).pathname
+  fileURLToPath(new URL('../.env', import.meta.url)),
+  fileURLToPath(new URL('.env', import.meta.url))
 ];
 
 for (const envPath of envPaths) {
@@ -431,6 +431,21 @@ export async function scrapeData() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log(`
+SarnFund Scraper — Fetch mutual fund data from SEC Thailand Open Data API v2.
+
+Usage:
+  node scraper.js [options]
+
+Options:
+  -h, --help     Show this help guide
+  --refresh      Clear registry cache (fund-registry.json) and rebuild from scratch
+  --force        Alias for --refresh
+`);
+    process.exit(0);
+  }
+
   if (process.argv.includes('--refresh') || process.argv.includes('--force')) {
     try {
       await fs.unlink(REGISTRY_PATH);

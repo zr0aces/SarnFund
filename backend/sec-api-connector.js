@@ -124,12 +124,31 @@ export class SecApiClient {
 
   async _get(url, primaryKey, secondaryKey, rateLimiter, attempt = 0) {
     await rateLimiter.wait();
-    const res = await fetch(url, {
-      headers: {
-        'Ocp-Apim-Subscription-Key': primaryKey,
-        'Accept': 'application/json',
-      },
-    });
+    
+    let res;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+    try {
+      res = await fetch(url, {
+        headers: {
+          'Ocp-Apim-Subscription-Key': primaryKey,
+          'Accept': 'application/json',
+        },
+        signal: controller.signal,
+      });
+    } catch (err) {
+      if (attempt < MAX_RETRIES) {
+        // Exponential backoff: 1s, 2s, 4s, 8s... plus a random jitter up to 1s
+        const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+        console.warn(`Network error or timeout for ${url} (${err.message}). Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
+        await sleep(backoff);
+        return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (res.status === 204) return null;
 
@@ -148,6 +167,14 @@ export class SecApiClient {
       const backoff = retryAfterSec >= 5 ? retryAfterSec * 1000 : RATE_LIMIT_FALLBACK_MS;
       const waitSec = Math.round(backoff / 1000);
       console.warn(`Rate limit (${res.status}), waiting ${waitSec}s before retry ${attempt + 1}/${MAX_RETRIES}…`);
+      await sleep(backoff);
+      return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
+    }
+
+    // Handle transient 5xx server errors
+    if (res.status >= 500 && res.status < 600 && attempt < MAX_RETRIES) {
+      const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+      console.warn(`SEC API HTTP ${res.status} for ${url}. Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
       await sleep(backoff);
       return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
     }
