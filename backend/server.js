@@ -169,8 +169,12 @@ app.post('/api/scrape', async (req, res) => {
 app.delete('/api/registry', async (req, res) => {
   try {
     const registryPath = path.join(DATA_DIR, 'fund-registry.json');
-    await fs.rm(registryPath, { force: true });
-    res.json({ success: true, message: 'Fund registry cleared. Next scrape will rebuild it.' });
+    const progressPath = path.join(DATA_DIR, '.registry-progress.json');
+    await Promise.all([
+      fs.rm(registryPath, { force: true }),
+      fs.rm(progressPath, { force: true }),
+    ]);
+    res.json({ success: true, message: 'Fund registry and progress checkpoint cleared. Next scrape will rebuild it.' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

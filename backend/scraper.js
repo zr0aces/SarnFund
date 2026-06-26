@@ -37,7 +37,7 @@ const DATA_DIR   = path.join(__dirname, 'data');
 // v2 AMC list has no amc_id, so we match by comp_name_en / comp_name_th.
 // Adding an AMC here is the only change needed: display and pattern stay in sync.
 const AMC_REGISTRY = {
-  KKPAM:      { display: 'KKP',        pattern: /kiatnakin|\bkkp\b/i },
+  KKPAM:      { display: 'KKP',        pattern: /kiartnakin|kiatnakin|\bkkp\b/i },
   KSAM:       { display: 'Krungsri',   pattern: /krungsri/i },
   BBLAM:      { display: 'BBL',        pattern: /\bbbl\b/i },
   TISCOASSET: { display: 'TISCO',      pattern: /tisco/i },
@@ -122,7 +122,7 @@ function parsePerformanceV2(rows) {
 const FUND_TYPES = ['RMF', 'SSF', 'ESG', 'ESGX', 'ETF'];
 // ESG/ESGX: many funds have null incentive_type — require spec lookup (TESG/TESGX spec_code).
 // Funds with the "Thai ESG" incentive string are caught in Phase 2; null-incentive ones fall here.
-const SPEC_LOOKUP_TYPES = ['RMF', 'ESG', 'ESGX', 'ETF'];
+const SPEC_LOOKUP_TYPES = ['RMF', 'ESGX', 'ESG', 'ETF'];
 const REGISTRY_PATH  = path.join(DATA_DIR, 'fund-registry.json');
 const PROGRESS_PATH  = path.join(DATA_DIR, '.registry-progress.json');
 const REGISTRY_TTL   = 7 * 24 * 60 * 60 * 1000;
@@ -450,6 +450,9 @@ Options:
     try {
       await fs.unlink(REGISTRY_PATH);
       console.log('Registry cache cleared — will rebuild from SEC API.');
+    } catch { /* file didn't exist */ }
+    try {
+      await fs.unlink(PROGRESS_PATH);
     } catch { /* file didn't exist */ }
   }
   scrapeData()
