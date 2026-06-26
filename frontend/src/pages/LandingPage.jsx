@@ -23,6 +23,17 @@ const LandingPage = () => {
   const [stats, setStats] = useState({ rmf: 0, esg: 0, esgx: 0, ssf: 0, etf: 0 });
   const [loading, setLoading] = useState(true);
 
+  const [shuffledTips, setShuffledTips] = useState(() => 
+    [...TAX_TIPS].sort(() => Math.random() - 0.5).slice(0, 3)
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShuffledTips([...TAX_TIPS].sort(() => Math.random() - 0.5).slice(0, 3));
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -209,7 +220,7 @@ const LandingPage = () => {
             Quick Planner Tips
           </div>
           <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1.5 custom-scrollbar">
-            {TAX_TIPS.map((tip, idx) => (
+            {shuffledTips.map((tip, idx) => (
               <div key={idx} className="flex gap-2 text-[11px] text-slate-600 leading-relaxed border-b border-slate-100/80 pb-2.5 last:border-0 last:pb-0 last:mb-0">
                 <span className="text-orange-500 select-none font-bold font-display">{idx + 1}.</span>
                 <span>{tip}</span>

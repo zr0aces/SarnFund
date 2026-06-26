@@ -14,7 +14,15 @@
     "Social Security: Deduct up to 9,000 Baht per year based on monthly contributions.",
     "Life Insurance: Deduct premiums up to 100k Baht. Must have at least 10-year maturity period.",
     "Health Insurance: Deduct premiums up to 25k Baht. Combined with general life insurance capped at 100k Baht.",
-    "Parent Care: Deduct 30k Baht per dependent parent aged 60+ earning less than 30k Baht annually."
+    "Parent Care: Deduct 30k Baht per dependent parent aged 60+ earning less than 30k Baht annually.",
+    "Spousal Allowance: Deduct 60k Baht if your legally registered spouse has no taxable income.",
+    "Parental Health Insurance: Deduct premiums up to 15k Baht per parent (parent must earn under 16k Baht/year).",
+    "Child Allowance (Second Child): Deduct 60,000 Baht per year for your second child born in or after 2561 (2018).",
+    "Pregnancy & Maternity: Deduct up to 60k Baht for antenatal care and delivery medical costs per pregnancy.",
+    "Mortgage Interest: Deduct up to 100k Baht on home loan interest payments for your primary residence.",
+    "Disabled Care: Deduct 60k Baht per year for providing official care to a disabled or incapacitated dependent.",
+    "National Savings Fund (NSF / กอช.): Deduct up to 30,000 Baht per year for self-employed/freelancers.",
+    "Filing Requirement: Any single individual earning over 120k Baht per year (salary) is legally required to file a tax return."
   ],
   "categories": {
     "rmf": [
@@ -22,32 +30,42 @@
       "RMF: Must invest at least every other year and hold until age 55 & at least 5 years to keep tax status.",
       "RMF: Switches between RMF funds are tax-free if transferred directly. Do not withdraw early!",
       "RMF: No dividends are paid. All gains are automatically reinvested for maximum long-term compound growth.",
-      "RMF: Outstanding for long-term target planning since they force savings discipline until age 55."
+      "RMF: Outstanding for long-term target planning since they force savings discipline until age 55.",
+      "RMF: No minimum purchase amount. You can buy as little as 100 Baht, but you must invest at least once every 2 years.",
+      "RMF: Crucial for compound interest. Since gains are tax-exempt and dividends aren't paid, wealth compounds faster."
     ],
     "esg": [
       "ThaiESG: Max deduction up to 30% of taxable income, capped at 300k Baht (separate from the 500k retirement cap).",
       "ThaiESG: Holding period is 5 full years (purchased date-to-date). No minimum annual investment required.",
       "ThaiESG 2569: The 300k limit is active for 2569; it is set to decrease to 100k in 2570!",
       "ThaiESG: Focuses on sustainability, local governance, and carbon-reduction projects in Thailand.",
-      "ThaiESG: Excellent choice for high-income earners who have already maxed out their 500k retirement cap."
+      "ThaiESG: Excellent choice for high-income earners who have already maxed out their 500k retirement cap.",
+      "ThaiESG: Funds must invest in Thai equities/bonds that meet SET ESG ratings or greenhouse gas reductions.",
+      "ThaiESG: Purchases made on the last day of the year still qualify for that tax year's deduction (instant credit)."
     ],
     "esgx": [
       "ESGX: Part of the ThaiESG 300k Baht separate cap. Focuses on high-impact environmental projects.",
       "ESGX: Typically features shorter holding structures or extra incentives. Validate exact terms before buying.",
       "ESGX: Tracks companies with prime sustainability ratings and active carbon-neutral transitions.",
-      "ESGX: A premium sub-class aimed at focused ESG/sustainability transition leaders."
+      "ESGX: A premium sub-class aimed at focused ESG/sustainability transition leaders.",
+      "ESGX: High-impact green bond options are available, offering a defensive yield with a clean ESG record.",
+      "ESGX: Allows targeting specific ESG indicators (like carbon footprint reductions) compared to general ESG portfolios."
     ],
     "ssf": [
       "SSF: Discontinued for new purchases starting Jan 2025. Old purchases must still fulfill the 10-year lockup!",
       "SSF: Holding period is 10 years *date-to-date* (from the exact purchase date).",
       "SSF: Max deduction was up to 30% of taxable income, capped at 200k Baht (part of the 500k retirement cap).",
-      "SSF: No continuity rule. You can skip years without losing privileges on previous investments."
+      "SSF: No continuity rule. You can skip years without losing privileges on previous investments.",
+      "SSF: Existing portfolios should not be sold before the 10-year term. Selling early triggers full tax clawbacks + interest.",
+      "SSF: Can be transferred to another SSF fund without tax penalties if transferred directly."
     ],
     "etf": [
       "ETF: No tax deduction benefits, but tradeable in real-time on the Stock Exchange of Thailand (SET).",
       "ETF: Offers lower management fees than traditional mutual funds. Great for passive index tracking.",
       "ETF: Highly liquid and pays regular dividends depending on the underlying fund policy.",
-      "ETF: Trades using real-time bidding spreads just like single shares during market hours."
+      "ETF: Trades using real-time bidding spreads just like single shares during market hours.",
+      "ETF: Pay attention to the bid-ask spread and volume to ensure you enter and exit at fair NAV prices.",
+      "ETF: Excellent for capturing immediate market exposure (e.g. SET50) without buying individual constituent stocks."
     ]
   }
 }

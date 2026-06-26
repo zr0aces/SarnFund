@@ -6,16 +6,21 @@ const CATEGORY_TIPS = tipsData.categories;
 
 const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundType }) => {
     const [activeTipIndex, setActiveTipIndex] = useState(0);
-
-    const tips = CATEGORY_TIPS[fundType] || CATEGORY_TIPS.rmf;
+    const [shuffledTips] = useState(() => {
+        const tips = CATEGORY_TIPS[fundType] || CATEGORY_TIPS.rmf;
+        return [...tips].sort(() => Math.random() - 0.5);
+    });
 
     // Cycle category tips with fade-like delay
     useEffect(() => {
+        if (shuffledTips.length === 0) return;
         const interval = setInterval(() => {
-            setActiveTipIndex((prev) => (prev + 1) % tips.length);
+            setActiveTipIndex((prev) => (prev + 1) % shuffledTips.length);
         }, 8000);
         return () => clearInterval(interval);
-    }, [tips.length]);
+    }, [shuffledTips.length]);
+
+    const currentTip = shuffledTips[activeTipIndex];
 
     const stats = useMemo(() => {
         if (funds.length === 0) return { bestFund: null, avgReturn: 0, metric: sortBy };
@@ -97,7 +102,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
                         Quick Planner Tip
                     </p>
                     <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                        {tips[activeTipIndex]}
+                        {currentTip}
                     </p>
                 </div>
             </div>
@@ -154,7 +159,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
                             Quick Planner Tip
                         </p>
                         <div className="text-xs font-display font-medium text-slate-650 leading-relaxed min-h-[48px]">
-                            {tips[activeTipIndex]}
+                            {currentTip}
                         </div>
                     </div>
                 </div>
