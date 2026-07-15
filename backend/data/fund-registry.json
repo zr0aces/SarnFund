@@ -1,0 +1,6683 @@
+{
+  "timestamp": 1782790959743,
+  "funds": [
+    {
+      "proj_id": "M0107_2564",
+      "code": "ONE-UJE",
+      "name": "ONE ULTIMATE JAPAN EQUITY FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-UJE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0136_2563",
+      "code": "ONE-TCMSSF",
+      "name": "ONE THAI CAPITAL MARKET SUPER SAVINGS FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-TCMSSF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0240_2561",
+      "code": "ONE-ALLCHINA",
+      "name": "ONE ALL CHINA EQUITY FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-ALLCHINA-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0618_2562",
+      "code": "ONE-DISC",
+      "name": "ONE DISCOVERY FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-DISC-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0672_2566",
+      "code": "ONE-ULTRAPLUS",
+      "name": "ONE ULTRA INCOME PLUS FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-ULTRAPLUS-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0717_2558",
+      "code": "ONE-UGG",
+      "name": "ONE Ultimate Global Growth Fund",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "ONE-UGG-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0746_2550",
+      "code": "1AM-DAILY",
+      "name": "1 A.M. DAILY FUND",
+      "amc": "ONE",
+      "type": "SSF",
+      "class": "1AM-DAILY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0007_2565",
+      "code": "KT-EPIC",
+      "name": "KTAM E.P.I.C. Global Equity Opportunities Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-EPIC-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0009_2564",
+      "code": "KT-ASIAG",
+      "name": "KTAM Asia Growth Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-ASIAG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0021_2559",
+      "code": "KT-JAPANSM",
+      "name": "KTAM Japan Small Cap Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-JAPANSM-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0022_2567",
+      "code": "KT-JAPANALL",
+      "name": "KTAM Japan All Cap Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-JAPANALL-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0031_2543",
+      "code": "KTFIXPLUS",
+      "name": "Krung Thai Fixed-Income Plus Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTFIXPLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0032_2561",
+      "code": "KTSUK",
+      "name": "Krung Thai Suk Jai Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTSUK-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0033_2561",
+      "code": "KTSRI",
+      "name": "Krung Thai Sri Siri Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTSRI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0035_2561",
+      "code": "KTMEE",
+      "name": "Krung Thai Mee Sup Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTMEE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0036_2561",
+      "code": "KTMUNG",
+      "name": "Krung Thai Mung Kung Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTMUNG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0055_2565",
+      "code": "KT-BLOCKCHAIN",
+      "name": "KTAM Blockchain Economy Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-BLOCKCHAIN-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0061_2564",
+      "code": "KT-CLIMATE",
+      "name": "KTAM Global Climate Change Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-CLIMATE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0062_2566",
+      "code": "KT-ARB",
+      "name": "KTAM Absolute Return Bond Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-ARB-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0083_2565",
+      "code": "KT-LUXURY",
+      "name": "KTAM Luxury Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-LUXURY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0087_2560",
+      "code": "KT-CHINA",
+      "name": "KTAM China Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-CHINA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0124_2558",
+      "code": "KT-ASEAN",
+      "name": "KTAM ASEAN Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-ASEAN-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0136_2564",
+      "code": "KT-CHINABOND",
+      "name": "KTAM China Bond Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-CHINABOND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0156_2564",
+      "code": "KT-GEQ",
+      "name": "KTAM Global Equity Passive Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-GEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0157_2563",
+      "code": "KTESGS",
+      "name": "Krungthai Korkarndee ESG Super Savings Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTESGS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0158_2563",
+      "code": "KT70/30S",
+      "name": "Krung Thai 70/30 Super Saving Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT70/30S-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0181_2559",
+      "code": "KT-PIF",
+      "name": "Krung Thai Property and Infrastructure Flexible Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-PIF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0218_2565",
+      "code": "KT-VIETNAM",
+      "name": "KTAM Vietnam Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-VIETNAM-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0268_2566",
+      "code": "KTWC-DEFENSIVE",
+      "name": "Krungthai World Class Defensive",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTWC-DEFENSIVE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0271_2566",
+      "code": "KTWC-MODERATE",
+      "name": "Krungthai World Class Moderate",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTWC-MODERATE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0273_2566",
+      "code": "KTWC-GROWTH",
+      "name": "Krungthai World Class Growth",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTWC-GROWTH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0304_2559",
+      "code": "KTSTPLUS",
+      "name": "Krung Thai Short Term Fixed Income Plus Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KTSTPLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0319_2564",
+      "code": "KT-EUROTECH",
+      "name": "KTAM European Technology Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-EUROTECH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0338_2563",
+      "code": "KT-Ashares",
+      "name": "KTAM China A Shares Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-Ashares-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0509_2554",
+      "code": "KT-PROPERTY",
+      "name": "KTAM World Property Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-PROPERTY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0542_2564",
+      "code": "KT-GESG",
+      "name": "KTAM Global Sustainable Growth Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-GESG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0557_2552",
+      "code": "KT-FINANCE",
+      "name": "KTAM World Financial Services Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-FINANCE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0557_2564",
+      "code": "KT-ASIANBOND",
+      "name": "KTAM Asian Bonds Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-ASIANBOND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0602_2558",
+      "code": "KT-HEALTHCARE",
+      "name": "KTAM World Healthcare Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-HEALTHCARE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0625_2560",
+      "code": "KT-GCINCOME",
+      "name": "KTAM Global Credit Income Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-GCINCOME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0642_2558",
+      "code": "KT-INDIA",
+      "name": "KTAM India Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-INDIA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0658_2556",
+      "code": "KT-HiDiv",
+      "name": "Krung Thai High Dividend Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-HiDiv-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0680_2557",
+      "code": "KT-WEQ",
+      "name": "KTAM World Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-WEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0691_2567",
+      "code": "KTESGSI",
+      "name": "Krung Thai ESG Sovereign Instruments Fund",
+      "amc": "KTAM",
+      "type": "ESG",
+      "class": "KTESGSI-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0700_2565",
+      "code": "KT-TECHNOLOGY",
+      "name": "KTAM World Technology Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-TECHNOLOGY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0747_2565",
+      "code": "KT-GREEN",
+      "name": "KTAM Green Energy Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-GREEN-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0821_2566",
+      "code": "KTAG",
+      "name": "Krungthai ESG A Grade Fund",
+      "amc": "KTAM",
+      "type": "ESG",
+      "class": "KTAG-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0846_2566",
+      "code": "KTAG70/30",
+      "name": "Krungthai ESG A Grade 70/30 Fund",
+      "amc": "KTAM",
+      "type": "ESG",
+      "class": "KTAG70/30-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0854_2566",
+      "code": "KTESG50",
+      "name": "Krungthai ESG50 Fund",
+      "amc": "KTAM",
+      "type": "ESG",
+      "class": "KTESG50-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1250_2557",
+      "code": "KT-US",
+      "name": "KTAM US Growth Equity Fund",
+      "amc": "KTAM",
+      "type": "SSF",
+      "class": "KT-US-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0005_2558",
+      "code": "SCBCHAFUND",
+      "name": "SCB CHINA A-SHARES FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCHA(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0005_2565",
+      "code": "SCBCIO",
+      "name": "SCB Cross Asset Investment Opportunity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCIO(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0017_2565",
+      "code": "SCBEV",
+      "name": "SCB Electric Vehicles and Future Mobility",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBEV(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0057_2567",
+      "code": "SCBLOWBETA",
+      "name": "SCB Thai Low Beta Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLOWBET(SSFA)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0059_2564",
+      "code": "SCBCLEAN",
+      "name": "SCB Global Clean Energy",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCLEAN(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0090_2561",
+      "code": "SCBLTSE",
+      "name": "SCB Thai Selects Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLTSE(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0110_2564",
+      "code": "SCBGEX",
+      "name": "SCB Global Experts Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGEX(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0120_2564",
+      "code": "SCBCTECH",
+      "name": "SCB China Technology",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCTECH(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0134_2564",
+      "code": "SCBDJI",
+      "name": "SCB US Equity DJI Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBDJI(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0144_2563",
+      "code": "SCBSETSSF",
+      "name": "SCB SET Index Super Savings Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSET-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0151_2563",
+      "code": "SCB70SSF",
+      "name": "SCB Mixed 70/30 Super Savings Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCB70-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0152_2564",
+      "code": "SCBFINTECH",
+      "name": "SCB Fintech Innovation",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBFINTEC(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0158_2564",
+      "code": "SCBAUTO",
+      "name": "SCB Autonomous Technology and Robotics",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBAUTO(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0162_2564",
+      "code": "SCBINNO",
+      "name": "SCB Innovation",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBINNO(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0163_2564",
+      "code": "SCBNEXT",
+      "name": "SCB Next Generation Internet",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBNEXT(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0164_2564",
+      "code": "SCBGENOME",
+      "name": "SCB Genomic Revolution",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGENOME(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0181_2563",
+      "code": "SCBEQSSF",
+      "name": "SCB Thai Equity Active Super Savings Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0182_2565",
+      "code": "SCBGQUAL",
+      "name": "SCB Global Quality Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGQUAL(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0185_2565",
+      "code": "SCBGVALUE",
+      "name": "SCB Global Value Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGVALUE(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0196_2564",
+      "code": "SCBTRAVEL",
+      "name": "SCB Travel and Leisure",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBTRAVEL(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0207_2549",
+      "code": "SCBPGFUND",
+      "name": "SCB PLATINUM GLOBAL OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBPGF(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0211_2564",
+      "code": "SCBIHEALTH",
+      "name": "SCB Healthcare Innovation",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBIHEALT(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0228_2554",
+      "code": "SCBSEFUND",
+      "name": "SCB SELECTS EQUITY FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSE(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0232_2564",
+      "code": "SCBSEMI",
+      "name": "SCB Semiconductor",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSEMI(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0260_2550",
+      "code": "SCBLT4FUND",
+      "name": "SCB Dynamic Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLT4(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0263_2550",
+      "code": "SCBLTTFUND",
+      "name": "SCB Thai Core Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLTT(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0274_2564",
+      "code": "SCBEUROPE",
+      "name": "SCB Europe Active Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBEUROPE(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0277_2564",
+      "code": "SCBBLOC",
+      "name": "SCB Blockchain",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBBLOC(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0279_2561",
+      "code": "SCBPIN",
+      "name": "SCB Property and Infrastructure Flexible Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBPIN(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0284_2555",
+      "code": "SCBEMBONDFUND",
+      "name": "SCB EMERGING MARKETS BOND FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBEMBOND(SFF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0285_2564",
+      "code": "SCBABOND",
+      "name": "SCB Asian Fixed Income",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBABOND(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0311_2555",
+      "code": "SCBSMART2FUND",
+      "name": "SCB SMART PLAN 2 OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSMART2(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0311_2564",
+      "code": "SCBNDQ",
+      "name": "SCB US Equity NDQ",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBNDQ(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0324_2562",
+      "code": "SCBMILD",
+      "name": "SCB Mixed – Mild Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBMILD(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0325_2562",
+      "code": "SCBCLASSIC",
+      "name": "SCB Mixed – Classic Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCLASSI(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0327_2562",
+      "code": "SCBSPICY",
+      "name": "SCB Mixed – Spicy Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSPICY(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0328_2564",
+      "code": "SCBGA",
+      "name": "SCB Global Allocation",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGA(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0329_2563",
+      "code": "SCBMLCA",
+      "name": "SCB Machine Learning China All Share",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBMLCA(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0348_2561",
+      "code": "SCBLTSET",
+      "name": "SCB SET Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLTSET(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0386_2564",
+      "code": "SCBJAPAN",
+      "name": "SCB Japan Active Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBJAPAN(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0396_2564",
+      "code": "SCBINDEQ",
+      "name": "SCB India Active Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBINDEQ(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0420_2564",
+      "code": "SCBASHARES",
+      "name": "SCB China A Shares Active Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBASHARE(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0450_2565",
+      "code": "SCBINDO",
+      "name": "SCB Indonesia Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBINDO(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0452_2546",
+      "code": "SCBDVFUND",
+      "name": "SCB DIVIDEND STOCK OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBDV(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0464_2548",
+      "code": "SCBLT3FUND",
+      "name": "SCB Thai Active Growth Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLT3(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0465_2564",
+      "code": "SCBWORLD",
+      "name": "SCB World Equity Index",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBWORLD(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0466_2564",
+      "code": "SCBMEGA",
+      "name": "SCB Global Megatrends",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBMEGA(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0489_2553",
+      "code": "SCBFPFUND",
+      "name": "SCB FIXED INCOME PLUS FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBFP(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0513_2564",
+      "code": "SCBAXJ",
+      "name": "SCB Asia ex Japan Equity Index",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBAXJ(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0515_2565",
+      "code": "SCBRS2000",
+      "name": "SCB US Small Cap Passive",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBRS2000(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0534_2563",
+      "code": "SCBGEESG",
+      "name": "SCB Global Sustainable Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGEESG(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0536_2563",
+      "code": "SCBUSA",
+      "name": "SCB US Active Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBUSA(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0539_2564",
+      "code": "SCBVIET",
+      "name": "SCB Vietnam Equity",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBVIET(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0550_2560",
+      "code": "SCBMLT",
+      "name": "SCB Machine Learning Thai Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBMLT(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0571_2567",
+      "code": "SCBTB",
+      "name": "SCB Thai Sustainability Bond Fund",
+      "amc": "SCB",
+      "type": "ESG",
+      "class": "SCBTB(ThaiESG)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0597_2552",
+      "code": "SCBSET50FUND",
+      "name": "SCB SET50 INDEX FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSET50(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0620_2552",
+      "code": "SCBCEFUND",
+      "name": "SCB CHINA EQUITY OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBCE(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0623_2547",
+      "code": "SCBLT1FUND",
+      "name": "SCB Dividend Mixed 70 Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLT1(SSFA)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0626_2547",
+      "code": "SCBLT2FUND",
+      "name": "SCB Thai Dividend Equity Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLT2(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0640_2566",
+      "code": "SCBDBOND",
+      "name": "SCB Dynamic Bond",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBDBOND(SSFA)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0643_2555",
+      "code": "SCBS&P500FUND",
+      "name": "SCB US EQUITY FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBS&P500(SSFA)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0732_2556",
+      "code": "SCBSFFPLUS",
+      "name": "SCB Short Term Fixed Income Plus Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBSFFPLU(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0749_2558",
+      "code": "SCBLEQFUND",
+      "name": "SCB LOW VOLATILITY EQUITY FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBLEQ(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0822_2567",
+      "code": "SCBTD",
+      "name": "SCB Thai Sustainable Dividend Equity Fund",
+      "amc": "SCB",
+      "type": "ESG",
+      "class": "SCBTD(ThaiESG)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0828_2554",
+      "code": "SCBGLOWFUND",
+      "name": "SCB GLOBAL WEALTH OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGLOW(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0843_2566",
+      "code": "SCBTM",
+      "name": "SCB Thai Sustainable Mixed Fund",
+      "amc": "SCB",
+      "type": "ESG",
+      "class": "SCBTM(ThaiESG)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0848_2566",
+      "code": "SCBTA",
+      "name": "SCB Thai Sustainable Equity Active Fund",
+      "amc": "SCB",
+      "type": "ESG",
+      "class": "SCBTA(ThaiESG)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0850_2566",
+      "code": "SCBTP",
+      "name": "SCB Thai Sustainable Equity Passive Fund",
+      "amc": "SCB",
+      "type": "ESG",
+      "class": "SCBTP(ThaiESG)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0856_2553",
+      "code": "SCBGOLDHFUND",
+      "name": "SCB GOLD THB HEDGED OPEN END FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGOLDH(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0866_2554",
+      "code": "SCBGLOBFUND",
+      "name": "SCB GLOBAL BOND FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGLOB(SSF)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0874_2554",
+      "code": "SCBGSIFUND",
+      "name": "SCB GLOBAL STRATEGIC INVESTMENT FUND",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBGSIF(SSFE)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0910_2566",
+      "code": "SCBMONEY",
+      "name": "SCB Money Market Fund",
+      "amc": "SCB",
+      "type": "SSF",
+      "class": "SCBMONEY(SSFA)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0065_2562",
+      "code": "ASP-DGOV",
+      "name": "Asset Plus Daily Government Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-DGOV-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0175_2563",
+      "code": "ASP-SME-MSSF",
+      "name": "Asset Plus Small and Mid Cap Equity Super Savings Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-SME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0231_2563",
+      "code": "ASP-TOPBRAND",
+      "name": "Asset Plus Top Brand Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-TOPBRAND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0245_2560",
+      "code": "ASPGIPLUS",
+      "name": "Asset Plus Global Income Plus Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASPGIPLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0257_2552",
+      "code": "ASP-S&P500",
+      "name": "Asset Plus S&P 500 Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-S&P500-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0337_2561",
+      "code": "ASP-INDIA",
+      "name": "Asset Plus India Dynamic Equity Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-INDIA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0603_2563",
+      "code": "ASP-JHC",
+      "name": "Asset Plus Japan High Conviction Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-JHC-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0629_2560",
+      "code": "ASP-VIET",
+      "name": "Asset Plus Vietnam Growth Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-VIET-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0651_2566",
+      "code": "ASP-USSMALL",
+      "name": "Asset Plus U.S. Small Cap Focus Fund",
+      "amc": "Asset Plus",
+      "type": "SSF",
+      "class": "ASP-USSMALL-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0054_2560",
+      "code": "K-FIXEDPLUS",
+      "name": "K Fixed Income Plus Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-FIXEDPLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0095_2567",
+      "code": "K-ESGSI",
+      "name": "K ESG Sovereign Instruments Fund",
+      "amc": "KAsset",
+      "type": "ESG",
+      "class": "K-ESGSI-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0131_2562",
+      "code": "K-CHANGE",
+      "name": "K Positive Change Equity Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-CHANGE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0159_2549",
+      "code": "K-STAR",
+      "name": "K STAR Equity Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-STAR-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0159_2555",
+      "code": "K-USA",
+      "name": "K USA Equity Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-USA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0217_2558",
+      "code": "K-GINCOME",
+      "name": "K Global Income Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-GINCOME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0377_2556",
+      "code": "K-SF",
+      "name": "K Short Term Fixed Income Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-SF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0579_2552",
+      "code": "K-CHINA",
+      "name": "K China Equity Fund",
+      "amc": "KAsset",
+      "type": "SSF",
+      "class": "K-CHINA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0776_2567",
+      "code": "K-BL30",
+      "name": "K ESG Balanced 30 Fund",
+      "amc": "KAsset",
+      "type": "ESG",
+      "class": "K-BL30-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0799_2566",
+      "code": "K-TNZ",
+      "name": "K Target Net Zero Thai Equity Fund",
+      "amc": "KAsset",
+      "type": "ESG",
+      "class": "K-TNZ-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0838_2568",
+      "code": "K-ESGBF",
+      "name": "K ESG Bond Fund",
+      "amc": "KAsset",
+      "type": "ESG",
+      "class": "K-ESGBF-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0002_2560",
+      "code": "UGIS",
+      "name": "United Global Income Strategic Bond Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGIS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0014_2564",
+      "code": "UEV-M",
+      "name": "United Battery and EV Technology Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UEV-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0040_2565",
+      "code": "UST",
+      "name": "United Sustainable Thematic Select Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UST-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0116_2549",
+      "code": "UOBSD-M",
+      "name": "UOB Sure Daily Open-ended Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UOBSD-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0142_2566",
+      "code": "UQI",
+      "name": "United Quality Income Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UQI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0232_2563",
+      "code": "UGSTAR-M",
+      "name": "United Global Stars Equity Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGSTAR-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0233_2550",
+      "code": "UOBSA-M",
+      "name": "UOB Smart Asia Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UOBSA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0276_2561",
+      "code": "UGQG-M",
+      "name": "United Global Quality Growth Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGQG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0283_2566",
+      "code": "UIFT",
+      "name": "United CIO Income Fund TH",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UIFT-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0337_2567",
+      "code": "UGISFX",
+      "name": "United Global Income Strategic Bond FX Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGISFX-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0345_2561",
+      "code": "UNI-M",
+      "name": "United Global Innovation Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UNI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0375_2564",
+      "code": "UGFT-M",
+      "name": "United CIO Growth Fund TH",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGFT-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0457_2563",
+      "code": "UCI-M",
+      "name": "United China A-Shares Innovation Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UCI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0465_2563",
+      "code": "USUS-M",
+      "name": "United Sustainable Equity Solution Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "USUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0502_2564",
+      "code": "UINFRA",
+      "name": "United Global Sustainable Infrastructure Equity Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UINFRA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0523_2562",
+      "code": "UJAZZ-M",
+      "name": "United Harmony-Jazz Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UJAZZ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0524_2562",
+      "code": "UPOP-M",
+      "name": "United Harmony-Pop Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UPOP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0525_2562",
+      "code": "UROCK-M",
+      "name": "United Harmony-Rock Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UROCK-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0533_2561",
+      "code": "UCHINA-M",
+      "name": "United All China Equity Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UCHINA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0611_2560",
+      "code": "UDB",
+      "name": "United Global Dynamic Bond Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UDB-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0644_2557",
+      "code": "UGH-M",
+      "name": "United Global Healthcare Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0654_2557",
+      "code": "UOBSHC-M",
+      "name": "UOB Smart Global Healthcare Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UOBSHC-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0670_2567",
+      "code": "UUSA-M",
+      "name": "United USA Growth Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UUSA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0741_2558",
+      "code": "UGBF",
+      "name": "United Global Balanced Fund",
+      "amc": "UOB",
+      "type": "SSF",
+      "class": "UGBF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0779_2567",
+      "code": "UTSB",
+      "name": "United Thai Sustainable Bond Fund",
+      "amc": "UOB",
+      "type": "ESG",
+      "class": "UTSB-THAIESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0853_2566",
+      "code": "UTSEQ",
+      "name": "United Thai Sustainable Equity Fund",
+      "amc": "UOB",
+      "type": "ESG",
+      "class": "UTSEQ-THAIESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0050_2565",
+      "code": "LHUSFIN",
+      "name": "LH US Financial Fund",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHUSFIN-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0052_2564",
+      "code": "LHGREEN",
+      "name": "LH GREEN TECHNOLOGY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHGREEN-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0053_2564",
+      "code": "LHCYBER",
+      "name": "LH GLOBAL CYBERSECURITY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHCYBER-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0062_2560",
+      "code": "LHSTRATEGY",
+      "name": "LH Strategy Equity Fund",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHSTRATEGY-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0112_2565",
+      "code": "LHGEQP",
+      "name": "LH Global Equity Passive Fund",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHGEQP-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0135_2563",
+      "code": "LHSMARTDSSF",
+      "name": "LH SMART SUPER SAVINGS FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHSMARTDSSF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0145_2565",
+      "code": "LHGDIV",
+      "name": "LH GLOBAL EQUITY DIVIDEND FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHGDIV-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0149_2567",
+      "code": "LHGBLOCK",
+      "name": "LH GLOBAL BLOCKCHAIN FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHGBLOCK-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0195_2561",
+      "code": "LHGEQ",
+      "name": "LH GLOBAL EQUITY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHGEQ-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0204_2559",
+      "code": "LHPROPIA",
+      "name": "LH PROPERTY INFRA FLEXIBLE A FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHPROPIA-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0216_2564",
+      "code": "LHHEALTH",
+      "name": "LH HEALTH INNOVATION FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHHEALTH-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0228_2563",
+      "code": "LHCHINA",
+      "name": "LH EQUITY CHINA OPPORTUNITY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHCHINA-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0312_2564",
+      "code": "LHVN",
+      "name": "LH VIETNAM FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHVN-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0380_2564",
+      "code": "LHEUROPE",
+      "name": "LH EUROPE FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHEUROPE-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0504_2559",
+      "code": "LHSTPLUS",
+      "name": "LH Short Term Fixed Income Plus Fund",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHSTPLUS-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0521_2567",
+      "code": "LHSPACE",
+      "name": "LH SPACE ECONOMY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHSPACE-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0810_2566",
+      "code": "LHTHAIESG",
+      "name": "LH THAILAND ESG FUND",
+      "amc": "LH Fund",
+      "type": "ESG",
+      "class": "LHTHAIESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0877_2566",
+      "code": "LHUS",
+      "name": "LH US EQUITY FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHUS-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0881_2554",
+      "code": "LHMM",
+      "name": "LH MONEY MARKET FUND",
+      "amc": "LH Fund",
+      "type": "SSF",
+      "class": "LHMM-ASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0126_2563",
+      "code": "KFS100",
+      "name": "Krungsri SET100 Fund",
+      "amc": "Krungsri",
+      "type": "SSF",
+      "class": "KFS100SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0372_2560",
+      "code": "KFHAPPY",
+      "name": "Krungsri Happy Life Fund",
+      "amc": "Krungsri",
+      "type": "SSF",
+      "class": "KFHAPPYSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0458_2559",
+      "code": "KFAFIX",
+      "name": "Krungsri Active Fixed Income Fund",
+      "amc": "Krungsri",
+      "type": "SSF",
+      "class": "KFAFIXSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0522_2567",
+      "code": "KFGBTHAIESG",
+      "name": "Krungsri Government Bond Thailand ESG Fund",
+      "amc": "Krungsri",
+      "type": "ESG",
+      "class": "KFGBTHAIESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0532_2550",
+      "code": "KFENSET50",
+      "name": "Krungsri Enhanced SET50 Fund",
+      "amc": "Krungsri",
+      "type": "SSF",
+      "class": "KFENS50SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0718_2546",
+      "code": "KFCASH",
+      "name": "Krungsri Cash Management Fund",
+      "amc": "Krungsri",
+      "type": "SSF",
+      "class": "KFCASHSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0820_2566",
+      "code": "KFTHAIESG",
+      "name": "Krungsri Enhanced SET Thailand ESG Fund",
+      "amc": "Krungsri",
+      "type": "ESG",
+      "class": "KFTHAIESGA",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0045_2564",
+      "code": "ABGS-M",
+      "name": "abrdn Global Small Cap Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABGS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0187_2563",
+      "code": "ABTESSF-M",
+      "name": "abrdn Thai Equity Super Savings Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABTESSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0250_2564",
+      "code": "ABGDD-M",
+      "name": "abrdn Global Dynamic Dividend Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABGDD-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0303_2564",
+      "code": "ABCA",
+      "name": "abrdn China A Share Sustainable Equity Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABCA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0401_2552",
+      "code": "ABCG-M",
+      "name": "abrdn All China Sustainable Equity Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABCG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0413_2548",
+      "code": "ABSM-M",
+      "name": "abrdn Small-Mid Cap Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABSM-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0536_2564",
+      "code": "ABINNO-M",
+      "name": "abrdn Global Innovation Equity Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABINNO-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0562_2558",
+      "code": "ABAGS-M",
+      "name": "abrdn American Growth – Smaller Companies Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABAGS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0581_2566",
+      "code": "ABGFIX-M",
+      "name": "abrdn Global Enhanced Fixed Income Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABGFIX-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0582_2548",
+      "code": "ABAPAC-M",
+      "name": "abrdn Asia Pacific Equity Fund",
+      "amc": "ABERDEEN ASSET MANAGEMENT (THAILAND) LIMITED",
+      "type": "SSF",
+      "class": "ABAPAC-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0130_2567",
+      "code": "MEGA10AI",
+      "name": "MEGA 10 ARTIFICIAL INTELLIGENCE FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "MEGA10AI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0155_2565",
+      "code": "TLSMALLEQ",
+      "name": "TALIS SMALL CAP EQUITY FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "TLSMALLEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0344_2564",
+      "code": "TLUSNDQ-H",
+      "name": "TALIS US EQUITY NDQ-HEDGE",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "TLUSNDQ-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0442_2567",
+      "code": "MEGA10EURO",
+      "name": "MEGA 10 EURO FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "MEGA10EURO-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0478_2564",
+      "code": "AFMOAT-H",
+      "name": "AF US Wide MOAT Fund Hedged",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "AFMOAT-HSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0595_2565",
+      "code": "MEGA10",
+      "name": "MEGA 10 FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "MEGA10-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0669_2559",
+      "code": "TLMMF",
+      "name": "TALIS MONEY MARKET FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "TLMMF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0682_2566",
+      "code": "MEGA10CHINA",
+      "name": "MEGA 10 CHINA FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "MEGA10CHINA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0683_2559",
+      "code": "TLMSEQ",
+      "name": "TALIS MID-SMALL CAP EQUITY FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "TLMSEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0864_2567",
+      "code": "MEGAWORLD30",
+      "name": "MEGA WORLD 30 FUND",
+      "amc": "TALIS",
+      "type": "SSF",
+      "class": "MEGAWORLD30-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0000_2552",
+      "code": "HI-DIV",
+      "name": "MFC Hi-Dividend Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "HIDIV-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0084_2563",
+      "code": "MRENEW",
+      "name": "MFC Renewable Energy Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MRENEW-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0094_2558",
+      "code": "M-MIDSMALL",
+      "name": "MFC Mid Small Cap Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "M-MIDSMALL-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0155_2547",
+      "code": "M-S50",
+      "name": "MFC SET 50 Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "M-S50-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0155_2563",
+      "code": "MTQS",
+      "name": "MFC Thai Equity Super Savings Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MTQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0176_2563",
+      "code": "MTFS",
+      "name": "MFC Thai Flexible Super Savings Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MTF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0200_2563",
+      "code": "MGF",
+      "name": "MFC Global Focus Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MGFSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0204_2542",
+      "code": "SMART",
+      "name": "MFC Smart Fixed Income Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "SMARTSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0250_2550",
+      "code": "M-IslamicEQ",
+      "name": "MFC Islamic Equity Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "M-IslamicEQSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0258_2563",
+      "code": "MCHINA",
+      "name": "MFC China Equity Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MCHINASSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0294_2563",
+      "code": "MIPLUS",
+      "name": "MFC Happy Income Plus Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MIPLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0353_2563",
+      "code": "MHEALTH",
+      "name": "MFC Health Innovation Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MHEALTHSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0456_2547",
+      "code": "MVEQ",
+      "name": "MFC Value Equity Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MVEQSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0517_2556",
+      "code": "M-PROP DIV",
+      "name": "MFC Property Dividend Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MPDIVSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0616_2563",
+      "code": "MEURO",
+      "name": "MFC Continental European Equity Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MEURO-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0630_2566",
+      "code": "MUBONDUH",
+      "name": "MFC US Aggregate Bond Unhedged Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MUBONDUH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0633_2551",
+      "code": "MM-GOV",
+      "name": "MFC Government Money Market  Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MMGOVSSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0652_2551",
+      "code": "I-GOLD",
+      "name": "MFC International Gold Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "IGOLD-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0768_2565",
+      "code": "MUBOND",
+      "name": "MFC US Aggregate Bond Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MUBOND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0933_2547",
+      "code": "MMM",
+      "name": "MFC Short Maturity Management Fund",
+      "amc": "MFC",
+      "type": "SSF",
+      "class": "MMM-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0009_2561",
+      "code": "KKP GNP-H FUND",
+      "name": "KKP GLOBAL NEW PERSPECTIVE FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GNP-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0058_2565",
+      "code": "KKP S-PLUS FUND",
+      "name": "KKP SMART PLUS FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP S-PLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0077_2567",
+      "code": "KKP EMXCN-H FUND",
+      "name": "KKP EMERGING MARKETS EX CHINA FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP EMXCN-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0078_2559",
+      "code": "KKP SMART MV FUND",
+      "name": "KKP SMART MINIMUM VOLATILITY FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SMART MV-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0080_2567",
+      "code": "KKP EMXCN-UH FUND",
+      "name": "KKP EMERGING MARKETS EX CHINA FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP EMXCN-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0135_2551",
+      "code": "KKP MP FUND",
+      "name": "KKP MONEY POSITIVE FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP MP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0164_2563",
+      "code": "KKP SET50 ESG FUND",
+      "name": "KKP SET50 ESG FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SET50 ESG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0193_2564",
+      "code": "KKP GIMPACT-H FUND",
+      "name": "KKP GLOBAL IMPACT FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GIMPACT-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0209_2554",
+      "code": "KKP CorePath Balanced FUND",
+      "name": "KKP CorePath Balanced FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CorePath Balanced-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0216_2567",
+      "code": "KKP GVALUE-H FUND",
+      "name": "KKP GLOBAL VALUE FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GVALUE-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0221_2567",
+      "code": "KKP GVALUE-UH FUND",
+      "name": "KKP GLOBAL VALUE FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GVALUE-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0241_2564",
+      "code": "KKP SEMICON-H FUND",
+      "name": "KKP SEMICONDUCTOR FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SEMICON-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0298_2567",
+      "code": "KKP US500-H FUND",
+      "name": "KKP US500 FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP US500-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0301_2567",
+      "code": "KKP US500-UH FUND",
+      "name": "KKP US500 FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP US500-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0316_2562",
+      "code": "KKP PGE-H FUND",
+      "name": "KKP PASSIVE GLOBAL EQUITY FUND-HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP PGE-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0359_2547",
+      "code": "KKP PLUS FUND",
+      "name": "KKP FIXED INCOME PLUS FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP PLUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0363_2559",
+      "code": "KKP SM CAP FUND",
+      "name": "KKP SMALL AND MID CAP EQUITY FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SM CAP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0376_2555",
+      "code": "KKP DIVIDEND FUND",
+      "name": "KKP DIVIDEND EQUITY FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP DIVIDEND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0424_2567",
+      "code": "KKP INDIA-H FUND",
+      "name": "KKP INDIA FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP INDIA-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0427_2567",
+      "code": "KKP INDIA-UH FUND",
+      "name": "KKP INDIA FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP INDIA-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0432_2565",
+      "code": "KKP CHINA-H FUND",
+      "name": "KKP CHINA FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CHINA-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0471_2561",
+      "code": "KKP CorePath Extra FUND",
+      "name": "KKP CorePath Extra FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CorePath Extra-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0471_2563",
+      "code": "KKP TECH-H FUND",
+      "name": "KKP EXPANDED TECH FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP TECH-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0488_2564",
+      "code": "KKP INCOME-H FUND",
+      "name": "KKP GLOBAL MULTI ASSET INCOME FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP INCOME-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0501_2566",
+      "code": "KKP PGE-UH FUND",
+      "name": "KKP PASSIVE GLOBAL EQUITY FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP PGE-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0501_2567",
+      "code": "KKP CASH FUND",
+      "name": "KKP CASH FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CASH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0512_2561",
+      "code": "KKP CorePath Light FUND",
+      "name": "KKP CorePath Light FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CorePath Light-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0518_2560",
+      "code": "KKP G-UBOND-H FUND",
+      "name": "KKP GLOBAL UNCONSTRAINED BOND FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP G-UBOND-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0526_2558",
+      "code": "KKP ACT FIXED FUND",
+      "name": "KKP ACTIVE FIXED INCOME FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP ACT FIXED-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0529_2556",
+      "code": "KKP PROP-D FUND",
+      "name": "KKP PROPERTY SECTOR FUND-DIVIDEND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP PROP-D-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0530_2564",
+      "code": "KKP NDQ100-H FUND",
+      "name": "KKP NDQ100 FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP NDQ100-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0582_2554",
+      "code": "KKP ACT EQ",
+      "name": "KKP ACTIVE EQUITY FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP ACT EQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0604_2563",
+      "code": "KKP G-THEME-H FUND",
+      "name": "KKP GLOBAL THEMATIC OPPORTUNITIES FUND – HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP G-THEME-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0605_2567",
+      "code": "KKP TECH-UH FUND",
+      "name": "KKP EXPANDED TECH FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP TECH-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0645_2558",
+      "code": "KKP GNP FUND",
+      "name": "KKP GLOBAL NEW PERSPECTIVE FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GNP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0690_2566",
+      "code": "KKP NDQ100-UH FUND",
+      "name": "KKP NDQ100 FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP NDQ100-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0742_2562",
+      "code": "KKP CorePath Ultra Light FUND",
+      "name": "KKP CorePath Ultra Light FUND",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP CorePath Ultra Light-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0743_2562",
+      "code": "KKP GINFRAEQ-H FUND",
+      "name": "KKP GLOBAL INFRASTRUCTURE EQUITY FUND-HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP GINFRAEQ-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0826_2567",
+      "code": "KKP SIB-H FUND",
+      "name": "KKP STRATEGIC INCOME BOND FUND - HEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SIB-H-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0829_2567",
+      "code": "KKP SIB-UH FUND",
+      "name": "KKP STRATEGIC INCOME BOND FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP SIB-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0965_2567",
+      "code": "KKP EWUS500-UH FUND",
+      "name": "KKP US500 EQUAL WEIGHT FUND - UNHEDGED",
+      "amc": "KKP",
+      "type": "SSF",
+      "class": "KKP EWUS500-UH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0105_2566",
+      "code": "SW",
+      "name": "Sawakami Mixed Fund",
+      "amc": "SAWAKAMI ASSET MANAGEMENT (THAILAND) COMPANY LIMITED",
+      "type": "SSF",
+      "class": "SW-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0011_2547",
+      "code": "TSF",
+      "name": "TISCO Strategic Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TSF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0033_2563",
+      "code": "TCHTECH",
+      "name": "TISCO China Technology Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TCHTECH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0081_2555",
+      "code": "TISCOHD",
+      "name": "TISCO High Dividend Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOHD-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0095_2559",
+      "code": "TINC",
+      "name": "TISCO Income Plus Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TINC-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0132_2563",
+      "code": "TEGSSF",
+      "name": "TISCO Equity Growth Super Savings Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TEG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0135_2566",
+      "code": "TNASDAQ",
+      "name": "TISCO US Nasdaq Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TNASDAQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0196_2562",
+      "code": "TISCOWB",
+      "name": "TISCO Thai Well-being Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOWB-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0219_2556",
+      "code": "TISCOMS",
+      "name": "TISCO Mid/Small Cap Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOMS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0258_2562",
+      "code": "TISCOCHA",
+      "name": "TISCO China A-Shares Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOCHA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0309_2552",
+      "code": "TISCOUS",
+      "name": "TISCO US Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOUS-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0390_2559",
+      "code": "TISCOFIX",
+      "name": "TISCO Fixed Income Select Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOFIX-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0403_2563",
+      "code": "TNEXTGEN",
+      "name": "TISCO Next Generation Internet Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TNEXTGEN-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0444_2565",
+      "code": "TUSTECH",
+      "name": "TISCO US Technology Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TUSTECH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0716_2565",
+      "code": "TUSBOND",
+      "name": "TISCO US Aggregate Bond Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TUSBOND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0740_2566",
+      "code": "TUSHEALTH",
+      "name": "TISCO US Healthcare Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TUSHEALTH-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0759_2566",
+      "code": "TGQUALITY",
+      "name": "TISCO Global Quality Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TGQUALITY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0793_2566",
+      "code": "T-ThaiESG",
+      "name": "TISCO Equity Thailand ESG Fund",
+      "amc": "TISCO",
+      "type": "ESG",
+      "class": "T-ThaiESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0793_2567",
+      "code": "TDSThaiESG",
+      "name": "TISCO Dividend Select Equity Thailand ESG Fund",
+      "amc": "TISCO",
+      "type": "ESG",
+      "class": "TDSThaiESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0901_2556",
+      "code": "TISCOEU",
+      "name": "TISCO Europe Equity Fund",
+      "amc": "TISCO",
+      "type": "SSF",
+      "class": "TISCOEU-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0046_2565",
+      "code": "PRINCIPAL MAGLOBAL",
+      "name": "Principal Multi Asset Global Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL MAGLOBAL-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0122_2565",
+      "code": "PRINCIPAL GESG",
+      "name": "Principal Global Equity ESG Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL GESG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0166_2560",
+      "code": "PRINCIPAL GOPP",
+      "name": "Principal Global Opportunity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL GOPP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0172_2563",
+      "code": "PRINCIPAL SET50SSF",
+      "name": "Principal SET50 Index Super Savings Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL SET50SSF-SSFX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0231_2559",
+      "code": "PRINCIPAL MAINCOME",
+      "name": "Principal Multi Asset Income Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL MAINCOME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0309_2558",
+      "code": "PRINCIPAL EUEQ",
+      "name": "Principal European Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL EUEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0344_2566",
+      "code": "PRINCIPAL GQE",
+      "name": "Principal Global Quality Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL GQE-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0406_2564",
+      "code": "PRINCIPAL VTOPP",
+      "name": "Principal Vietnam Thai Opportunity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL VTOPP-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0423_2560",
+      "code": "PRINCIPAL VNEQ",
+      "name": "Principal Vietnam Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL VNEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0531_2567",
+      "code": "PRINCIPAL INDIAEQ",
+      "name": "Principal India Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL INDIAEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0554_2567",
+      "code": "SIGNATURE GINCOME",
+      "name": "Signature Global Dynamic Income Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "SIGNATURE GINCOME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0625_2562",
+      "code": "PRINCIPAL iPROPEN",
+      "name": "Principal Enhanced Property and Infrastructure Flex Income Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL iPROPEN-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0653_2554",
+      "code": "PRINCIPAL APDI",
+      "name": "Principal Asia Pacific Dynamic Income Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL APDI-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0694_2559",
+      "code": "PRINCIPAL TDIF",
+      "name": "Principal Thai Dynamic Income Equity  Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL TDIF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0791_2556",
+      "code": "PRINCIPAL JEQ",
+      "name": "Principal Japanese Equity Fund",
+      "amc": "Principal",
+      "type": "SSF",
+      "class": "PRINCIPAL JEQ-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0845_2566",
+      "code": "PRINCIPAL EQESG",
+      "name": "Principal Equity ESG Fund",
+      "amc": "Principal",
+      "type": "ESG",
+      "class": "PRINCIPAL EQESG-ThaiESG",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0027_2565",
+      "code": "FP SENERGY",
+      "name": "First Plus Smart Energy Equities FIF",
+      "amc": "FIRST PLUS ASSET MANAGEMENT (THAILAND) COMPANY LIMITED",
+      "type": "SSF",
+      "class": "FP SENERGY-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0234_2550",
+      "code": "FP LARGE",
+      "name": "First Plus Large Cap Equity Fund",
+      "amc": "FIRST PLUS ASSET MANAGEMENT (THAILAND) COMPANY LIMITED",
+      "type": "SSF",
+      "class": "FP LARGE SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0844_2566",
+      "code": "FP ThaiESG",
+      "name": "First Plus Thailand ESG Fund",
+      "amc": "FIRST PLUS ASSET MANAGEMENT (THAILAND) COMPANY LIMITED",
+      "type": "ESG",
+      "class": "FP ThaiESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0013_2563",
+      "code": "ES-CHINAA",
+      "name": "Eastspring China A Active Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-CHINAA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0041_2543",
+      "code": "ES-SET50",
+      "name": "Eastspring SET50 Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-SET50-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0201_2563",
+      "code": "ES-GCG",
+      "name": "EASTSPRING Global Capital Growth Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GCG-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0307_2559",
+      "code": "ES-GINFRA",
+      "name": "EASTSPRING Global Infrastructure Equity Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GINFRA-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0479_2563",
+      "code": "ES-GINNO",
+      "name": "EASTSPRING Global Innovation Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GINNO-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0563_2566",
+      "code": "ES-GAINCOME",
+      "name": "EASTSPRING Global Multi Asset Income Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GAINCOME-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0621_2553",
+      "code": "ES-GF",
+      "name": "EASTSPRING GIS Global Bond Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GF-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0708_2562",
+      "code": "ES-GSBOND",
+      "name": "EASTSPRING Global Smart Bond Fund",
+      "amc": "Eastspring",
+      "type": "SSF",
+      "class": "ES-GSBOND-SSF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0730_2567",
+      "code": "ES-ESG3070",
+      "name": "Eastspring ESG Mixed 30/70 Fund",
+      "amc": "Eastspring",
+      "type": "ESG",
+      "class": "ES-ESG3070-ThaiESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0815_2566",
+      "code": "ES-SETESG",
+      "name": "EASTSPRING SETESG Fund",
+      "amc": "Eastspring",
+      "type": "ESG",
+      "class": "ES-SETESG-ThaiESG-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0068_2544",
+      "code": "M-RMF",
+      "name": "MONEY PLUS RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "M-RMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0069_2544",
+      "code": "F-RMF",
+      "name": "FIXED INCOME PLUS RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0070_2544",
+      "code": "V-RMF",
+      "name": "VALUED STOCK RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "V-RMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0093_2553",
+      "code": "GOLD-RMF",
+      "name": "ONE GOLD RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "GOLD-RMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0149_2564",
+      "code": "ONE-VIETNAMRMF",
+      "name": "ONE VIETNAM EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "ONE-VIETNAMRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0259_2550",
+      "code": "TDEX",
+      "name": "ThaiDex SET50 Exchange Traded Fund",
+      "amc": "ONE",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0392_2568",
+      "code": "ONE-THAIESGX",
+      "name": "ONE EQUITY THAILAND ESG EXTRA FUND",
+      "amc": "ONE",
+      "type": "ESGX",
+      "class": "ONE-THAIESGX-L",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0437_2554",
+      "code": "1DIV",
+      "name": "ThaiDEX SET High Dividend ETF",
+      "amc": "ONE",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0475_2563",
+      "code": "ONE-DISCRMF",
+      "name": "ONE DISCOVERY RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "ONE-DISCRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0633_2546",
+      "code": "FLEX-RMF",
+      "name": "FLEXIBLE PLUS RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0637_2559",
+      "code": "ONE-UGERMF",
+      "name": "ONE ULTIMATE GLOBAL EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": "ONE-UGERMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0768_2555",
+      "code": "ONEPROP-RMF",
+      "name": "ONE PROPERTY RETIREMENT MUTUAL FUND",
+      "amc": "ONE",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0818_2566",
+      "code": "ONE-THAIESG",
+      "name": "ONE EQUITY THAILAND ESG FUND",
+      "amc": "ONE",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0853_2557",
+      "code": "ONE-STOXXASEANETF",
+      "name": "ONE STOXX ASEAN  SELECT DIVIDEND INDEX ETF",
+      "amc": "ONE",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0110_2545",
+      "code": "RMF1",
+      "name": "The Krung Thai Mixed Fund RMF 1",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0112_2545",
+      "code": "RMF2",
+      "name": "The Krung Thai Fixed Income RMF 2",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0186_2548",
+      "code": "RMF3",
+      "name": "The Krung Thai Debt Securities RMF 3",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0374_2561",
+      "code": "KT-BRAIN RMF",
+      "name": "Krung Thai AI Brain RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0380_2549",
+      "code": "KSRMF",
+      "name": "The Krung  Thai Shariah Retirement Mutual Fund",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0428_2561",
+      "code": "KTMUNG-RMF",
+      "name": "Krung Thai Mung Kung RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0434_2561",
+      "code": "KTMEE-RMF",
+      "name": "Krung Thai Mee Sup RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0436_2561",
+      "code": "KTSUK-RMF",
+      "name": "Krung Thai Suk Jai RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0437_2561",
+      "code": "KTSRI-RMF",
+      "name": "Krung Thai Sri Siri RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0443_2564",
+      "code": "KT-WTAI RMF",
+      "name": "KTAM World Technology Artificial Intelligence Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0463_2568",
+      "code": "KTEQPLUSX",
+      "name": "Krungthai Equity Plus Thailand ESG Extra Fund",
+      "amc": "KTAM",
+      "type": "ESGX",
+      "class": "KTEQPLUSX-D",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0467_2568",
+      "code": "KTEQ70PLUSX",
+      "name": "Krungthai Equity Plus 70/30 Thailand ESG Extra Fund",
+      "amc": "KTAM",
+      "type": "ESGX",
+      "class": "KTEQ70PLUSX-D",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0471_2564",
+      "code": "KT-CLIMATE RMF",
+      "name": "KTAM Global Climate Change RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0472_2568",
+      "code": "KTEQDIVX",
+      "name": "Krungthai Dividend Equity Thailand ESG Extra Fund",
+      "amc": "KTAM",
+      "type": "ESGX",
+      "class": "KTEQDIVX-D",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0492_2565",
+      "code": "KT-VIETNAM RMF",
+      "name": "KTAM Vietnam Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0494_2559",
+      "code": "KT-PIF RMF",
+      "name": "Krung Thai Property and Infrastructure Flexible RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0546_2563",
+      "code": "KT-Ashares RMF",
+      "name": "KTAM China A Shares Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0559_2560",
+      "code": "KTEF-RMF",
+      "name": "Krung Thai Smart Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0586_2560",
+      "code": "KT-CHINA RMF",
+      "name": "KTAM China Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0615_2562",
+      "code": "KT-ESG RMF",
+      "name": "Krungthai Korkarndee ESG RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0627_2558",
+      "code": "KT-HEALTHC RMF",
+      "name": "KTAM World Healthcare RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0632_2566",
+      "code": "KT-US RMF",
+      "name": "KTAM US Growth Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0633_2566",
+      "code": "KT-GESG RMF",
+      "name": "KTAM Global Sustainable Growth Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0652_2553",
+      "code": "KT-GOLD RMF",
+      "name": "KTAM Gold RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0653_2559",
+      "code": "KTSET50RMF",
+      "name": "Krung Thai SET50 RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0659_2567",
+      "code": "KTWC-MODERATE RMF",
+      "name": "Krungthai World Class Moderate RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0718_2551",
+      "code": "RMF4",
+      "name": "Krung Thai Money Market RMF 4",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0730_2555",
+      "code": "KTSE-RMF",
+      "name": "Krung Thai Selective Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0795_2553",
+      "code": "CHINA",
+      "name": "W.I.S.E. KTAM CSI 300 China Tracker",
+      "amc": "KTAM",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0822_2556",
+      "code": "KT-HiDiv RMF",
+      "name": "Krung Thai High Dividend Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0824_2555",
+      "code": "KT-PROPERTY RMF",
+      "name": "KTAM World Property RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0869_2557",
+      "code": "KT-WEQ RMF",
+      "name": "KTAM World Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0886_2555",
+      "code": "KT-BOND RMF",
+      "name": "KTAM World Bond RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0899_2553",
+      "code": "GLD",
+      "name": "KTAM GOLD ETF Tracker",
+      "amc": "KTAM",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0966_2568",
+      "code": "KT-TECHNOLOGY RMF",
+      "name": "KTAM World Technology RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1029_2568",
+      "code": "KTWC-INCOME RMF",
+      "name": "Krungthai World Class Income RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1085_2568",
+      "code": "KT-PRECIOUS RMF",
+      "name": "KTAM World Gold and Precious Equity RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1150_2557",
+      "code": "KT25/75RMF",
+      "name": "Krung Thai Conservative 25/75 RMF",
+      "amc": "KTAM",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0049_2565",
+      "code": "SCBRMUSA",
+      "name": "SCB US Active Equity RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMUSA(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0074_2544",
+      "code": "SCBRM2",
+      "name": "SCB GOVERNMENT BOND RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0079_2544",
+      "code": "SCBRM1",
+      "name": "SCB SHORT TERM FIXED INCOME RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0080_2544",
+      "code": "SCBRM3",
+      "name": "SCB FLEXIBLE FUND RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0081_2544",
+      "code": "SCBRM4",
+      "name": "SCB EQUITY RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0088_2565",
+      "code": "SCBRMCLEAN",
+      "name": "SCB Global Clean Energy RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMCLEAN(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0146_2565",
+      "code": "SCBRMPGF",
+      "name": "SCB Platinum Global RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMPGF(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0181_2564",
+      "code": "SCBRMCHA",
+      "name": "SCB China A-Shares RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0295_2564",
+      "code": "SCBRMCTECH",
+      "name": "SCB China Technology RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0310_2564",
+      "code": "SCBRMMLCA",
+      "name": "SCB Machine Learning China All Share RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0317_2565",
+      "code": "SCBRMWORLD",
+      "name": "SCB World Equity Index RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMWORLD(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0374_2565",
+      "code": "SCBRMJAPAN",
+      "name": "SCB Japan Active Equity RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMJAPAN(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0424_2562",
+      "code": "SCBRMPIN",
+      "name": "SCB Property and Infrastructure Flexible RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0425_2562",
+      "code": "SCBRMLEQ",
+      "name": "SCB Low Volatility Equity RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0426_2562",
+      "code": "SCBRMS&P500",
+      "name": "SCB US EQUITY RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0443_2568",
+      "code": "SCBT70X",
+      "name": "SCB Mixed 70 Thailand ESG Extra Fund",
+      "amc": "SCB",
+      "type": "ESGX",
+      "class": "SCBT70X(25A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0445_2568",
+      "code": "SCBTAPX",
+      "name": "SCB Active Equity Plus Thailand ESG Extra Fund",
+      "amc": "SCB",
+      "type": "ESGX",
+      "class": "SCBTAPX(25A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0450_2568",
+      "code": "SCBTS100X",
+      "name": "SCB SET100FF Index Thailand ESG Extra Fund",
+      "amc": "SCB",
+      "type": "ESGX",
+      "class": "SCBTS100X(25A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0452_2568",
+      "code": "SCBTAX",
+      "name": "SCB Active Equity Thailand ESG Extra Fund",
+      "amc": "SCB",
+      "type": "ESGX",
+      "class": "SCBTAX(25A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0457_2565",
+      "code": "SCBRMDIGI",
+      "name": "SCB Global Digital RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMDIGI(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0511_2558",
+      "code": "SCBRMJP",
+      "name": "SCB JAPAN EQUITY RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0518_2558",
+      "code": "SCBRMGIF",
+      "name": "SCB GLOBAL INFRASTRUCTURE  RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0522_2558",
+      "code": "SCBRMEU",
+      "name": "SCB EUROPEAN EQUITY RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0547_2564",
+      "code": "SCBRMNDQ",
+      "name": "SCB US Equity NDQ RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMNDQ(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0548_2564",
+      "code": "SCBRMVIET",
+      "name": "SCB Vietnam Equity RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMVIET(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0555_2564",
+      "code": "SCBRMASHARES",
+      "name": "SCB China A Shares Active Equity RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": "SCBRMASHARES(A)",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0570_2560",
+      "code": "SCBRMPOP",
+      "name": "SCB Global Sustainable Population Trend RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0593_2558",
+      "code": "SCBRMGHC",
+      "name": "SCB GLOBAL HEALTH CARE RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0706_2568",
+      "code": "SCBRMMONEY",
+      "name": "SCB Money Market RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0778_2554",
+      "code": "SCBGOLDHRMF",
+      "name": "SCB GOLD THB HEDGED RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0787_2554",
+      "code": "SCBRMS50",
+      "name": "SCB SET50 INDEX RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0933_2554",
+      "code": "SCBRMGW",
+      "name": "SCB GLOBAL WEALTH RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0935_2554",
+      "code": "SCBRMGWP",
+      "name": "SCB GLOBAL WEALTH PLUS RMF",
+      "amc": "SCB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0085_2566",
+      "code": "ASP-SMERMF",
+      "name": "Asset Plus Small and Mid Cap Equity RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0271_2561",
+      "code": "ASP-DISRUPTRMF",
+      "name": "Asset Plus Disruptive Opportunities RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0298_2561",
+      "code": "ASP-VIETRMF",
+      "name": "Asset Plus Vietnam Growth RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0318_2567",
+      "code": "ASP-INDIARMF",
+      "name": "Asset Plus India Dynamic Equity RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0343_2566",
+      "code": "ASP-TOPBRANDRMF",
+      "name": "Asset Plus Top Brand RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0402_2564",
+      "code": "ASP-NCLRRMF",
+      "name": "Asset Plus Nuclear Energy RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0437_2568",
+      "code": "ASP-DEQ ThaiESGX",
+      "name": "Asset Plus Dividend Equity Thailand ESG Extra Fund",
+      "amc": "Asset Plus",
+      "type": "ESGX",
+      "class": "ASP-DEQ ThaiESGX-LTF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0442_2568",
+      "code": "ASP-MIX ThaiESGX",
+      "name": "Asset Plus Mixed Thailand ESG Extra Fund",
+      "amc": "Asset Plus",
+      "type": "ESGX",
+      "class": "ASP-MIX ThaiESGX-LTF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0449_2563",
+      "code": "ASP-EVOCHINARMF",
+      "name": "Asset Plus Evolution China Equity RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0497_2564",
+      "code": "ASP-DIGIBLOCRMF",
+      "name": "Asset Plus Digital Blockchain RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0542_2560",
+      "code": "ASP-AIEQRMF",
+      "name": "Asset Plus Artificial Intelligence Equity Growth RMF Fund",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0776_2547",
+      "code": "ASP-ERF",
+      "name": "Asset Plus Equity RMF",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0785_2547",
+      "code": "ASP-MRF",
+      "name": "Asset Plus Mixed RMF",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0787_2547",
+      "code": "ASP-FRF",
+      "name": "Asset Plus Fixed RMF",
+      "amc": "Asset Plus",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0804_2566",
+      "code": "ASP-ThaiESG",
+      "name": "Asset Plus Equity Thailand ESG Fund",
+      "amc": "Asset Plus",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0045_2565",
+      "code": "K-VIETNAMRMF",
+      "name": "K Vietnam Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0061_2544",
+      "code": "K-FLRMF",
+      "name": "K Flexible Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0062_2544",
+      "code": "K-BLRMF",
+      "name": "K Balanced RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0063_2544",
+      "code": "K-SFRMF",
+      "name": "K Short Term Fixed Income RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0064_2544",
+      "code": "K-GBRMF",
+      "name": "K Government Bond RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0065_2544",
+      "code": "K-FIRMF",
+      "name": "K Fixed Income RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0065_2568",
+      "code": "K-WORLDXRMF",
+      "name": "K Global Equity Passive RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0135_2568",
+      "code": "K-GDBONDRMF",
+      "name": "K Global Dynamic Bond RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0145_2549",
+      "code": "ABFTH",
+      "name": "The ABF Thailand Bond Index Fund",
+      "amc": "KAsset",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0192_2559",
+      "code": "K-GIFRMF",
+      "name": "K Global Infrastructure Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0405_2549",
+      "code": "K-STARRMF",
+      "name": "K STAR Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0408_2567",
+      "code": "K-US500XRMF",
+      "name": "K US Equity Passive RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0410_2558",
+      "code": "K-GHRMF",
+      "name": "K Global Healthcare Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0429_2568",
+      "code": "K-HDThaiESGX",
+      "name": "K High Dividend Stock Thailand ESG Extra Fund",
+      "amc": "KAsset",
+      "type": "ESGX",
+      "class": "K-HDThaiESGX-68",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0433_2558",
+      "code": "K-MSRMF",
+      "name": "K Mid Small Cap Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0455_2567",
+      "code": "K-WPSPEEDRMF",
+      "name": "K WealthPLUS SpeedUp RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0455_2568",
+      "code": "K-70ThaiESGX",
+      "name": "K 70:30 Thailand ESG Extra Fund",
+      "amc": "KAsset",
+      "type": "ESGX",
+      "class": "K-70ThaiESGX-68",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0468_2563",
+      "code": "K-CHANGERMF",
+      "name": "K Positive Change Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0470_2563",
+      "code": "K-USARMF",
+      "name": "K USA Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0512_2563",
+      "code": "K-CHINARMF",
+      "name": "K China Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0527_2560",
+      "code": "K-THAICGRMF",
+      "name": "K Thai Equity CG RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0529_2563",
+      "code": "K-2035RMF",
+      "name": "K Target Retirement 2035 RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0545_2563",
+      "code": "K-2040RMF",
+      "name": "K Target Retirement 2040 RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0552_2565",
+      "code": "K-GINCOMERMF",
+      "name": "K Global Income RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0573_2566",
+      "code": "K-WPBALRMF",
+      "name": "K WealthPLUS Balanced RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0580_2566",
+      "code": "K-PLANETRMF",
+      "name": "K Planetary Transition RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0592_2567",
+      "code": "K-USXNDQRMF",
+      "name": "K US Equity NDQ 100 Index RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0596_2562",
+      "code": "K-PROPIRMF",
+      "name": "K Property Infrastructure Flexible RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0596_2566",
+      "code": "K-WPULTIRMF",
+      "name": "K WealthPLUS Ultimate RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0599_2566",
+      "code": "K-GTECHRMF",
+      "name": "K Global Technology Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0608_2557",
+      "code": "K-JPRMF",
+      "name": "K Japanese Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0612_2567",
+      "code": "K-GSELECTRMF",
+      "name": "K Global Select Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0679_2557",
+      "code": "K-EURMF",
+      "name": "K European Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0714_2552",
+      "code": "K-GDRMF",
+      "name": "K GOLD RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0738_2556",
+      "code": "K-S50RMF",
+      "name": "K SET50 RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0861_2553",
+      "code": "K-GARMF",
+      "name": "K GLOBAL ALLOCATION RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0907_2566",
+      "code": "K-INDIARMF",
+      "name": "K India Equity RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0250_2569",
+      "code": "K-WPLIGHTRMF",
+      "name": "K WealthPLUS Light RMF",
+      "amc": "KAsset",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0021_2558",
+      "code": "UOBGARMF",
+      "name": "UOB Global Allocation RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0064_2565",
+      "code": "UBOT",
+      "name": "United Robotics & Artificial Intelligence ETF",
+      "amc": "UOB",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0078_2546",
+      "code": "CPRMF2",
+      "name": "Capital Protected Retirement Mutual Fund 2",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0083_2545",
+      "code": "UOBGBRMF",
+      "name": "UOB GOVERNMENT BOND RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0088_2545",
+      "code": "UOBSVRMF",
+      "name": "UOB Smart Value RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0089_2545",
+      "code": "UOBEQRMF",
+      "name": "UOB EQUITIES RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0154_2564",
+      "code": "USUSRMF",
+      "name": "United Sustainable Equity Solution Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0165_2562",
+      "code": "UJSMRMF",
+      "name": "United Japan Small And Mid Cap Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0169_2564",
+      "code": "UNIRMF",
+      "name": "United Global Innovation Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0178_2545",
+      "code": "GBRMF",
+      "name": "Government Bond Retirement Mutual Fund",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0180_2545",
+      "code": "CPRMF1",
+      "name": "Capital Protected Retirement Mutual Fund 1",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0181_2545",
+      "code": "ERMF",
+      "name": "Equity Retirement Mutual Fund",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0280_2562",
+      "code": "UCHINARMF",
+      "name": "United All China Equity Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0353_2564",
+      "code": "UHERO",
+      "name": "United Hero ETF",
+      "amc": "UOB",
+      "type": "ETF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0365_2568",
+      "code": "UIFTRMF",
+      "name": "United CIO Income Fund TH RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0380_2568",
+      "code": "UGFTRMF",
+      "name": "United CIO Growth Fund TH RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0382_2549",
+      "code": "CPRMF5",
+      "name": "Capital Protected Retirement Mutual Fund 5",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0398_2561",
+      "code": "UGQGRMF",
+      "name": "United Global Quality Growth Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0454_2568",
+      "code": "UEQ-TESGX",
+      "name": "United Equity Thailand ESG Extra Fund",
+      "amc": "UOB",
+      "type": "ESGX",
+      "class": "UEQ-TESGX-D",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0460_2559",
+      "code": "UGBFRMF",
+      "name": "United Global Balanced Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0461_2568",
+      "code": "UMIX-TESGX",
+      "name": "United Mixed 70/30 Thailand ESG Extra Fund",
+      "amc": "UOB",
+      "type": "ESGX",
+      "class": "UMIX-TESGX-D",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0475_2558",
+      "code": "UHCRMF",
+      "name": "United Global Healthcare RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0510_2560",
+      "code": "UGISRMF",
+      "name": "United Global Income Strategic Bond Fund RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0607_2559",
+      "code": "CG-RMF",
+      "name": "Good Corporate Governance RMF",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0704_2547",
+      "code": "CPRMF3",
+      "name": "Capital Protected Retirement Mutual Fund 3",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0766_2547",
+      "code": "SVRMF",
+      "name": "Smart Value Retirement Mutual Fund",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0815_2554",
+      "code": "UOBGRMF-H",
+      "name": "UOB Gold RMF - Currency Hedged",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0852_2548",
+      "code": "CPRMF4",
+      "name": "Capital Protected Retirement Mutual Fund 4",
+      "amc": "UOB",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0274_2563",
+      "code": "LHGEQRMF",
+      "name": "LH GLOBAL EQUITY RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0357_2568",
+      "code": "LHTHAIESGX",
+      "name": "LH FLEXIBLE THAILAND ESG EXTRA FUND",
+      "amc": "LH Fund",
+      "type": "ESGX",
+      "class": "LHTHAIESGX-LT",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0500_2560",
+      "code": "LHGINCOMERMF",
+      "name": "LH Global Income Retirement Mutual Fund",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0557_2563",
+      "code": "LHCHINARMF",
+      "name": "LH EQUITY CHINA OPPORTUNITY RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0562_2565",
+      "code": "LHMMRMF",
+      "name": "LH MONEY MARKET RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0589_2568",
+      "code": "LHGIGORMF",
+      "name": "LH GLOBAL INVESTMENT GRADE OPPORTUNITIES RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0626_2558",
+      "code": "LHTPROPRMF",
+      "name": "LH THAI PROPERTY RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0705_2568",
+      "code": "LHCYBERRMF",
+      "name": "LH GLOBAL CYBERSECURITY RMF FUND",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0801_2567",
+      "code": "LHSITHAIESG",
+      "name": "LH SOVEREIGN INSTRUMENTS THAILAND ESG FUND",
+      "amc": "LH Fund",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0885_2555",
+      "code": "LHFLRMF",
+      "name": "LH FLEXIBLE RMF",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0890_2555",
+      "code": "LHGOVRMF",
+      "name": "LH GOVERNMENT BOND RMF",
+      "amc": "LH Fund",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0076_2561",
+      "code": "KFINDIARMF",
+      "name": "Krungsri India Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0077_2561",
+      "code": "KFAFIXRMF",
+      "name": "Krungsri Active Fixed Income RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0081_2561",
+      "code": "KFDNMRMF",
+      "name": "Krungsri Dynamic RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0105_2545",
+      "code": "KFMTFIRMF",
+      "name": "Krungsri Medium Term Fixed Income RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0107_2545",
+      "code": "KFLTGOVRMF",
+      "name": "Krungsri Long Term Government Bond RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0108_2545",
+      "code": "KFFLEX2RMF",
+      "name": "Krungsri Flexible 2 RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0133_2545",
+      "code": "KFGOVRMF",
+      "name": "Krungsri Government Bond RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0136_2545",
+      "code": "KFTSRMF",
+      "name": "Krungsri Taweesap RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0170_2549",
+      "code": "KFEQRMF",
+      "name": "Krungsri Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0255_2566",
+      "code": "KF1MILDRMF",
+      "name": "Krungsri The One Mild RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0260_2566",
+      "code": "KF1MAXRMF",
+      "name": "Krungsri The One Max RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0267_2566",
+      "code": "KF1MEANRMF",
+      "name": "Krungsri The One Mean RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0331_2561",
+      "code": "KFGOODRMF",
+      "name": "Krungsri Good Life RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0363_2564",
+      "code": "KFINFRARMF",
+      "name": "Krungsri Next Generation Infrastructure RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0376_2564",
+      "code": "KFGGRMF",
+      "name": "Krungsri Global Growth RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0377_2565",
+      "code": "KFCORERMF",
+      "name": "Krungsri Global Core Allocation RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0383_2564",
+      "code": "KFCLIMARMF",
+      "name": "Krungsri ESG Climate Tech RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0385_2564",
+      "code": "KFUSRMF",
+      "name": "Krungsri US Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0386_2552",
+      "code": "KFGOLDRMF",
+      "name": "Krungsri Gold RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0395_2565",
+      "code": "KFCMEGARMF",
+      "name": "Krungsri China Megatrends RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0402_2565",
+      "code": "KFESGRMF",
+      "name": "Krungsri Equity Sustainable Global Growth RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0419_2548",
+      "code": "KFS100RMF",
+      "name": "Krungsri SET100 RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0424_2565",
+      "code": "KFVIETRMF",
+      "name": "Krungsri Vietnam Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0451_2568",
+      "code": "KF70-THAIESGX",
+      "name": "Krungsri 70/30 Thailand ESG Extra Fund",
+      "amc": "Krungsri",
+      "type": "ESGX",
+      "class": "KF70-THAIESGX-68",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0456_2568",
+      "code": "KFAEQ-THAIESGX",
+      "name": "Krungsri Active Equity Thailand ESG Extra Fund",
+      "amc": "Krungsri",
+      "type": "ESGX",
+      "class": "KFAEQ-THAIESGX-68",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0457_2568",
+      "code": "KFS50-THAIESGX",
+      "name": "Krungsri SET50 Thailand ESG Extra Fund",
+      "amc": "Krungsri",
+      "type": "ESGX",
+      "class": "KFS50-THAIESGX-68",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0460_2550",
+      "code": "KFDIVRMF",
+      "name": "Krungsri Dividend Stock RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0487_2560",
+      "code": "KF-GCHINARMF",
+      "name": "Krungsri Greater China Equity Hedged FX RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0488_2560",
+      "code": "KFGTECHRMF",
+      "name": "Krungsri Global Technology Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0489_2560",
+      "code": "KFHAPPYRMF",
+      "name": "Krungsri Happy Life RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0490_2560",
+      "code": "KFSTARRMF",
+      "name": "Krungsri Thai All Stars Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0517_2561",
+      "code": "KFSUPERRMF",
+      "name": "Krungsri Super Life RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0550_2559",
+      "code": "KF-SINCOMERMF",
+      "name": "Krungsri Global Smart Income RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0566_2559",
+      "code": "KFGBRANRMF",
+      "name": "Krungsri Global Brands Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0577_2563",
+      "code": "KF-ACHINARMF",
+      "name": "Krungsri China A Shares Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0596_2567",
+      "code": "KFUSINDFXRMF",
+      "name": "Krungsri US Equity Index FX RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0620_2558",
+      "code": "KFJAPANRMF",
+      "name": "Krungsri Japan RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0709_2567",
+      "code": "KF-SINCOME-FXRMF",
+      "name": "Krungsri Global Smart Income FX RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0717_2567",
+      "code": "KFGLOBALRMF",
+      "name": "Krungsri Global Unconstrained Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0718_2567",
+      "code": "KFGLOBFXRMF",
+      "name": "Krungsri Global Unconstrained Equity FX RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0725_2567",
+      "code": "KF-WORLD-INDXRMF",
+      "name": "Krungsri World Equity Index RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0762_2547",
+      "code": "KFCASHRMF",
+      "name": "Krungsri Cash RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0859_2567",
+      "code": "KFNDQRMF",
+      "name": "Krungsri NDQ Index RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0862_2568",
+      "code": "KF-GDIVRMF",
+      "name": "Krungsri Global Dividend RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0863_2568",
+      "code": "KF-CSI300-INDXRMF",
+      "name": "Krungsri China Equity CSI 300 RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0865_2568",
+      "code": "KF-JP-INDXRMF",
+      "name": "Krungsri Japan Equity Index RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0866_2568",
+      "code": "KF-HSHARE-INDXRMF",
+      "name": "Krungsri China H Shares Equity Index RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0867_2568",
+      "code": "KF-US-PLUSRMF",
+      "name": "Krungsri US Select Equity Plus RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0873_2567",
+      "code": "KF-EMXCN-INDXRMF",
+      "name": "Krungsri Emerging Markets ex China Index RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0922_2556",
+      "code": "KFEURORMF",
+      "name": "Krungsri Europe Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1094_2557",
+      "code": "KFHCARERMF",
+      "name": "Krungsri Global Healthcare Equity RMF",
+      "amc": "Krungsri",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0074_2568",
+      "code": "MEGAWORLD30RMF",
+      "name": "MEGA WORLD 30 RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0093_2569",
+      "code": "TLDEFENSERMF",
+      "name": "TALIS DEFENSE TECH RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0153_2569",
+      "code": "TLWORLDRMF",
+      "name": "TALIS WORLD STOCK RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0187_2568",
+      "code": "MEGA10AICHINARMF",
+      "name": "MEGA 10 ARTIFICIAL INTELLIGENCE CHINA RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0241_2567",
+      "code": "MEGA10AIRMF",
+      "name": "MEGA 10 ARTIFICIAL INTELLIGENCE RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0408_2568",
+      "code": "MEGATX8020U",
+      "name": "MEGA 20 THAILAND ESG EXTRA FUND 80-20 U",
+      "amc": "TALIS",
+      "type": "ESGX",
+      "class": "MEGATX8020U-L",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0411_2569",
+      "code": "TLUSHDRMF",
+      "name": "TALIS U.S. DIVIDEND EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0457_2564",
+      "code": "TLMSEQRMF",
+      "name": "TALIS MID-SMALL CAP EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0473_2568",
+      "code": "MEGATX8020C",
+      "name": "MEGA 20 THAILAND ESG EXTRA FUND 80-20 C",
+      "amc": "TALIS",
+      "type": "ESGX",
+      "class": "MEGATX8020C-L",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0525_2566",
+      "code": "AFMOATHRMF",
+      "name": "AF US WIDE MOAT HEDGE RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0526_2568",
+      "code": "MEGA10HEALTHRMF",
+      "name": "MEGA 10 HEALTHCARE RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0530_2569",
+      "code": "TLUSHGRMF",
+      "name": "TALIS U.S. LARGE-CAP GROWTH EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0539_2567",
+      "code": "MEGA10EURORMF",
+      "name": "MEGA 10 EURO RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0596_2559",
+      "code": "TLFLEXRMF",
+      "name": "TALIS FLEXIBLE RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0598_2559",
+      "code": "TLEQRMF",
+      "name": "TALIS EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0616_2560",
+      "code": "TLDIVRMF",
+      "name": "TALIS DIVIDEND STOCK RMF",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0619_2565",
+      "code": "MEGA10RMF",
+      "name": "MEGA 10 RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0628_2559",
+      "code": "TLMMRMF",
+      "name": "TALIS MONEY MARKET RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0761_2566",
+      "code": "MEGA10CHINARMF",
+      "name": "MEGA 10 CHINA RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0822_2566",
+      "code": "MEGA20THAIESG",
+      "name": "MEGA 20 THAILAND ESG FUND",
+      "amc": "TALIS",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0917_2568",
+      "code": "MEGA10CHINAPOPRMF",
+      "name": "MEGA 10 CHINA POPULAR CONSUMER BRAND RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0936_2568",
+      "code": "MEGA10CHINATECHRMF",
+      "name": "MEGA 10 CHINA TECHNOLOGY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0948_2568",
+      "code": "TLAWSRMF",
+      "name": "TALIS ALL WEATHER STRATEGY RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1015_2568",
+      "code": "MEGA10CYBERRMF",
+      "name": "MEGA 10 CYBERSECURITY AND ENTERPRISE SOFTWARE RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1027_2568",
+      "code": "TLUS500RMF",
+      "name": "TALIS US EQUITY 500 RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1087_2568",
+      "code": "TLUSNDQRMF",
+      "name": "TALIS US EQUITY NDQ RETIREMENT MUTUAL FUND",
+      "amc": "TALIS",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0057_2545",
+      "code": "M-FIX",
+      "name": "MFC Retirement Fixed Income Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0082_2545",
+      "code": "M-BOND",
+      "name": "MFC Retirement Bond Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0084_2545",
+      "code": "MMF-RMF",
+      "name": "MFC Money Market Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0093_2545",
+      "code": "M-VALUE",
+      "name": "MFC Retirement Value Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0113_2561",
+      "code": "M-TWSUK RMF",
+      "name": "MFC Senior Taweesuk Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0144_2559",
+      "code": "M-PROP RMF",
+      "name": "MFC Smart Property Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0152_2561",
+      "code": "HI-DIV RMF",
+      "name": "MFC Hi-Dividend Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0286_2553",
+      "code": "I-GOLDRMF",
+      "name": "MFC International Gold Retirement  Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0396_2565",
+      "code": "MHEALTHRMF",
+      "name": "MFC Health Innovation Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0444_2568",
+      "code": "MIF-Thai ESGX",
+      "name": "MFC FTSE Shariah Investment Thailand ESG Extra Fund",
+      "amc": "MFC",
+      "type": "ESGX",
+      "class": "MIF-ESGX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0447_2568",
+      "code": "MIX-Thai ESGX",
+      "name": "MFC Mixed Thailand ESG Extra Fund",
+      "amc": "MFC",
+      "type": "ESGX",
+      "class": "MIX-ESGX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0448_2568",
+      "code": "MEQUITY-Thai ESGX",
+      "name": "MFC Equity Thailand ESG Extra Fund",
+      "amc": "MFC",
+      "type": "ESGX",
+      "class": "MEQUITY-ESGX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0449_2568",
+      "code": "HIDIV-Thai ESGX",
+      "name": "MFC Hi-Dividend Thailand ESG Extra Fund",
+      "amc": "MFC",
+      "type": "ESGX",
+      "class": "HIDIV-ESGX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0479_2564",
+      "code": "MRENEWRMF",
+      "name": "MFC Renewable Energy Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0550_2563",
+      "code": "MGFRMF",
+      "name": "MFC Global Focus Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0580_2560",
+      "code": "M-S50 RMF",
+      "name": "MFC SET 50 Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0703_2567",
+      "code": "MSOV-ThaiESG",
+      "name": "MFC Sovereign Instruments Thailand ESG Fund",
+      "amc": "MFC",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0830_2548",
+      "code": "M-CR",
+      "name": "MFC Capital Protection Retirement Mutual Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0836_2566",
+      "code": "MT25-ThaiESG",
+      "name": "MFC Equity Top 25 Thailand ESG Fund",
+      "amc": "MFC",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0849_2566",
+      "code": "MFLEX-ThaiESG",
+      "name": "MFC Flexible Thailand ESG Fund",
+      "amc": "MFC",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0992_2568",
+      "code": "MGALL-RMF",
+      "name": "MFC Global Strategic Allocation Retirement Fund",
+      "amc": "MFC",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0370_2563",
+      "code": "DAOL-GOLDRMF",
+      "name": "DAOL GOLD AND SILVER EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "DAOL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0398_2563",
+      "code": "DAOL-MONYRMF",
+      "name": "DAOL MONEY MARKET RETIREMENT MUTUAL FUND",
+      "amc": "DAOL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0506_2563",
+      "code": "DAOL-GLOBALEQRMF",
+      "name": "DAOL GLOBAL EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "DAOL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0059_2545",
+      "code": "BFLRMF",
+      "name": "Bualuang Flexible RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0062_2545",
+      "code": "BFRMF",
+      "name": "Bualuang Fixed-income RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0067_2545",
+      "code": "BERMF",
+      "name": "Bualuang Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0082_2564",
+      "code": "B-GTORMF",
+      "name": "Bualuang Global Thematic Opportunities RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0083_2558",
+      "code": "BCARERMF",
+      "name": "Bualuang Global Health Care RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0089_2561",
+      "code": "B-TOPTENRMF",
+      "name": "Bualuang Top-Ten RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0092_2567",
+      "code": "B-SI-THAIESG",
+      "name": "Bualuang Sovereign Instruments Thailand ESG Fund",
+      "amc": "BBL",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0110_2563",
+      "code": "B-CHINAARMF",
+      "name": "Bualuang China A-Shares Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0112_2564",
+      "code": "B-FUTURERMF",
+      "name": "Bualuang Future Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0116_2553",
+      "code": "BGOLDRMF",
+      "name": "Bualuang Gold RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0148_2560",
+      "code": "B-ASEANRMF",
+      "name": "Bualuang ASEAN Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0149_2565",
+      "code": "BMAPS100RMF",
+      "name": "BUALUANG MAPS 100 RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0167_2565",
+      "code": "BMAPS55RMF",
+      "name": "BUALUANG MAPS 55 RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0178_2565",
+      "code": "BMAPS25RMF",
+      "name": "BUALUANG MAPS 25 RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0197_2561",
+      "code": "B-ASIARMF",
+      "name": "Bualuang Asia Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0202_2556",
+      "code": "BSIRIRMF",
+      "name": "Bualuang Siriphol Corporate Governance RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0213_2561",
+      "code": "B-INNOTECHRMF",
+      "name": "Bualuang Global Innovation & Technology RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0237_2557",
+      "code": "BBASICRMF",
+      "name": "Bualuang Basic RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0259_2551",
+      "code": "IN-RMF",
+      "name": "Bualuang Infrastructure RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0304_2566",
+      "code": "B-PREMIUMRMF",
+      "name": "Bualuang Premium Brands Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0320_2566",
+      "code": "B-DYNAMICRMF",
+      "name": "Bualuang Dynamic Bond RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0388_2564",
+      "code": "B-SIPRMF",
+      "name": "Bualuang Sustainable Investing Portfolio RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0416_2564",
+      "code": "B-USALPHARMF",
+      "name": "Bualuang US Alpha RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0434_2568",
+      "code": "BEQD-TESGX",
+      "name": "Bualuang Equity Thailand ESG Extra Fund",
+      "amc": "BBL",
+      "type": "ESGX",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0435_2568",
+      "code": "BM70-TESGX",
+      "name": "Bualuang Mixed 70/30 Thailand ESG Extra Fund",
+      "amc": "BBL",
+      "type": "ESGX",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0436_2568",
+      "code": "BMDIV-TESGX",
+      "name": "Bualuang Mixed Dividend Thailand ESG Extra Fund",
+      "amc": "BBL",
+      "type": "ESGX",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0439_2564",
+      "code": "B-VIETNAMRMF",
+      "name": "Bualuang Vietnam Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0452_2560",
+      "code": "B-INDIAMRMF",
+      "name": "Bualuang India Mid Cap RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0473_2565",
+      "code": "B-GLOB-INFRARMF",
+      "name": "Bualuang Global Infrastructure Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0495_2558",
+      "code": "B-GLOBALRMF",
+      "name": "Bualuang Global Equity RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0568_2567",
+      "code": "B-ASIATECHRMF",
+      "name": "Bualuang Asia Technology RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0573_2562",
+      "code": "B-IR-FOFRMF",
+      "name": "Bualuang Infrastructure and Real Estate Fund of Funds RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0597_2551",
+      "code": "MM-RMF",
+      "name": "Bualuang Money Market RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0694_2567",
+      "code": "B-MIXED-THAIESG",
+      "name": "Bualuang Mixed Thailand ESG Fund",
+      "amc": "BBL",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0698_2567",
+      "code": "B-EQ-THAIESG",
+      "name": "Bualuang Equity Thailand ESG Fund",
+      "amc": "BBL",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0731_2567",
+      "code": "B-OPPRMF",
+      "name": "Bualuang Equity Opportunities RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0770_2566",
+      "code": "B-TOP-THAIESG",
+      "name": "Bualuang Top-Ten Thailand ESG Fund",
+      "amc": "BBL",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0775_2554",
+      "code": "B-SM-RMF",
+      "name": "Bualuang Small-Mid Cap RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0837_2568",
+      "code": "B-USPASSIVERMF",
+      "name": "Bualuang US Equity Passive RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0991_2550",
+      "code": "B25RMF",
+      "name": "Bualuang Equity 25% RMF",
+      "amc": "BBL",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0184_2561",
+      "code": "KKP CorePath Balanced RMF",
+      "name": "KKP CorePath Balanced Retirement Mutual FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0366_2561",
+      "code": "KKP GNP RMF-H",
+      "name": "KKP GLOBAL NEW PERSPECTIVE RMF–HEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0369_2561",
+      "code": "KKP GNP RMF-UH",
+      "name": "KKP GLOBAL NEW PERSPECTIVE RMF-UNHEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0400_2564",
+      "code": "KKP PGE RMF-H",
+      "name": "KKP PASSIVE GLOBAL EQUITY RMF-HEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0414_2547",
+      "code": "KKP INRMF FUND",
+      "name": "KKP INCOME RETIREMENT MUTUAL FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": "KKP  INRMF-F",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0423_2547",
+      "code": "KKP BLRMF",
+      "name": "KKP BALANCE RETIREMENT MUTUAL FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0426_2547",
+      "code": "KKP EQRMF",
+      "name": "KKP EQUITY RETIREMENT MUTUAL FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0463_2564",
+      "code": "KKP TECH RMF-H",
+      "name": "KKP EXPANDED TECH FUND RMF - HEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0466_2568",
+      "code": "KKP BL THAI ESGX FUND",
+      "name": "KKP BALANCED THAILAND ESG EXTRA FUND",
+      "amc": "KKP",
+      "type": "ESGX",
+      "class": "KKP BL THAI ESGX",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0669_2552",
+      "code": "KKP MMRMF FUND",
+      "name": "KKP MONEY MARKET RETIREMENT MUTUAL FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": "KKP MMRMF",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0719_2567",
+      "code": "KKP PGE RMF-UH",
+      "name": "KKP PASSIVE GLOBAL EQUITY RMF - UNHEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0840_2566",
+      "code": "KKP GB THAI ESG",
+      "name": "KKP GOVERNMENT BOND THAILAND ESG FUND",
+      "amc": "KKP",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0847_2554",
+      "code": "KKP PROPRMF",
+      "name": "KKP PROPERTY SECTOR RETIREMENT MUTUAL FUND",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0851_2566",
+      "code": "KKP EQ THAI ESG",
+      "name": "KKP EQUITY THAILAND ESG FUND",
+      "amc": "KKP",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0869_2568",
+      "code": "KKP US500 RMF-UH",
+      "name": "KKP US500 RMF - UNHEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0872_2568",
+      "code": "KKP INDIA RMF-UH",
+      "name": "KKP INDIA RMF - UNHEDGED",
+      "amc": "KKP",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0004_2556",
+      "code": "TCHRMF",
+      "name": "TISCO China H-Shares Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0059_2544",
+      "code": "TSFIRMF",
+      "name": "TISCO Secured  Fixed Income Retirement  Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0074_2545",
+      "code": "TFPRMF",
+      "name": "TISCO  Flexible Portfolio Retirement Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TFPRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0095_2545",
+      "code": "TFIRMF",
+      "name": "TISCO  Fixed Income Retirement  Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TFIRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0096_2545",
+      "code": "TEGRMF",
+      "name": "TISCO Equity Growth Retirement  Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TEGRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0152_2567",
+      "code": "TGQUALITYRMF",
+      "name": "TISCO Global Quality Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TGQUALITYRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0237_2561",
+      "code": "TINRMF",
+      "name": "TISCO Income Plus RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TINRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0409_2563",
+      "code": "TTECHRMF",
+      "name": "TISCO Technology Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TTECHRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0426_2564",
+      "code": "TSFRMF",
+      "name": "TISCO Strategic RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TSFRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0438_2566",
+      "code": "TWBRMF",
+      "name": "TISCO Thai Well-being Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TWBRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0439_2566",
+      "code": "TNASDAQRMF",
+      "name": "TISCO US Nasdaq Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TNASDAQRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0439_2568",
+      "code": "TThaiESGX",
+      "name": "TISCO Equity Thailand ESG Extra Fund",
+      "amc": "TISCO",
+      "type": "ESGX",
+      "class": "TThaiESGX-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0445_2558",
+      "code": "TGHRMF",
+      "name": "TISCO Global Healthcare RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TGHRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0446_2568",
+      "code": "TThai70ESGX",
+      "name": "TISCO Equity 70 Thailand ESG Extra Fund",
+      "amc": "TISCO",
+      "type": "ESGX",
+      "class": "TThai70ESGX-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0459_2564",
+      "code": "TNEXTGENRMF",
+      "name": "TISCO Next Generation Internet RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TNEXTGENRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0468_2558",
+      "code": "TEURMF",
+      "name": "TISCO Europe Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TEURMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0505_2563",
+      "code": "TCHARMF",
+      "name": "TISCO China A-Shares Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TCHARMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0512_2550",
+      "code": "TCIRMF",
+      "name": "TISCO China India Retirement Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0549_2567",
+      "code": "TAIRMF",
+      "name": "TISCO AI & Big Data RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TAIRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0552_2563",
+      "code": "TCHTECHRMF",
+      "name": "TISCO China Technology RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TCHTECHRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0559_2567",
+      "code": "TSIThaiESG",
+      "name": "TISCO Sovereign Instruments Thailand ESG Fund",
+      "amc": "TISCO",
+      "type": "ESG",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0561_2557",
+      "code": "TMSRMF",
+      "name": "TISCO Mid/Small Cap Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TMSRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0577_2565",
+      "code": "TVIETNAMRMF",
+      "name": "TISCO Vietnam Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TVIETNAMRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0648_2552",
+      "code": "TAPRMF",
+      "name": "TISCO Asia Pacific ex Japan Retirement Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0690_2556",
+      "code": "TJPRMF",
+      "name": "TISCO Japan Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TJPRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0696_2556",
+      "code": "TUSRMF",
+      "name": "TISCO US Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TUSRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0714_2568",
+      "code": "TGSMARTRMF",
+      "name": "TISCO Global Smart Allocation RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TGSMARTRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0796_2555",
+      "code": "THDRMF",
+      "name": "TISCO High Dividend Equity RMF",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "THDRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0819_2554",
+      "code": "TGOLDRMF",
+      "name": "TISCO Gold Retirement Fund",
+      "amc": "TISCO",
+      "type": "RMF",
+      "class": "TGOLDRMF-A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0415_2548",
+      "code": "PRINCIPAL EQRMF",
+      "name": "Principal Equity Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0420_2548",
+      "code": "PRINCIPAL FIRMF",
+      "name": "Principal Fixed Income Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0459_2568",
+      "code": "PRINCIPAL SEQTESGX",
+      "name": "Principal Selected Dividend Equity Thailand ESG Extra Fund",
+      "amc": "Principal",
+      "type": "ESGX",
+      "class": "PRINCIPAL SEQTESGX-N",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0517_2566",
+      "code": "PRINCIPAL VNEQRMF",
+      "name": "Principal Vietnam Equity Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0805_2554",
+      "code": "PRINCIPAL BARMF",
+      "name": "Principal Balanced Allocation Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0820_2553",
+      "code": "PRINCIPAL MMRMF",
+      "name": "Principal Money Market Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0821_2548",
+      "code": "PRINCIPAL PRMF",
+      "name": "Principal Protected Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0830_2547",
+      "code": "PRINCIPAL AARMF",
+      "name": "Principal Aggressive allocation Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0833_2553",
+      "code": "PRINCIPAL SET100RMF",
+      "name": "Principal SET100 Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0888_2555",
+      "code": "PRINCIPAL iPROPRMF",
+      "name": "Principal Property Income Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1142_2557",
+      "code": "PRINCIPAL APDIRMF",
+      "name": "Principal Asia Pacific Dynamic Income Equity Retirement Mutual Fund",
+      "amc": "Principal",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0359_2552",
+      "code": "X-EQRMF",
+      "name": "XSpringam Equity RMF",
+      "amc": "XSpring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0056_2545",
+      "code": "ES-EQRMF",
+      "name": "Eastspring Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0071_2544",
+      "code": "ES-GOVRMF",
+      "name": "Eastspring Government Bonds RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0078_2545",
+      "code": "ES-MMRMF",
+      "name": "Eastspring Money Market RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0120_2565",
+      "code": "ES-VIETNAMRMF",
+      "name": "Eastspring Vietnam Active Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0140_2564",
+      "code": "ES-GINNORMF",
+      "name": "Eastspring Global Innovation RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0221_2554",
+      "code": "ES-GOLDRMF-H",
+      "name": "Eastspring Gold Bullion RMF-Currency Hedged Fund",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0222_2554",
+      "code": "ES-GOLDRMF-UH",
+      "name": "Eastspring Gold Bullion RMF-Currency Unhedged Fund",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0253_2557",
+      "code": "ES-EGRMF",
+      "name": "Eastspring European Growth RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0258_2559",
+      "code": "ES-GINCOMERMF",
+      "name": "Eastspring Global Income RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0292_2562",
+      "code": "ES-SET50RMF2",
+      "name": "Eastspring SET50 Index RMF 2",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0327_2558",
+      "code": "ES-ASIARMF",
+      "name": "Eastspring Asia Active Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0328_2558",
+      "code": "ES-CORMF",
+      "name": "Eastspring China Opportunity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0329_2558",
+      "code": "ES-JERMF",
+      "name": "Eastspring Japan Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0330_2558",
+      "code": "ES-GQGRMF",
+      "name": "Eastspring Global Quality Growth RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0367_2558",
+      "code": "ES-HEALTHCARERMF",
+      "name": "Eastspring Global Healthcare RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0367_2564",
+      "code": "ES-STARTECHRMF",
+      "name": "Eastspring Star50 Chinese Technology RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0413_2568",
+      "code": "ES-DIV70THAIESGX",
+      "name": "Eastspring Dividend Stock 70 Thailand ESG Extra Fund",
+      "amc": "Eastspring",
+      "type": "ESGX",
+      "class": "ES-DIV70THAIESGX-68A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0419_2568",
+      "code": "ES-DIVTHAIESGX",
+      "name": "Eastspring Dividend Stock Thailand ESG Extra Fund",
+      "amc": "Eastspring",
+      "type": "ESGX",
+      "class": "ES-DIVTHAIESGX-68A",
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0422_2545",
+      "code": "ES-FIXEDRMF",
+      "name": "Eastspring General Fixed Income RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0424_2557",
+      "code": "ES-PIPFRMF",
+      "name": "Eastspring Property and Infrastructure Income Plus Flexible RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0489_2563",
+      "code": "ES-CHINAARMF",
+      "name": "Eastspring China A RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0525_2559",
+      "code": "ES-SMCAPRMF",
+      "name": "Eastspring Small Medium Cap Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0541_2559",
+      "code": "ES-ABRMF",
+      "name": "Eastspring Aggregate Bond RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0551_2563",
+      "code": "ES-GCGRMF",
+      "name": "Eastspring Global Capital Growth RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0564_2565",
+      "code": "ES-INDONESIA-RMF",
+      "name": "EASTSPRING Indonesia Active Equity Retirement Mutual Fund",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0576_2553",
+      "code": "ES-BRMF",
+      "name": "Eastspring Bond RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0602_2546",
+      "code": "ES-SET50RMF",
+      "name": "Eastspring SET50 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0605_2546",
+      "code": "ES-MRMF",
+      "name": "Eastspring Money RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0648_2560",
+      "code": "ES-EAERMF",
+      "name": "Eastspring Emerging Active Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0650_2560",
+      "code": "ES-GPROPRMF",
+      "name": "Eastspring Global Property RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0659_2547",
+      "code": "ES-MIXEDRMF",
+      "name": "Eastspring Mixed RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0669_2567",
+      "code": "ES-GAINCOMERMF",
+      "name": "EASTSPRING Global Multi Asset Income RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0681_2556",
+      "code": "ES-GLOBALEQRMF",
+      "name": "Eastspring Global Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0791_2568",
+      "code": "ES-ULTIMATE GA1RMF",
+      "name": "Eastspring Ultimate Global Allocation Fund 1 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0819_2555",
+      "code": "ES-LOWBETARMF",
+      "name": "Eastspring Low Beta RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0833_2568",
+      "code": "ES-INDAERMF",
+      "name": "Eastspring India Active Equity RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0872_2547",
+      "code": "ES-JB25RMF",
+      "name": "Eastspring JUMBO 25 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0873_2568",
+      "code": "ES-ULTIMATE GA2RMF",
+      "name": "Eastspring Ultimate Global Allocation Fund 2 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0874_2568",
+      "code": "ES-ULTIMATE GA3RMF",
+      "name": "Eastspring Ultimate Global Allocation Fund 3 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0970_2553",
+      "code": "ES-GRMF",
+      "name": "Eastspring Global Bond RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0987_2567",
+      "code": "ES-TECHRMF",
+      "name": "Eastspring Global Prime Technology RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M0989_2555",
+      "code": "ES-US500RMF",
+      "name": "Eastspring US500 RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    },
+    {
+      "proj_id": "M1034_2553",
+      "code": "ES-GOLDSRMF",
+      "name": "Eastspring Gold Singapore RMF",
+      "amc": "Eastspring",
+      "type": "RMF",
+      "class": null,
+      "riskLevel": 0
+    }
+  ]
+}
