@@ -1,44 +1,26 @@
-import { readFileSync, existsSync } from 'fs';
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cron from 'node-cron';
+import config from './config.js';
+import { FileFundStoreAdapter } from './fund-store.js';
 import { scrapeData } from './scraper.js';
-
-// Load .env if present (checks parent directory first, then local directory)
-const envPaths = [
-  fileURLToPath(new URL('../.env', import.meta.url)),
-  fileURLToPath(new URL('.env', import.meta.url))
-];
-
-for (const envPath of envPaths) {
-  if (existsSync(envPath)) {
-    for (const line of readFileSync(envPath, 'utf8').split('\n')) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) continue;
-      const eq = trimmed.indexOf('=');
-      if (eq === -1) continue;
-      const key = trimmed.slice(0, eq).trim();
-      const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
-      if (key && !process.env[key]) process.env[key] = val;
-    }
-    break; // Load first valid .env found
-  }
-}
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { HttpSecAdapter } from './sec-api-connector.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-const DATA_DIR = path.join(__dirname, 'data');
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const PORT = config.server.port;
+const store = new FileFundStoreAdapter();
+const connector = new HttpSecAdapter(
+  config.sec.factsheetKey,
+  config.sec.dailyInfoKey,
+  {
+    factsheetKey2: config.sec.factsheetKey2,
+    dailyInfoKey2: config.sec.dailyInfoKey2,
+  }
+);
 
 // CORS Configuration - Restrict in production
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || '*', // Set CORS_ORIGIN in production
+  origin: config.server.corsOrigin,
   optionsSuccessStatus: 200
 };
 
@@ -56,41 +38,9 @@ app.use((req, res, next) => {
 });
 
 // Ensure data directory exists
-await fs.mkdir(DATA_DIR, { recursive: true });
+await store.ensureDataDir();
 
-/**
- * Check if cached data is still valid (less than 24 hours old)
- */
-function isCacheValid(timestamp) {
-  if (!timestamp) return false;
-  const age = Date.now() - timestamp;
-  return age < CACHE_DURATION;
-}
-
-/**
- * Get cached data or return null
- */
-async function getCachedData(filename) {
-  try {
-    const filePath = path.join(DATA_DIR, filename);
-    const data = await fs.readFile(filePath, 'utf-8');
-    const parsed = JSON.parse(data);
-
-    if (isCacheValid(parsed.timestamp)) {
-      console.log(`Using valid cache for ${filename}`);
-      return parsed;
-    } else {
-      console.log(`Cache expired for ${filename}`);
-      return null;
-    }
-  } catch (error) {
-    console.log(`No cache found for ${filename}:`, error.message);
-    return null;
-  }
-}
-
-// Active fund types — to add a new type: add its key here (must match scraper FUND_TYPES)
-// and ensure the scraper writes {type}.json to the data directory.
+// Active fund types — to add a new type: add its key here
 const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'all']);
 
 // Backward-compat aliases — must be before /:type or Express shadows them
@@ -109,7 +59,7 @@ app.get('/api/funds/:type', async (req, res) => {
   }
   try {
     console.log(`GET /api/funds/${type}`);
-    const cached = await getCachedData(`${type}.json`);
+    const cached = await store.getFunds(type);
     if (cached) return res.json({ success: true, cached: true, ...cached });
     return res.status(503).json({
       success: false,
@@ -124,14 +74,11 @@ app.get('/api/funds/:type', async (req, res) => {
 
 /**
  * Manually trigger scraping.
- * Requires the SCRAPE_TOKEN env var to match the X-Scrape-Token header (or
- * the ?token= query param). Falls back to allowing the request if no token is
- * configured (dev mode), but logs a warning.
  */
 app.post('/api/scrape', async (req, res) => {
   try {
     // ── Auth check ────────────────────────────────────────────────────────────
-    const configuredToken = process.env.SCRAPE_TOKEN;
+    const configuredToken = config.server.scrapeToken;
     const providedToken   = req.headers['x-scrape-token'] || req.query.token;
 
     if (configuredToken) {
@@ -144,18 +91,18 @@ app.post('/api/scrape', async (req, res) => {
 
     // ── Cache check (skip with ?force=true) ──────────────────────────────────
     if (req.query.force !== 'true') {
-      const cached = await getCachedData('all.json');
+      const cached = await store.getFunds('all', true);
       if (cached) {
         return res.json({
           success: true,
           message: 'Cache is still valid. Use ?force=true to scrape anyway.',
-          nextScrapeIn: CACHE_DURATION - (Date.now() - cached.timestamp),
+          nextScrapeIn: config.storage.cacheDurationMs - (Date.now() - cached.timestamp),
         });
       }
     }
 
     console.log('POST /api/scrape – manual scrape triggered');
-    const result = await scrapeData();
+    const result = await scrapeData(connector, store);
     res.json({ success: true, message: 'Scrape completed.', data: result });
   } catch (error) {
     console.error('Manual scrape error:', error);
@@ -168,12 +115,7 @@ app.post('/api/scrape', async (req, res) => {
  */
 app.delete('/api/registry', async (req, res) => {
   try {
-    const registryPath = path.join(DATA_DIR, 'fund-registry.json');
-    const progressPath = path.join(DATA_DIR, '.registry-progress.json');
-    await Promise.all([
-      fs.rm(registryPath, { force: true }),
-      fs.rm(progressPath, { force: true }),
-    ]);
+    await store.clearRegistry();
     res.json({ success: true, message: 'Fund registry and progress checkpoint cleared. Next scrape will rebuild it.' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -185,41 +127,8 @@ app.delete('/api/registry', async (req, res) => {
  */
 app.get('/api/health', async (req, res) => {
   try {
-    const [rmfCache, esgCache, esgxCache, ssfCache, etfCache] = await Promise.all([
-      getCachedData('rmf.json'),
-      getCachedData('esg.json'),
-      getCachedData('esgx.json'),
-      getCachedData('ssf.json'),
-      getCachedData('etf.json'),
-    ]);
-
-    let registry = null;
-    try {
-      const reg = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'fund-registry.json'), 'utf8'));
-      registry = { funds: reg.funds?.length ?? 0, lastBuilt: new Date(reg.timestamp).toISOString() };
-    } catch { /* no registry yet */ }
-
-    const cacheInfo = (c) => c
-      ? { valid: true, funds: c.data?.length ?? 0, lastUpdated: new Date(c.timestamp).toISOString() }
-      : { valid: false };
-
-    res.json({
-      status: 'ok',
-      secApi: {
-        factsheetKey:  !!process.env.SEC_FACTSHEET_KEY,
-        factsheetKey2: !!process.env.SEC_FACTSHEET_KEY_2,
-        dailyInfoKey:  !!process.env.SEC_DAILYINFO_KEY,
-        dailyInfoKey2: !!process.env.SEC_DAILYINFO_KEY_2,
-      },
-      registry,
-      cache: {
-        rmf:  cacheInfo(rmfCache),
-        esg:  cacheInfo(esgCache),
-        esgx: cacheInfo(esgxCache),
-        ssf:  cacheInfo(ssfCache),
-        etf:  cacheInfo(etfCache),
-      },
-    });
+    const health = await store.getHealth();
+    res.json(health);
   } catch (error) {
     res.status(500).json({ status: 'error', error: error.message });
   }
@@ -230,34 +139,18 @@ app.get('/api/health', async (req, res) => {
  */
 app.get('/api/stats', async (req, res) => {
   try {
-    const [rmf, esg, esgx, ssf, etf] = await Promise.all([
-      getCachedData('rmf.json'),
-      getCachedData('esg.json'),
-      getCachedData('esgx.json'),
-      getCachedData('ssf.json'),
-      getCachedData('etf.json'),
-    ]);
-
-    res.json({
-      success: true,
-      stats: {
-        rmf:  rmf?.data?.length  || 0,
-        esg:  esg?.data?.length  || 0,
-        esgx: esgx?.data?.length || 0,
-        ssf:  ssf?.data?.length  || 0,
-        etf:  etf?.data?.length  || 0,
-      },
-    });
+    const stats = await store.getStats();
+    res.json(stats);
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// Schedule daily scraping at 1 AM
-cron.schedule('0 1 * * *', async () => {
-  console.log('Running scheduled scrape at 1 AM...');
+// Schedule daily scraping at 6:30 PM
+cron.schedule('30 18 * * *', async () => {
+  console.log('Running scheduled scrape at 6:30 PM...');
   try {
-    await scrapeData();
+    await scrapeData(connector, store);
     console.log('Scheduled scrape completed successfully');
   } catch (error) {
     console.error('Scheduled scrape failed:', error);
@@ -266,11 +159,11 @@ cron.schedule('0 1 * * *', async () => {
 
 // Start server
 app.listen(PORT, () => {
-  const hasFs    = !!process.env.SEC_FACTSHEET_KEY;
-  const hasFs2   = !!process.env.SEC_FACTSHEET_KEY_2;
-  const hasDi    = !!process.env.SEC_DAILYINFO_KEY;
-  const hasDi2   = !!process.env.SEC_DAILYINFO_KEY_2;
-  const hasToken = !!process.env.SCRAPE_TOKEN;
+  const hasFs    = !!config.sec.factsheetKey;
+  const hasFs2   = !!config.sec.factsheetKey2;
+  const hasDi    = !!config.sec.dailyInfoKey;
+  const hasDi2   = !!config.sec.dailyInfoKey2;
+  const hasToken = !!config.server.scrapeToken;
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`SEC Factsheet API: primary ${hasFs ? '✓' : '✗ MISSING'}  secondary ${hasFs2 ? '✓' : '–'}`);
   console.log(`SEC Daily Info API: primary ${hasDi ? '✓' : '✗ MISSING'}  secondary ${hasDi2 ? '✓' : '–'}`);
@@ -287,7 +180,7 @@ app.listen(PORT, () => {
   console.log(`  DELETE /api/registry    - Reset fund registry cache`);
   console.log(`  GET    /api/health      - Health check`);
   console.log(`  GET    /api/stats       - Fund counts`);
-  console.log(`\nScheduled scraping: Daily at 1 AM`);
+  console.log(`\nScheduled scraping: Daily at 6:30 PM`);
   console.log(`Cache duration: 24 hours | Registry TTL: 7 days`);
 });
 

@@ -8,7 +8,7 @@ The system is structured as a multi-container Docker Compose application consist
 
 - **Frontend Builder (Vite + React)**: A one-shot node:24-alpine service that builds the frontend React single-page application (SPA) using Vite and outputs static files to a shared volume (`frontend_dist`). It exits cleanly once compilation completes.
 - **Nginx Gateway (Reverse Proxy)**: Acts as the single entry point (port 8091). Serves the compiled static frontend files and proxies API requests `/api/*` to the backend Express server. Includes gzip compression and client-side caching configurations.
-- **Backend Service (Node.js + Express)**: An internal Express API server running on port 3001 (not exposed directly to the host). It serves the cached fund data, runs a daily cron job at 1:00 AM to fetch NAV updates, and provides a protected endpoint to trigger manual scrapes.
+- **Backend Service (Node.js + Express)**: An internal Express API server running on port 3001 (not exposed directly to the host). It serves the cached fund data, runs a daily cron job at 6:30 PM to fetch NAV updates, and provides a protected endpoint to trigger manual scrapes.
 - **SEC Thailand Open Data API v2**: The official external API endpoints (`api.sec.or.th`) from which the backend gathers all mutual fund data.
 
 ```mermaid
@@ -37,7 +37,7 @@ sequenceDiagram
     end
     
     rect rgb(245, 245, 245)
-    Note over Backend, SEC: Phase 2: Daily NAV & Performance (Daily at 1 AM)
+    Note over Backend, SEC: Phase 2: Daily NAV & Performance (Daily at 6:30 PM)
     Backend->>Backend: Load data/fund-registry.json
     Backend->>SEC: GET /v2/fund/daily-info/nav (NAV, AUM, offering/redemption)
     Backend->>SEC: GET /v2/fund/factsheet/performance (YTD & returns)
@@ -57,7 +57,7 @@ sequenceDiagram
   5. Caches the deduplicated result in `data/fund-registry.json`.
 
 ### 2. Phase 2 — Daily NAV Fetch (Daily)
-- **TTL**: 24 hours (run automatically by backend cron job daily at 01:00 AM server time).
+- **TTL**: 24 hours (run automatically by backend cron job daily at 06:30 PM server time).
 - **Purpose**: Fetches daily Net Asset Value (NAV), Assets Under Management (AUM), offering/redemption prices, and YTD / multi-year performance.
 - **Mechanism**:
   1. Reads `data/fund-registry.json`.

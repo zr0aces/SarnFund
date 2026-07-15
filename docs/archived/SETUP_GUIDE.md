@@ -171,7 +171,7 @@ cd backend && npm run scrape
 
 ### Automatic scraping
 
-The backend cron job runs daily at **01:00 AM** (server local time) and refreshes the NAV cache. Registry is only rebuilt if older than 7 days.
+The backend cron job runs daily at **06:30 PM** (Asia/Bangkok timezone) and refreshes the NAV cache. Registry is only rebuilt if older than 7 days.
 
 ---
 

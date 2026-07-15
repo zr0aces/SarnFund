@@ -180,7 +180,7 @@ loadRegistry()
 |------|---------|
 | `backend/sec-api-connector.js` | All SEC API calls: `_get`, `_post`, rate limiter, `numVal`, `matchesFundType`, `runBatched` |
 | `backend/scraper.js` | Two-phase scrape logic; fund registry; NAV + performance fetch |
-| `backend/server.js` | Express routes, cron (01:00 AM daily), inline `.env` loader (checks root/local paths) |
+| `backend/server.js` | Express routes, cron (06:30 PM daily), inline `.env` loader (checks root/local paths) |
 | `backend/init-data.js` | Seeds initial data (called by `npm run init`) |
 | `.env.example` | Template for all required and optional env vars at root level |
 | `nginx/default.conf` | Nginx routing: static files + `/api/` proxy + gzip + asset caching |

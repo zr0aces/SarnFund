@@ -59,7 +59,7 @@ SarnFund/
 
 ## Data Flow
 
-1. **Scheduled Scraping:** Daily at 1 AM, node-cron triggers data collection
+1. **Scheduled Scraping:** Daily at 6:30 PM, node-cron triggers data collection
 2. **API Fetching:** `refetch_funds_v2.sh` uses curl to fetch JSON from SET Trade API
 3. **Data Processing:** `scraper.js` normalizes AMC names and transforms data structure
 4. **Caching:** Processed data saved to `backend/data/` as JSON files (24-hour TTL)
@@ -270,7 +270,7 @@ docker-compose down
 
 1. Update cron expression in `backend/server.js`
 2. Format: `'second minute hour day month weekday'`
-3. Example: `'0 1 * * *'` = Daily at 1 AM
+3. Example: `'30 18 * * *'` = Daily at 6:30 PM
 
 ## Troubleshooting
 

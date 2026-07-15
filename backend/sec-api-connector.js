@@ -99,7 +99,7 @@ class RateLimiter {
   }
 }
 
-export class SecApiClient {
+class SecApiClient {
   /**
    * @param {string} factsheetKey  – Fund General Info / Factsheet API primary key
    * @param {string} dailyInfoKey  – Fund Daily Info API primary key
@@ -147,7 +147,7 @@ export class SecApiClient {
       }
       throw err;
     } finally {
-      clearTimeout(timeoutId);
+      timeoutId && clearTimeout(timeoutId);
     }
 
     if (res.status === 204) return null;
@@ -313,9 +313,25 @@ export class SecApiClient {
    *   last_upd_date
    * }
    */
-  getDailyNav(projId, navDate, fundClass = null) {
-    const params = { proj_id: projId, start_nav_date: navDate, end_nav_date: navDate };
-    if (fundClass && fundClass !== 'main') params.fund_class_name = fundClass;
+  getDailyNav(projId, startNavDate, endNavDate = null, fundClass = null) {
+    let actualEnd = endNavDate;
+    let actualClass = fundClass;
+
+    // Support flexible signature: if third arg is not a date, it is the fundClass
+    if (endNavDate && !/^\d{4}-\d{2}-\d{2}$/.test(endNavDate)) {
+      actualEnd = startNavDate;
+      actualClass = endNavDate;
+    } else if (!endNavDate) {
+      actualEnd = startNavDate;
+    }
+
+    const params = {
+      proj_id: projId,
+      start_nav_date: startNavDate,
+      end_nav_date: actualEnd
+    };
+    if (actualClass && actualClass !== 'main') params.fund_class_name = actualClass;
+
     return this._getAllPages(
       `${BASE_URL}/v2/fund/daily-info/nav`,
       params,
@@ -344,14 +360,29 @@ export class SecApiClient {
    * @param {string} [fundClass] – pass fund_class_name from registry to filter multi-class results
    */
   async getLatestNav(projId, maxDaysBack = 5, fundClass = null) {
-    for (let i = 0; i < maxDaysBack; i++) {
-      const dateStr = thaiDateStr(i);
-      const items = await this.getDailyNav(projId, dateStr, fundClass);
-      if (Array.isArray(items) && items.length > 0) {
-        const nav = items[0];
-        if (nav.last_val != null && nav.last_val !== '-' && numVal(nav.last_val) > 0) {
-          return { nav, navDate: nav.nav_date || dateStr };
-        }
+    const startDateStr = thaiDateStr(maxDaysBack - 1);
+    const endDateStr = thaiDateStr(0);
+
+    let items = await this.getDailyNav(projId, startDateStr, endDateStr, fundClass);
+
+    // Fallback: If no items found for the specific class, try without class filter
+    if ((!items || items.length === 0) && fundClass) {
+      items = await this.getDailyNav(projId, startDateStr, endDateStr, null);
+    }
+
+    if (Array.isArray(items) && items.length > 0) {
+      const validItems = items.filter(
+        (nav) => nav.last_val != null && nav.last_val !== '-' && numVal(nav.last_val) > 0
+      );
+
+      if (validItems.length > 0) {
+        // Sort by nav_date descending to get the latest entry
+        validItems.sort((a, b) => b.nav_date.localeCompare(a.nav_date));
+        const nav = validItems[0];
+        return {
+          nav,
+          navDate: nav.nav_date
+        };
       }
     }
     return null;
@@ -415,3 +446,50 @@ export async function runBatched(tasks, concurrency = 5) {
   }
   return results;
 }
+
+function parsePerformanceV2(rows) {
+  const out = { ytd: 0, month_3: 0, month_6: 0, year_1: 0, year_3: 0, year_5: 0 };
+  for (const row of rows || []) {
+    const typeDesc = row.performance_type_desc || '';
+    if (!/ผลตอบแทนกองทุนรวม|Fund Return/i.test(typeDesc)) continue;
+
+    const p = row.reference_period || '';
+    const v = numVal(row.performance_value);
+    if (/ytd|ต้นปี|year.to.date/i.test(p))        out.ytd     = v;
+    else if (/3\s*(m|month|เดือน)/i.test(p))       out.month_3 = v;
+    else if (/6\s*(m|month|เดือน)/i.test(p))       out.month_6 = v;
+    else if (/^1\s*(y|year|ปี)/i.test(p))          out.year_1  = v;
+    else if (/3\s*(y|year|ปี)/i.test(p))           out.year_3  = v;
+    else if (/5\s*(y|year|ปี)/i.test(p))           out.year_5  = v;
+  }
+  return out;
+}
+
+// Concrete adapter for SecConnector interface
+export class HttpSecAdapter {
+  constructor(factsheetKey, dailyInfoKey, opts = {}) {
+    this._client = new SecApiClient(factsheetKey, dailyInfoKey, opts);
+  }
+
+  async getAmcList() {
+    return this._client.getAmcList();
+  }
+
+  async getFundProfiles(companyUniqueId, fundStatus) {
+    return this._client.getFundProfiles({ company_info: companyUniqueId, fund_status: fundStatus });
+  }
+
+  async getSpecifications(projId) {
+    return this._client.getFundSpecifications(projId);
+  }
+
+  async getLatestNav(projId, maxDaysBack = 15, fundClass = null) {
+    return this._client.getLatestNav(projId, maxDaysBack, fundClass);
+  }
+
+  async getFundPerformance(projId) {
+    const rows = await this._client.getFundPerformance(projId);
+    return parsePerformanceV2(rows);
+  }
+}
+

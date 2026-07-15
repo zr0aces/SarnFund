@@ -8,7 +8,7 @@ Express API server that fetches Thai mutual fund data from the **SEC Thailand Op
 |------|---------|
 | `sec-api-connector.js` | SEC API client — rate limiting, primary/secondary key failover, all endpoints, `numVal` helper |
 | `scraper.js` | Two-phase scrape: fund registry build + daily NAV fetch |
-| `server.js` | Express routes, cron scheduler (01:00 AM daily), inline `.env` loader (checks root/local paths) |
+| `server.js` | Express routes, cron scheduler (06:30 PM daily), inline `.env` loader (checks root/local paths) |
 | `init-data.js` | Seed script for empty cache files |
 
 ## Setup
@@ -73,7 +73,7 @@ Secondary keys are optional but enable zero-downtime key rotation: if the primar
 | `data/ssf.json` | 24 h | Latest SSF NAV + performance |
 | `data/all.json` | 24 h | Combined snapshot |
 
-Daily scrape runs automatically at **01:00 AM** via `node-cron`.
+Daily scrape runs automatically at **06:30 PM** (Asia/Bangkok timezone) via `node-cron`.
 
 ## Rate limiting
 

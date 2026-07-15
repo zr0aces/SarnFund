@@ -4,13 +4,7 @@
  * This ensures the backend is healthy even before first scrape
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, 'data');
+import { FileFundStoreAdapter } from './fund-store.js';
 
 // Sample RMF data (subset from frontend mock data)
 const RMF_INITIAL_DATA = [
@@ -49,32 +43,24 @@ const ETF_INITIAL_DATA = [
 async function initializeData() {
   console.log('Initializing SarnFund backend seed data...');
   
-  // Create data directory
-  await fs.mkdir(DATA_DIR, { recursive: true });
+  const store = new FileFundStoreAdapter();
+  await store.ensureDataDir();
   console.log('✓ Data directory verified/created');
   
   const timestamp = Date.now();
   const selectedAMCs = ['KKP', 'Krungsri', 'BBL', 'TISCO', 'SCB', 'ONE'];
   
   const filesToCreate = [
-    { name: 'rmf.json', data: RMF_INITIAL_DATA },
-    { name: 'esg.json', data: ESG_INITIAL_DATA },
-    { name: 'esgx.json', data: ESGX_INITIAL_DATA },
-    { name: 'ssf.json', data: SSF_INITIAL_DATA },
-    { name: 'etf.json', data: ETF_INITIAL_DATA }
+    { name: 'rmf', data: RMF_INITIAL_DATA },
+    { name: 'esg', data: ESG_INITIAL_DATA },
+    { name: 'esgx', data: ESGX_INITIAL_DATA },
+    { name: 'ssf', data: SSF_INITIAL_DATA },
+    { name: 'etf', data: ETF_INITIAL_DATA }
   ];
 
   for (const file of filesToCreate) {
-    const wrapper = {
-      timestamp,
-      selectedAMCs,
-      data: file.data
-    };
-    await fs.writeFile(
-      path.join(DATA_DIR, file.name),
-      JSON.stringify(wrapper, null, 2)
-    );
-    console.log(`   ✓ Created ${file.name} with ${file.data.length} items`);
+    await store.saveFunds(file.name, file.data, { selectedAMCs });
+    console.log(`   ✓ Created ${file.name}.json with ${file.data.length} items`);
   }
   
   // Create combined data file (all.json)
@@ -90,10 +76,7 @@ async function initializeData() {
       etf: ETF_INITIAL_DATA
     }
   };
-  await fs.writeFile(
-    path.join(DATA_DIR, 'all.json'),
-    JSON.stringify(allData, null, 2)
-  );
+  await store.saveAllFundsCombined(allData);
   console.log('✓ Created all.json snapshot');
   
   console.log('\n✅ Backend data initialized successfully!');
