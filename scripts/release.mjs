@@ -25,29 +25,54 @@ const SYNC_SCRIPT = path.join(ROOT_DIR, 'scripts', 'sync-version.mjs');
 
 async function main() {
   const args = process.argv.slice(2);
+
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+CalVer Release Management (release.mjs)
+
+Usage:
+  node scripts/release.mjs                     # Bumps version based on CalVer rules & syncs manifests
+  node scripts/release.mjs --version <val>     # Manually set version (alias: -v <val>)
+  node scripts/release.mjs --tag               # Create git commit and tag
+  node scripts/release.mjs --build             # Run docker compose build with APP_VERSION
+  node scripts/release.mjs --help (-h)         # Display this help menu
+`);
+    process.exit(0);
+  }
+
   const tagMode = args.includes('--tag');
   const buildMode = args.includes('--build');
 
-  // Find target version argument (non-flag)
-  const versionArg = args.find(arg => !arg.startsWith('--'));
+  // Find target version argument (--version <val>, -v <val>, or positional arg)
+  let versionOverride;
+  const vFlagIdx = args.findIndex(a => a === '--version' || a === '-v');
+  if (vFlagIdx !== -1 && args[vFlagIdx + 1]) {
+    versionOverride = args[vFlagIdx + 1];
+  } else {
+    versionOverride = args.find(arg => !arg.startsWith('-'));
+  }
 
   let newVersion;
 
-  if (versionArg) {
-    // Strip leading 'v' if present (e.g. v2026.6.3 -> 2026.6.3)
-    const cleanVersion = versionArg.startsWith('v') ? versionArg.slice(1) : versionArg;
+  if (versionOverride) {
+    // Strip leading 'v' if present (e.g. v2026.7.3 -> 2026.7.3)
+    const cleanVersion = versionOverride.startsWith('v') ? versionOverride.slice(1) : versionOverride;
     const calVerRegex = /^\d{4}\.(1[0-2]|[1-9])\.\d+$/;
     if (!calVerRegex.test(cleanVersion)) {
-      console.error(`ERROR: Provided version "${versionArg}" is not a valid CalVer YYYY.M.MINOR (e.g., 2026.6.3)`);
+      console.error(`ERROR: Provided version "${versionOverride}" is not a valid CalVer YYYY.M.MINOR (e.g., 2026.7.3)`);
       process.exit(1);
     }
     newVersion = cleanVersion;
     console.log(`Bumping to explicitly provided version: ${newVersion}`);
   } else {
-    // 1. Read and validate current VERSION
+    // 1. Read and validate current VERSION (or bootstrap if missing)
     if (!existsSync(VERSION_FILE)) {
-      console.error(`ERROR: VERSION file not found at ${VERSION_FILE}`);
-      process.exit(1);
+      const now = new Date();
+      const sysYear = now.getFullYear();
+      const sysMonth = now.getMonth() + 1;
+      const initialVersion = `${sysYear}.${sysMonth}.1`;
+      console.log(`VERSION file not found. Bootstrapping initial CalVer VERSION: ${initialVersion}`);
+      await fs.writeFile(VERSION_FILE, initialVersion + '\n');
     }
 
     const rawVersion = (await fs.readFile(VERSION_FILE, 'utf8')).trim();
