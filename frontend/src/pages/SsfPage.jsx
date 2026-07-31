@@ -1,15 +1,15 @@
-import { Leaf } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
-import { INITIAL_SSF, AMC_COLORS_SSF } from '../data/funds';
+import { FUND_CATEGORIES, getAmcColorMap } from '../config/fundCategories';
 
 const SsfPage = () => {
+    const cat = FUND_CATEGORIES.ssf;
     return (
         <DashboardLayout
-            title="SSF Dashboard"
-            icon={Leaf}
+            title={cat.title}
+            icon={cat.icon}
             fundType="ssf"
-            AMC_COLORS={AMC_COLORS_SSF}
-            initialMockData={INITIAL_SSF}
+            AMC_COLORS={getAmcColorMap('ssf')}
+            initialMockData={[]}
         />
     );
 };

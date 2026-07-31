@@ -1,15 +1,15 @@
 import DashboardLayout from '../components/DashboardLayout';
-import { Trophy } from 'lucide-react';
-import { AMC_COLORS_RMF, INITIAL_RMF } from '../data/funds';
+import { FUND_CATEGORIES, getAmcColorMap } from '../config/fundCategories';
 
 const RmfPage = () => {
+    const cat = FUND_CATEGORIES.rmf;
     return (
         <DashboardLayout
-            title="RMF Dashboard"
-            icon={Trophy}
+            title={cat.title}
+            icon={cat.icon}
             fundType="rmf"
-            AMC_COLORS={AMC_COLORS_RMF}
-            initialMockData={INITIAL_RMF}
+            AMC_COLORS={getAmcColorMap('rmf')}
+            initialMockData={[]}
         />
     );
 };

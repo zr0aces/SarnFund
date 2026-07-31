@@ -1,15 +1,15 @@
 import DashboardLayout from '../components/DashboardLayout';
-import { Leaf } from 'lucide-react';
-import { AMC_COLORS_ESG, INITIAL_ESG } from '../data/funds';
+import { FUND_CATEGORIES, getAmcColorMap } from '../config/fundCategories';
 
 const ThaiEsgPage = () => {
+    const cat = FUND_CATEGORIES.esg;
     return (
         <DashboardLayout
-            title="ThaiESG Dashboard"
-            icon={Leaf}
+            title={cat.title}
+            icon={cat.icon}
             fundType="esg"
-            AMC_COLORS={AMC_COLORS_ESG}
-            initialMockData={INITIAL_ESG}
+            AMC_COLORS={getAmcColorMap('esg')}
+            initialMockData={[]}
         />
     );
 };

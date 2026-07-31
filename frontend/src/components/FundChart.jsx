@@ -4,7 +4,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => {
 
     const chartData = useMemo(() => {
-        // Filter out funds with undefined metrics for the chart to avoid errors
         const metric = showNewOnly ? 'ytd' : sortBy;
         const validFunds = funds.filter(f => f[metric] !== undefined);
 
@@ -19,24 +18,50 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
     if (chartData.length === 0) return null;
 
     return (
-        <div className="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-transparent mb-6 font-sans">
-            <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg font-display font-bold text-slate-800">
-                    Top 10 <span className="text-slate-400 font-sans font-normal text-xs">({showNewOnly ? 'YTD' : getSortLabel(sortBy)})</span>
+        <div className="glass-panel rounded-3xl p-5 sm:p-6 mb-8 font-sans">
+            <div className="flex justify-between items-center mb-5">
+                <h3 className="text-base sm:text-lg font-display font-extrabold text-white flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    Top 10 Performance Radar
+                    <span className="text-slate-400 font-mono font-normal text-xs ml-1">
+                        ({showNewOnly ? 'YTD' : getSortLabel(sortBy)})
+                    </span>
                 </h3>
             </div>
-            <div className="h-48 sm:h-64 lg:h-80 w-full">
+            <div className="h-56 sm:h-72 lg:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 16, left: 8, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                        <XAxis type="number" unit="%" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 10, fontFamily: 'Kanit' }} />
-                        <YAxis dataKey="name" type="category" width={90} axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 10, fontWeight: 500, fontFamily: 'Kanit' }} />
+                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 24, left: 10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255, 255, 255, 0.08)" />
+                        <XAxis 
+                            type="number" 
+                            unit="%" 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fill: '#94A3B8', fontSize: 11, fontFamily: 'JetBrains Mono' }} 
+                        />
+                        <YAxis 
+                            dataKey="name" 
+                            type="category" 
+                            width={100} 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fill: '#E2E8F0', fontSize: 11, fontWeight: 600, fontFamily: 'Kanit' }} 
+                        />
                         <Tooltip
-                            cursor={{ fill: '#f1f5f9' }}
-                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'Prompt' }}
+                            cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }}
+                            contentStyle={{ 
+                                backgroundColor: 'rgba(15, 22, 38, 0.95)', 
+                                backdropFilter: 'blur(12px)',
+                                borderRadius: '16px', 
+                                border: '1px solid rgba(255, 255, 255, 0.15)', 
+                                boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.5)',
+                                color: '#F8FAFC',
+                                fontFamily: 'Prompt',
+                                padding: '10px 14px'
+                            }}
                             formatter={(value) => [`${value.toFixed(2)}%`, `Return`]}
                         />
-                        <Bar dataKey="return" radius={[0, 4, 4, 0]} barSize={28}>
+                        <Bar dataKey="return" radius={[0, 6, 6, 0]} barSize={26}>
                             {chartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={AMC_COLORS[entry.amc] || AMC_COLORS['All']} />
                             ))}

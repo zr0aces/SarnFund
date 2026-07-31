@@ -1,15 +1,15 @@
 import DashboardLayout from '../components/DashboardLayout';
-import { Sprout } from 'lucide-react';
-import { AMC_COLORS_ESGX, INITIAL_ESGX } from '../data/funds';
+import { FUND_CATEGORIES, getAmcColorMap } from '../config/fundCategories';
 
 const ThaiEsgXPage = () => {
+    const cat = FUND_CATEGORIES.esgx;
     return (
         <DashboardLayout
-            title="ThaiESGX Dashboard"
-            icon={Sprout}
+            title={cat.title}
+            icon={cat.icon}
             fundType="esgx"
-            AMC_COLORS={AMC_COLORS_ESGX}
-            initialMockData={INITIAL_ESGX}
+            AMC_COLORS={getAmcColorMap('esgx')}
+            initialMockData={[]}
         />
     );
 };

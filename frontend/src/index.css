@@ -1,22 +1,84 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Kanit', system-ui, -apple-system, sans-serif;
+  --font-display: 'Prompt', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --color-obsidian-base: #090d16;
+  --color-obsidian-card: #0f1626;
+  --color-obsidian-border: rgba(255, 255, 255, 0.08);
+  --color-emerald-neon: #00f5a0;
+  --color-cyan-neon: #38bdf8;
+  --color-amber-neon: #fbbf24;
+}
 
 @layer base {
   body {
-    @apply antialiased text-slate-800 bg-gray-50;
+    @apply antialiased text-slate-100 bg-[#090D16] font-sans selection:bg-emerald-500/30 selection:text-emerald-200;
   }
 }
 
 @layer utilities {
-  .bg-grid-pattern {
-    background-size: 32px 32px;
+  .bg-telemetry-grid {
+    background-size: 40px 40px;
     background-image: 
-      linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  .bg-radial-mesh {
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 245, 160, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(56, 189, 248, 0.05), transparent),
+      radial-gradient(ellipse 50% 30% at 10% 90%, rgba(249, 115, 22, 0.05), transparent);
+  }
+
+  .glass-panel {
+    background: rgba(15, 22, 38, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-panel-hover {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-panel-hover:hover {
+    background: rgba(22, 32, 53, 0.85);
+    border-color: rgba(255, 255, 255, 0.16);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(0, 245, 160, 0.05);
+  }
+
+  .glass-header {
+    background: rgba(9, 13, 22, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .telemetry-glow-emerald {
+    box-shadow: 0 0 25px -5px rgba(0, 245, 160, 0.15);
+  }
+  .telemetry-glow-orange {
+    box-shadow: 0 0 25px -5px rgba(249, 115, 22, 0.15);
+  }
+  .telemetry-glow-cyan {
+    box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.15);
+  }
+  .telemetry-glow-purple {
+    box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.15);
+  }
+  .telemetry-glow-amber {
+    box-shadow: 0 0 25px -5px rgba(251, 191, 36, 0.15);
   }
 }
 
 @keyframes sparkline-draw {
+  from {
+    stroke-dashoffset: 200;
+  }
   to {
     stroke-dashoffset: 0;
   }
@@ -25,29 +87,38 @@
 .animate-sparkline {
   stroke-dasharray: 200;
   stroke-dashoffset: 200;
-  animation: sparkline-draw 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: sparkline-draw 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Hide scrollbar while keeping scroll functionality */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.96); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Scrollbar customization */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Custom subtle scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
+  height: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(15, 22, 38, 0.5);
+  border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(0, 245, 160, 0.4);
 }
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) rgba(15, 22, 38, 0.5);
 }
-

@@ -1,15 +1,15 @@
 import DashboardLayout from '../components/DashboardLayout';
-import { TrendingUp } from 'lucide-react';
-import { AMC_COLORS_ETF, INITIAL_ETF } from '../data/funds';
+import { FUND_CATEGORIES, getAmcColorMap } from '../config/fundCategories';
 
 const EtfPage = () => {
+    const cat = FUND_CATEGORIES.etf;
     return (
         <DashboardLayout
-            title="ETF Dashboard"
-            icon={TrendingUp}
+            title={cat.title}
+            icon={cat.icon}
             fundType="etf"
-            AMC_COLORS={AMC_COLORS_ETF}
-            initialMockData={INITIAL_ETF}
+            AMC_COLORS={getAmcColorMap('etf')}
+            initialMockData={[]}
         />
     );
 };
