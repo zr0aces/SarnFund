@@ -138,3 +138,15 @@ dist-ssr/
 /data/
 /backend/data/
 graphify-out/
+
+# AI Coding Tool temporary files, local settings, caches, & artifacts
+.claude/
+.claude.json
+.claude/settings.local.json
+.antigravity/
+.agy/
+.codex/
+.codex-cache/
+.brainsync/
+.superpowers/
+

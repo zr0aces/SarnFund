@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGY.md
 
-This file provides guidance to Claude Code (`claude` CLI) when working with code in this repository.
+This file provides guidance to Google Antigravity (AGY) when working with code in this repository.
 
 # SarnFund — AI Coding Agent Guidelines
 
@@ -36,7 +36,7 @@ node scripts/release.mjs             # bump version according to CalVer rules
 
 SarnFund supports three AI coding tools:
 - **Claude Code** (`CLAUDE.md`)
-- **Google Antigravity (AGY)** (`AGY.md`)
+- **Google Antigravity (AGY)** (`AGENTS.md`)
 - **Codex AI** (`CODEX.md`)
 
 All instruction files follow standardized formatting, taxonomy, and operational boundaries.
