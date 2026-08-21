@@ -1,0 +1,3 @@
+# agent-parity:begin
+.agent-parity/memory/*.md merge=agent-parity-memory
+# agent-parity:end

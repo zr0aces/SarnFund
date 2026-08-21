@@ -150,3 +150,7 @@ graphify-out/
 .brainsync/
 .superpowers/
 
+# agent-parity:begin
+!/.codex/
+# agent-parity:end
+.agent-parity/
