@@ -26,7 +26,7 @@ export const useFundData = (fundType, initialMockData) => {
         if (initialMockData?.length) return initialMockData;
         return [];
     });
-    const [loading,     setLoading]     = useState(false);
+    const [loading,     setLoading]     = useState(() => !initialCache && !initialMockData?.length);
     const [error,       setError]       = useState(null);
     const [lastUpdated, setLastUpdated] = useState(() => {
         if (initialCache) return initialCache.lastUpdated || new Date(initialCache.timestamp).toISOString();
@@ -42,21 +42,24 @@ export const useFundData = (fundType, initialMockData) => {
     // while it was in-flight.
     const currentTimestamp = useRef(initialCache ? initialCache.timestamp : 0);
 
-    const fetchDataFromAPI = useCallback(async (silent = false, cachedTimestamp = null) => {
-        if (!silent) setLoading(true);
-        if (!silent) setError(null);
+    const fetchData = useCallback(async (isSilent = false, cachedTs = null, ignoreRef = null) => {
+        if (!isSilent) {
+            setLoading(true);
+            setError(null);
+        }
 
         try {
             const res = await fetch(`/api/funds/${fundType}`);
             if (!res.ok) throw new Error(`API error: ${res.status}`);
 
             const result = await res.json();
+            if (ignoreRef?.current) return;
             if (!result.success || !result.data?.length) {
                 throw new Error('No data available from API');
             }
 
             // Skip update if the server has no newer data than what's displayed.
-            if (cachedTimestamp && result.timestamp <= cachedTimestamp) return;
+            if (cachedTs && result.timestamp <= cachedTs) return;
             // Skip if a newer response already arrived.
             if (result.timestamp <= currentTimestamp.current) return;
 
@@ -64,6 +67,7 @@ export const useFundData = (fundType, initialMockData) => {
             setFunds(result.data);
             setLastUpdated(result.lastUpdated || new Date(result.timestamp).toISOString());
             setDataSource('api');
+            setLoading(false);
 
             localStorage.setItem(cacheKey, JSON.stringify({
                 timestamp:   result.timestamp,
@@ -71,36 +75,37 @@ export const useFundData = (fundType, initialMockData) => {
                 data:        result.data,
             }));
         } catch (err) {
-            if (!silent) {
+            if (ignoreRef?.current) return;
+            // In silent mode, only surface the error if there's no cache to fall back on.
+            if (!isSilent || !cachedTs) {
                 setError(`Unable to fetch data: ${err.message}`);
                 setDataSource('error');
             }
         } finally {
-            if (!silent) setLoading(false);
+            if (!isSilent) {
+                setLoading(false);
+            }
         }
     }, [fundType, cacheKey]);
 
-    // On mount: serve from cache immediately, then silently check server.
+    // On mount or fundType change: query server asynchronously.
     useEffect(() => {
         const cached = getInitialCache();
-        if (cached) {
-            currentTimestamp.current = cached.timestamp;
-            // Silently update if the server has newer data.
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            fetchDataFromAPI(true, cached.timestamp);
-        } else if (initialMockData?.length) {
-            // Already initialized in useState, no action needed
-        } else {
-            fetchDataFromAPI(false);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fundType]);
+        const ignoreRef = { current: false };
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchData(true, cached?.timestamp, ignoreRef);
+
+        return () => {
+            ignoreRef.current = true;
+        };
+    }, [fundType, cacheKey, getInitialCache, fetchData]);
 
     const refresh = useCallback(() => {
         localStorage.removeItem(cacheKey);
         currentTimestamp.current = 0;
-        fetchDataFromAPI(false);
-    }, [cacheKey, fetchDataFromAPI]);
+        fetchData(false, null);
+    }, [cacheKey, fetchData]);
 
     return { funds, loading, error, lastUpdated, dataSource, refresh };
 };

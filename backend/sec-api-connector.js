@@ -68,9 +68,8 @@ class RateLimiter {
   }
 
   wait() {
-    const slot   = this._queue;
-    this._queue  = this._queue.then(() => this._acquire());
-    return slot;
+    this._queue = this._queue.catch(() => {}).then(() => this._acquire());
+    return this._queue;
   }
 
   async _acquire() {
@@ -125,23 +124,57 @@ class SecApiClient {
   async _get(url, primaryKey, secondaryKey, rateLimiter, attempt = 0) {
     await rateLimiter.wait();
     
-    let res;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
     try {
-      res = await fetch(url, {
+      const res = await fetch(url, {
         headers: {
           'Ocp-Apim-Subscription-Key': primaryKey,
           'Accept': 'application/json',
         },
         signal: controller.signal,
       });
+
+      if (res.status === 204) return null;
+
+      if (res.status === 401) {
+        if (secondaryKey) {
+          console.warn(`Primary key returned 401, retrying with secondary key for ${url}`);
+          return this._get(url, secondaryKey, null, rateLimiter, 0);
+        }
+        throw new Error(`SEC API 401 – check subscription key for ${url}`);
+      }
+
+      if ((res.status === 421 || res.status === 429) && attempt < MAX_RETRIES) {
+        const retryAfterSec = parseInt(res.headers.get('Retry-After') || '0', 10);
+        // Only trust Retry-After if it's at least 5 s — the API sometimes sends "1"
+        // which is too short for a 300-second rate-limit window.
+        const backoff = retryAfterSec >= 5 ? retryAfterSec * 1000 : RATE_LIMIT_FALLBACK_MS;
+        const waitSec = Math.round(backoff / 1000);
+        console.warn(`Rate limit (${res.status}), waiting ${waitSec}s before retry ${attempt + 1}/${MAX_RETRIES}…`);
+        await sleep(backoff);
+        return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
+      }
+
+      // Handle transient 5xx server errors
+      if (res.status >= 500 && res.status < 600 && attempt < MAX_RETRIES) {
+        const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+        console.warn(`SEC API HTTP ${res.status} for ${url}. Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
+        await sleep(backoff);
+        return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
+      }
+
+      if (!res.ok) throw new Error(`SEC API HTTP ${res.status} for ${url}`);
+      return await res.json();
     } catch (err) {
+      if (err.message?.includes('SEC API 401')) {
+        throw err;
+      }
       if (attempt < MAX_RETRIES) {
         // Exponential backoff: 1s, 2s, 4s, 8s... plus a random jitter up to 1s
         const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
-        console.warn(`Network error or timeout for ${url} (${err.message}). Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
+        console.warn(`Network/API error for ${url} (${err.message}). Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
         await sleep(backoff);
         return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
       }
@@ -149,38 +182,6 @@ class SecApiClient {
     } finally {
       timeoutId && clearTimeout(timeoutId);
     }
-
-    if (res.status === 204) return null;
-
-    if (res.status === 401) {
-      if (secondaryKey) {
-        console.warn(`Primary key returned 401, retrying with secondary key for ${url}`);
-        return this._get(url, secondaryKey, null, rateLimiter, 0);
-      }
-      throw new Error(`SEC API 401 – check subscription key for ${url}`);
-    }
-
-    if ((res.status === 421 || res.status === 429) && attempt < MAX_RETRIES) {
-      const retryAfterSec = parseInt(res.headers.get('Retry-After') || '0', 10);
-      // Only trust Retry-After if it's at least 5 s — the API sometimes sends "1"
-      // which is too short for a 300-second rate-limit window.
-      const backoff = retryAfterSec >= 5 ? retryAfterSec * 1000 : RATE_LIMIT_FALLBACK_MS;
-      const waitSec = Math.round(backoff / 1000);
-      console.warn(`Rate limit (${res.status}), waiting ${waitSec}s before retry ${attempt + 1}/${MAX_RETRIES}…`);
-      await sleep(backoff);
-      return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
-    }
-
-    // Handle transient 5xx server errors
-    if (res.status >= 500 && res.status < 600 && attempt < MAX_RETRIES) {
-      const backoff = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
-      console.warn(`SEC API HTTP ${res.status} for ${url}. Retrying ${attempt + 1}/${MAX_RETRIES} in ${(backoff / 1000).toFixed(1)}s…`);
-      await sleep(backoff);
-      return this._get(url, primaryKey, secondaryKey, rateLimiter, attempt + 1);
-    }
-
-    if (!res.ok) throw new Error(`SEC API HTTP ${res.status} for ${url}`);
-    return res.json();
   }
 
   // Fetches all pages of a v2 cursor-paginated endpoint, returns combined items[].

@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- `frontend/src/hooks/useFundData.js` — the mount-time fetch and `refresh()` had drifted into two hand-duplicated fetch implementations; merged back into one `fetchData()`, with unmount/fundType-change cancellation now passed in via an `ignoreRef` instead of a second copy of the fetch body.
+- Extracted the repeated `typeof v === 'number' && !isNaN(v)` guard (reimplemented 4× across `FundChart.jsx`, `FundTable.jsx`, `KPICards.jsx`) into a shared `isValidNumber()` helper in `frontend/src/utils/number.js`.
+- `frontend/vite.config.js` — added `with { type: 'json' }` to the `package.json` import to silence Vite's native-config-loader JSON-import warning.
+
+### Changed
+- Dependency updates to latest compatible versions: `react`/`react-dom` 19.2.8, `vite` 8.2.2, `@vitejs/plugin-react` 6.1.0, `recharts` 3.10.1, `lucide-react` 1.33.0, `autoprefixer` 10.5.4, `globals` 17.11.0, `@types/react` 19.2.18, `@types/react-dom` 19.2.4, `eslint-plugin-react-refresh` 0.5.4, backend `node-cron` 4.6.0.
+- `eslint`/`@eslint/js` intentionally held at latest 9.x (9.39.5) rather than 10.x — `eslint-plugin-react`'s peer range (`^3 || ... || ^9.7`) doesn't yet support ESLint 10; bumping would reintroduce the peer-dependency conflict this repo recently removed `--legacy-peer-deps` to fix.
+
 ## [2.0.1] - 2026-06-24
 
 ### Fixed

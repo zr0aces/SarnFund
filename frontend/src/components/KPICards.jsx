@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Trophy, TrendingUp, ArrowUpRight, Sparkles } from 'lucide-react';
 import tipsData from '../data/tips.json';
+import { isValidNumber } from '../utils/number';
 
 const CATEGORY_TIPS = tipsData.categories;
 
@@ -25,7 +26,7 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
     const stats = useMemo(() => {
         if (funds.length === 0) return { bestFund: null, avgReturn: 0, metric: sortBy };
         const metric = showNewOnly ? 'ytd' : sortBy;
-        const validFunds = funds.filter(f => f[metric] !== undefined && f[metric] !== 0);
+        const validFunds = funds.filter(f => isValidNumber(f[metric]) && f[metric] !== 0);
         if (validFunds.length === 0) return { bestFund: null, avgReturn: 0, metric };
         const bestFund = [...validFunds].sort((a, b) => b[metric] - a[metric])[0];
         const avgReturn = validFunds.reduce((sum, f) => sum + f[metric], 0) / validFunds.length;
@@ -33,7 +34,9 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
     }, [funds, sortBy, showNewOnly]);
 
     const label = showNewOnly ? 'YTD' : getSortLabel(sortBy);
-    const bestVal = stats.bestFund ? stats.bestFund[stats.metric] : null;
+    const bestVal = (stats.bestFund && isValidNumber(stats.bestFund[stats.metric]))
+        ? stats.bestFund[stats.metric]
+        : null;
 
     return (
         <>

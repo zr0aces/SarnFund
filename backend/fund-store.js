@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import { existsSync } from 'fs';
 import path from 'path';
 import config from './config.js';
 
@@ -136,23 +135,19 @@ export class FileFundStoreAdapter {
     
     let registry = null;
     try {
-      if (existsSync(this.registryPath)) {
-        const reg = JSON.parse(await fs.readFile(this.registryPath, 'utf8'));
-        registry = {
-          funds: reg.funds?.length ?? 0,
-          lastBuilt: new Date(reg.timestamp).toISOString()
-        };
-      }
+      const reg = JSON.parse(await fs.readFile(this.registryPath, 'utf8'));
+      registry = {
+        funds: reg.funds?.length ?? 0,
+        lastBuilt: new Date(reg.timestamp).toISOString()
+      };
     } catch (e) {
       // Ignored
     }
 
     let failedFundsCount = 0;
     try {
-      if (existsSync(this.failedFundsPath)) {
-        const failedData = JSON.parse(await fs.readFile(this.failedFundsPath, 'utf8'));
-        failedFundsCount = failedData.failedCount || 0;
-      }
+      const failedData = JSON.parse(await fs.readFile(this.failedFundsPath, 'utf8'));
+      failedFundsCount = failedData.failedCount || 0;
     } catch (e) {
       // Ignored
     }
@@ -186,10 +181,8 @@ export class FileFundStoreAdapter {
 
     let failures = [];
     try {
-      if (existsSync(this.failedFundsPath)) {
-        const failedData = JSON.parse(await fs.readFile(this.failedFundsPath, 'utf8'));
-        failures = failedData.failures || [];
-      }
+      const failedData = JSON.parse(await fs.readFile(this.failedFundsPath, 'utf8'));
+      failures = failedData.failures || [];
     } catch (e) {
       // Ignored
     }

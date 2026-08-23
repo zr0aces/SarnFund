@@ -62,9 +62,11 @@ function fundTypeFromTaxIncentive(profile) {
 // When the API returns a Thai ESG incentive, check fund name/class for 'ESGX' suffix
 // to distinguish ThaiESG from ThaiESGX (SEC uses the same incentive type for both).
 function esgSubtype(profile) {
-  const code = (profile.proj_abbr_name || '').toUpperCase();
-  const cls  = (profile.fund_class_name || '').toUpperCase();
-  if (/ESGX|TESGX/.test(code) || /ESGX|TESGX/.test(cls)) return 'ESGX';
+  const code   = (profile.proj_abbr_name || '').toUpperCase();
+  const cls    = (profile.fund_class_name || '').toUpperCase();
+  const nameEn = (profile.proj_name_en || '').toUpperCase();
+  const nameTh = (profile.proj_name_th || '').toUpperCase();
+  if (/ESGX|TESGX/.test(code) || /ESGX|TESGX/.test(cls) || /ESGX|TESGX/.test(nameEn) || /ESGX|TESGX/.test(nameTh)) return 'ESGX';
   return 'ESG';
 }
 
@@ -246,7 +248,7 @@ async function fetchFundData(client, entry) {
   // v2 NAV: sell_price / buy_price are top-level (not nested under amc_info)
   // change_val / change_percent not available in v2 daily-info/nav
   return {
-    id:               `fund_${Date.now()}_${code}`,
+    id:               `fund_${proj_id}_${fundClass || 'main'}_${code}`,
     code,
     name,
     amc,

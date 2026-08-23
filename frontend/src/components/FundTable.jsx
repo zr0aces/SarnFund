@@ -1,9 +1,12 @@
 import { ExternalLink, Filter } from 'lucide-react';
+import { isValidNumber } from '../utils/number';
 
 const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
 
     const renderReturnCell = (value, isBold = false) => {
-        if (value === 0 || value === undefined) return <span className="text-slate-600 font-mono">-</span>;
+        if (value === 0 || !isValidNumber(value)) {
+            return <span className="text-slate-600 font-mono">-</span>;
+        }
         return (
             <span className={`font-mono ${value >= 0 ? 'text-emerald-400' : 'text-rose-400'} ${isBold ? 'font-bold' : 'font-medium'}`}>
                 {value > 0 ? '+' : ''}{value.toFixed(2)}%
@@ -13,12 +16,13 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
 
     const renderReturnChip = (value, label, key) => {
         const isActive = sortBy === key || (showNewOnly && key === 'ytd');
-        const colorClass = value > 0 ? 'text-emerald-400' : value < 0 ? 'text-rose-400' : 'text-slate-500';
+        const isNum = isValidNumber(value) && value !== 0;
+        const colorClass = isNum ? (value > 0 ? 'text-emerald-400' : 'text-rose-400') : 'text-slate-500';
         return (
             <div key={key} className={`text-center rounded-xl p-2 transition-all ${isActive ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-slate-900/60 border border-white/5'}`}>
                 <div className="text-[9px] font-mono font-bold text-slate-400 uppercase">{label}</div>
                 <div className={`text-xs font-mono font-bold mt-0.5 ${colorClass}`}>
-                    {value ? `${value > 0 ? '+' : ''}${value.toFixed(1)}%` : '-'}
+                    {isNum ? `${value > 0 ? '+' : ''}${value.toFixed(1)}%` : '-'}
                 </div>
             </div>
         );

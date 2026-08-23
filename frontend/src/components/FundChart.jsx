@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { isValidNumber } from '../utils/number';
 
 const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => {
 
     const chartData = useMemo(() => {
         const metric = showNewOnly ? 'ytd' : sortBy;
-        const validFunds = funds.filter(f => f[metric] !== undefined);
+        const validFunds = funds.filter(f => isValidNumber(f[metric]));
 
         return validFunds.slice(0, 10).map(f => ({
             name: f.class ? `${f.code} (${f.class})` : f.code,
