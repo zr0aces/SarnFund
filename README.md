@@ -1,21 +1,23 @@
 # SarnFund
 
-Thai mutual fund analytics dashboard for tax-saving investments tracking RMF, ThaiESG, LTF, and SSF funds across 18 Asset Management Companies using the official SEC Open Data API v2.
+Thai mutual fund analytics telemetry console for tax-saving investments tracking RMF, ThaiESG (ESG), ThaiESGX (ESGX), SSF, and ETF funds across 18 Asset Management Companies using the official SEC Open Data API v2.
 
 ## Features
 
-- **Official SEC API v2**: Sourced from `api.sec.or.th` (no scraping or private cookies).
-- **Four tax-saving fund types**: RMF, ThaiESG (TESG), LTF, and SSF.
-- **18 AMCs tracked**: Including KKP, Krungsri, BBL, TISCO, SCB, KAsset, KTAM, ONE, UOB, and Principal.
-- **Primary + Secondary keys**: Zero-downtime key rotation and automated 401 failover.
-- **Dual-layer caching**: 7-day fund registry metadata cache + 24-hour NAV daily price cache.
-- **Modern UI**: Light Theme dashboard optimized to fit the browser viewport, using Prompt and Kanit typography.
+- **Official SEC API v2**: Direct data ingestion from `api.sec.or.th` (no web scraping or fragile session cookies).
+- **Five Fund Categories Tracked**: RMF, ThaiESG, ThaiESGX, SSF, and ETF.
+- **Thai Tax Engine 2569**: Built-in dynamic tax bracket planner, withholding optimizer, and deduction limit projector.
+- **18 AMCs Tracked**: Including KKP, Krungsri, BBL, TISCO, SCB, KAsset, KTAM, ONE, UOB, Principal, Eastspring, Asset Plus, DAOL, KWI, LH Fund, MFC, TALIS, and XSpring.
+- **Zero-Downtime Key Failover**: Primary + Secondary API key rotation with automatic 401 failover.
+- **Dual-Layer Caching**: 7-day fund registry metadata cache + 24-hour NAV daily price cache (with browser `localStorage` instant hydration).
+- **High-Performance Telemetry UI**: Dark Obsidian glassmorphic telemetry console with Kanit, Prompt, and JetBrains Mono typography, responsive on mobile and desktop.
+- **Optimized Bundle Splitting**: Vite 8 / Rolldown code-splitting with isolated vendor and chart chunks.
 
 ## Quick Start
 
 ### Prerequisites
 - Node.js 24+ & npm
-- Docker & Docker Compose
+- Docker & Docker Compose (optional for containerized deployment)
 - SEC Open Data API Subscription Keys
 
 ### Configuration
@@ -23,7 +25,7 @@ Create a single root-level `.env` file using the template:
 ```bash
 cp .env.example .env
 ```
-Fill in the required `SEC_FACTSHEET_KEY`, `SEC_DAILYINFO_KEY`, and `SCRAPE_TOKEN`.
+Fill in the required `SEC_FACTSHEET_KEY`, `SEC_DAILYINFO_KEY`, and optional `SCRAPE_TOKEN`.
 See [configuration.md](file:///home/san/workspace/SarnFund/docs/configuration.md) for variable details.
 
 ### Run (Docker)
@@ -36,10 +38,19 @@ Access the application at http://localhost:8091.
 ### Run (Local Development)
 ```bash
 # Terminal 1: Run Backend API
-cd backend && npm install && npm run scrape && npm start
+cd backend && npm install && npm run scrape && npm run dev
 
 # Terminal 2: Run Frontend Dashboard
 cd frontend && npm install && npm run dev
+```
+
+### Data Fetching & Scraping Commands
+```bash
+# Fetch latest daily NAV (reuses 7-day fund registry)
+node scripts/fetch-funds.js
+
+# Force full refresh (wipes registry cache and queries all 18 AMCs from scratch)
+node scripts/fetch-funds.js --refresh
 ```
 
 ## Architecture
@@ -56,7 +67,7 @@ See [deployment.md](file:///home/san/workspace/SarnFund/docs/deployment.md) for 
 
 ## Versioning
 
-Uses Calendar Versioning (CalVer) in the `YYYY.M.MINOR` format (e.g. `2026.6.1`), with [VERSION](file:///home/san/workspace/SarnFund/VERSION) as the single source of truth.
+Uses Calendar Versioning (CalVer) in the `YYYY.M.MINOR` format (e.g. `2026.8.0`), with [VERSION](file:///home/san/workspace/SarnFund/VERSION) as the single source of truth.
 
 ## License
 

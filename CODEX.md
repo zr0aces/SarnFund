@@ -24,6 +24,10 @@ cd frontend && npm run build     # production build → dist/
 cd frontend && npm run lint      # ESLint execution (max-warnings 0 enforced)
 cd frontend && npm run preview   # preview production build locally
 
+# Data Ingestion & Refresh Commands (run from project root)
+node scripts/fetch-funds.js          # scrape latest NAV using cached registry
+node scripts/fetch-funds.js --refresh # scrape with forced registry rebuild
+
 # Versioning Commands (run from project root)
 node scripts/sync-version.mjs        # propagate VERSION file to package manifests
 node scripts/sync-version.mjs --check # verify version consistency across files

@@ -1,15 +1,22 @@
 # Changelog
 
-## [Unreleased]
+## [2026.8.0] - 2026-08-23
+
+### Added
+- **Vite 8 / Rolldown Code-Splitting**: Configured function-based `manualChunks` in `frontend/vite.config.js` to isolate `vendor-react` and `vendor-charts`, reducing the main entry chunk from 656 kB down to 106 kB (84% reduction).
+- **Deterministic Fund IDs**: Standardized fund unique IDs in `scraper.js` (`fund_${proj_id}_${class}_${code}`) replacing nondeterministic `Date.now()` timestamp generators.
+- **ThaiESGX Classification**: Expanded `esgSubtype` in `scraper.js` to inspect full English/Thai project names alongside unit class and abbreviation codes.
 
 ### Fixed
-- `frontend/src/hooks/useFundData.js` — the mount-time fetch and `refresh()` had drifted into two hand-duplicated fetch implementations; merged back into one `fetchData()`, with unmount/fundType-change cancellation now passed in via an `ignoreRef` instead of a second copy of the fetch body.
-- Extracted the repeated `typeof v === 'number' && !isNaN(v)` guard (reimplemented 4× across `FundChart.jsx`, `FundTable.jsx`, `KPICards.jsx`) into a shared `isValidNumber()` helper in `frontend/src/utils/number.js`.
-- `frontend/vite.config.js` — added `with { type: 'json' }` to the `package.json` import to silence Vite's native-config-loader JSON-import warning.
+- **Runtime Defensive Boundaries**: Added strict number, null, and NaN type checks in `FundTable.jsx`, `KPICards.jsx`, and `FundChart.jsx` to prevent `TypeError: Cannot read properties of null (reading 'toFixed')` on missing metrics.
+- **RateLimiter Queue Serialization**: Hardened `RateLimiter.wait()` in `sec-api-connector.js` with `.catch().then()` chaining to ensure sequential queuing without unhandled rejection lockups.
+- **SEC API Response Parsing Resilience**: Wrapped `res.json()` parsing within the try-catch backoff retry block in `sec-api-connector.js` to handle transient gateway HTML error payloads.
+- **Pure Async File Operations**: Replaced synchronous `existsSync` calls in `fund-store.js` with non-blocking `fs/promises`.
+- **Peer Dependency Graph Alignment**: Aligned `@eslint/js` (`^9.39.5`) with `eslint` (`^9.39.4`) in `frontend/package.json`, removing the need for `--legacy-peer-deps` in `frontend/Dockerfile`.
+- **Agent Parity Tracking**: Unignored `.agent-parity/` in `.gitignore` to allow seamless multi-agent state and skill sync.
 
-### Changed
-- Dependency updates to latest compatible versions: `react`/`react-dom` 19.2.8, `vite` 8.2.2, `@vitejs/plugin-react` 6.1.0, `recharts` 3.10.1, `lucide-react` 1.33.0, `autoprefixer` 10.5.4, `globals` 17.11.0, `@types/react` 19.2.18, `@types/react-dom` 19.2.4, `eslint-plugin-react-refresh` 0.5.4, backend `node-cron` 4.6.0.
-- `eslint`/`@eslint/js` intentionally held at latest 9.x (9.39.5) rather than 10.x — `eslint-plugin-react`'s peer range (`^3 || ... || ^9.7`) doesn't yet support ESLint 10; bumping would reintroduce the peer-dependency conflict this repo recently removed `--legacy-peer-deps` to fix.
+### Security
+- **0 Vulnerabilities**: Resolved all 9 high/moderate vulnerability advisories across frontend and backend dependencies via targeted package upgrades.
 
 ## [2.0.1] - 2026-06-24
 

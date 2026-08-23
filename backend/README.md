@@ -28,10 +28,11 @@ Get subscription keys at [secopendata.sec.or.th/sec-open-apis](https://secopenda
 ## Scripts
 
 ```bash
-npm start       # production server
-npm run dev     # nodemon (auto-reload)
-npm run scrape  # run scraper directly
-npm run init    # seed empty data files
+npm start              # production server
+npm run dev            # nodemon development server (auto-reload)
+npm run scrape         # run scrape reusing registry (< 7 days)
+npm run scrape:refresh # wipe registry and force full scrape from scratch
+npm run init           # seed mock data files
 ```
 
 ## Environment variables
@@ -46,18 +47,21 @@ npm run init    # seed empty data files
 | `PORT` | No | 3001 | Server port |
 | `CORS_ORIGIN` | No | `*` | Restrict CORS in production |
 
-Secondary keys are optional but enable zero-downtime key rotation: if the primary key returns 401, the connector retries automatically with the secondary — no restart required.
+Secondary keys enable zero-downtime key rotation: if the primary key returns 401, the connector retries automatically with the secondary — no restart required.
 
 ## API endpoints
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/api/funds/rmf` | — | RMF fund data |
-| GET | `/api/funds/tesg` | — | ThaiESG fund data |
-| GET | `/api/funds/ltf` | — | LTF fund data |
+| GET | `/api/funds/esg` | — | ThaiESG fund data (primary endpoint) |
+| GET | `/api/funds/esgx` | — | ThaiESGX fund data |
 | GET | `/api/funds/ssf` | — | SSF fund data |
-| GET | `/api/funds/all` | — | All four types combined |
-| GET | `/api/health` | — | Keys, registry, cache status |
+| GET | `/api/funds/etf` | — | ETF fund data |
+| GET | `/api/funds/all` | — | All fund categories combined |
+| GET | `/api/funds/tesg` | — | Redirects 301 to `/api/funds/esg` (backward compatibility) |
+| GET | `/api/funds/ltf` | — | Returns 410 Gone (LTF discontinued) |
+| GET | `/api/health` | — | Keys, registry, cache status, failed funds |
 | GET | `/api/stats` | — | Fund counts per type |
 | POST | `/api/scrape` | `X-Scrape-Token` | Manual scrape; `?force=true` bypasses cache |
 | DELETE | `/api/registry` | — | Clear 7-day registry cache; next scrape rebuilds it |
@@ -68,10 +72,12 @@ Secondary keys are optional but enable zero-downtime key rotation: if the primar
 |------------|-----|----------|
 | `data/fund-registry.json` | 7 days | Fund type, class, risk classification for all active funds |
 | `data/rmf.json` | 24 h | Latest RMF NAV + performance |
-| `data/tesg.json` | 24 h | Latest ThaiESG NAV + performance |
-| `data/ltf.json` | 24 h | Latest LTF NAV + performance |
+| `data/esg.json` | 24 h | Latest ThaiESG NAV + performance |
+| `data/esgx.json` | 24 h | Latest ThaiESGX NAV + performance |
 | `data/ssf.json` | 24 h | Latest SSF NAV + performance |
-| `data/all.json` | 24 h | Combined snapshot |
+| `data/etf.json` | 24 h | Latest ETF NAV + performance |
+| `data/all.json` | 24 h | Combined snapshot of all fund categories |
+| `data/failed-funds.json` | 24 h | Log of funds with failed lookups or 0 NAV |
 
 Daily scrape runs automatically at **06:30 PM** (Asia/Bangkok timezone) via `node-cron`.
 

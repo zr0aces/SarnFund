@@ -20,6 +20,7 @@ const TAX_TIPS = tipsData.general;
 
 const LandingPage = () => {
   const [stats, setStats] = useState({ rmf: 0, esg: 0, esgx: 0, ssf: 0, etf: 0 });
+  const [metrics, setMetrics] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [shuffledTips, setShuffledTips] = useState(() => 
@@ -38,8 +39,9 @@ const LandingPage = () => {
       try {
         const response = await fetch('/api/stats');
         const result = await response.json();
-        if (result.success && result.stats) {
-          setStats(result.stats);
+        if (result.success) {
+          if (result.stats) setStats(result.stats);
+          if (result.metrics) setMetrics(result.metrics);
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error);
@@ -62,13 +64,13 @@ const LandingPage = () => {
       icon: cat.icon,
       title: cat.title,
       desc: cat.description,
-      sparklineD: cat.sparklineD,
       colorClass: cat.theme.text,
       badgeClass: cat.theme.badgeBg,
       iconBgClass: cat.theme.iconBg,
       glowClass: cat.theme.glow,
       accentColor: cat.accentColor,
-      count: stats[cat.id] || 0
+      count: stats[cat.id] || 0,
+      metric: metrics[cat.id] || null
     })),
     {
       id: 'tax',
@@ -78,13 +80,13 @@ const LandingPage = () => {
       icon: Calculator,
       title: 'Thai Tax Calculator 2569',
       desc: 'Dynamic tax bracket planner, withholding rate optimizer, and deduction limit projector.',
-      sparklineD: 'M0,26 L20,26 L20,18 L50,18 L50,11 L80,11 L80,4 L100,4',
       colorClass: 'text-rose-400',
       badgeClass: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
       iconBgClass: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
       glowClass: 'hover:border-rose-500/40 hover:shadow-[0_0_30px_rgba(244,63,94,0.15)]',
       accentColor: '#F43F5E',
-      count: 'Active'
+      count: 'Active',
+      metric: null
     }
   ];
 
@@ -222,7 +224,7 @@ const LandingPage = () => {
                 className={`group flex flex-col justify-between p-5 glass-panel glass-panel-hover rounded-3xl overflow-hidden relative shadow-lg ${card.glowClass}`}
               >
                 {/* Top Badge & Icon */}
-                <div className="flex items-start justify-between gap-2 mb-3">
+                <div className="flex items-start justify-between gap-2 mb-2">
                   <span className={`text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg border leading-tight ${card.badgeClass}`}>
                     {card.badge}
                   </span>
@@ -241,18 +243,96 @@ const LandingPage = () => {
                   </p>
                 </div>
 
-                {/* Sparkline Graphic */}
-                <div className="my-3 py-1">
-                  <svg className="w-full h-8 stroke-current opacity-80 group-hover:opacity-100 transition-opacity duration-300" viewBox="0 0 100 30" fill="none">
-                    <path
-                      d={card.sparklineD}
-                      className={`${card.colorClass} animate-sparkline`}
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
+                {/* Real Performance Telemetry Pill & Mini-Bar Indicator (Option 3) */}
+                {card.id !== 'tax' ? (
+                  <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
+                    {/* Top Fund and Avg Stats */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                          Top ({card.metric?.metricLabel || '1Y'}):
+                        </span>
+                        <span className="text-xs font-display font-extrabold text-white truncate max-w-[120px]">
+                          {card.metric?.topFund ? card.metric.topFund.code : '—'}
+                        </span>
+                        {card.metric?.topFund && typeof card.metric.topFund.returnVal === 'number' && (
+                          <span className={`text-xs font-mono font-bold ${card.metric.topFund.returnVal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            {card.metric.topFund.returnVal > 0 ? '+' : ''}{card.metric.topFund.returnVal.toFixed(1)}%
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
+                        <span>Avg: <strong className={card.metric?.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{card.metric?.avgReturn ? `${card.metric.avgReturn > 0 ? '+' : ''}${card.metric.avgReturn.toFixed(1)}%` : '—'}</strong></span>
+                        {card.metric?.topFund?.amc && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5">
+                            {card.metric.topFund.amc}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Mini-Bar Visual Spectrum */}
+                    <div className="flex items-end gap-1 h-7 px-1 shrink-0">
+                      {card.metric?.trendBars?.length ? (
+                        card.metric.trendBars.map((val, bIdx) => {
+                          const maxVal = Math.max(...card.metric.trendBars.map(Math.abs), 1);
+                          const heightPct = Math.max(Math.min((Math.abs(val) / maxVal) * 100, 100), 20);
+                          return (
+                            <div
+                              key={bIdx}
+                              title={`Rank ${bIdx + 1}: ${val > 0 ? '+' : ''}${val.toFixed(1)}%`}
+                              className="w-1.5 rounded-t-sm transition-all duration-300 group-hover:scale-y-110 origin-bottom"
+                              style={{
+                                height: `${heightPct}%`,
+                                backgroundColor: card.accentColor,
+                                opacity: 0.4 + (0.6 * (1 - bIdx / card.metric.trendBars.length))
+                              }}
+                            />
+                          );
+                        })
+                      ) : (
+                        <div className="flex items-end gap-1 h-full opacity-30">
+                          <div className="w-1.5 h-3 rounded-t-sm bg-slate-600" />
+                          <div className="w-1.5 h-5 rounded-t-sm bg-slate-600" />
+                          <div className="w-1.5 h-4 rounded-t-sm bg-slate-600" />
+                          <div className="w-1.5 h-6 rounded-t-sm bg-slate-600" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Tax Engine Telemetry Pill */
+                  <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-400">
+                          Tax Year 2569:
+                        </span>
+                        <span className="text-xs font-mono font-bold text-white">
+                          Max Cap 800k THB
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">
+                        500k Retirement + 300k ThaiESG
+                      </div>
+                    </div>
+
+                    {/* Mini Tax Bracket Progression Visualizer */}
+                    <div className="flex items-end gap-1 h-7 px-1 shrink-0">
+                      {[5, 10, 15, 20, 25, 30, 35].map((rate, rIdx) => (
+                        <div
+                          key={rIdx}
+                          title={`Bracket: ${rate}%`}
+                          className="w-1 rounded-t-sm bg-rose-400 transition-all duration-300 group-hover:scale-y-110 origin-bottom"
+                          style={{
+                            height: `${(rate / 35) * 100}%`,
+                            opacity: 0.35 + (rIdx / 7) * 0.65
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Bottom Bar: Count & CTA */}
                 <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-1">

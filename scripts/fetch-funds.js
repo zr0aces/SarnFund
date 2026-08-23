@@ -128,13 +128,17 @@ if (!process.env.SEC_FACTSHEET_KEY || !process.env.SEC_DAILYINFO_KEY) {
   process.exit(1);
 }
 
+const targetDataDir = existsSync(join(PROJECT_ROOT, 'data'))
+  ? join(PROJECT_ROOT, 'data')
+  : join(BACKEND_DIR, 'data');
+
 if (forceRefresh) {
-  const registryPath = join(BACKEND_DIR, 'data', 'fund-registry.json');
-  const progressPath = join(BACKEND_DIR, 'data', '.registry-progress.json');
+  const registryPath = join(targetDataDir, 'fund-registry.json');
+  const progressPath = join(targetDataDir, '.registry-progress.json');
   for (const p of [registryPath, progressPath]) {
     if (existsSync(p)) rmSync(p);
   }
-  console.log('Registry cache cleared — will rebuild from scratch.');
+  console.log(`Registry cache cleared in ${targetDataDir} — will rebuild from scratch.`);
 }
 
 const { scrapeData } = await import(pathToFileURL(join(BACKEND_DIR, 'scraper.js')).href);
@@ -144,4 +148,4 @@ const result = await scrapeData();
 const elapsed = ((Date.now() - start) / 1000).toFixed(1);
 
 const total = Object.values(result.data).flat().length;
-console.log(`Done in ${elapsed}s — ${total} funds written to backend/data/`);
+console.log(`Done in ${elapsed}s — ${total} funds written to ${targetDataDir}/`);

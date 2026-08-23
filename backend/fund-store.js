@@ -188,13 +188,54 @@ export class FileFundStoreAdapter {
     }
 
     const stats = {};
+    const metrics = {};
+
     types.forEach((t, index) => {
-      stats[t] = cacheResults[index]?.data?.length || 0;
+      const funds = cacheResults[index]?.data || [];
+      stats[t] = funds.length;
+
+      // Extract valid 1Y or YTD performance funds
+      const valid1y = funds.filter(f => typeof f.return1y === 'number' && !isNaN(f.return1y) && f.return1y !== 0);
+      const validYtd = funds.filter(f => typeof f.ytd === 'number' && !isNaN(f.ytd) && f.ytd !== 0);
+
+      const use1y = valid1y.length > 0;
+      const targetList = use1y ? valid1y : validYtd;
+      const metricKey = use1y ? 'return1y' : 'ytd';
+      const metricLabel = use1y ? '1Y' : 'YTD';
+
+      if (targetList.length > 0) {
+        const sorted = [...targetList].sort((a, b) => b[metricKey] - a[metricKey]);
+        const topFund = sorted[0];
+        const avgReturn = Number((targetList.reduce((sum, f) => sum + f[metricKey], 0) / targetList.length).toFixed(2));
+        const trendBars = sorted.slice(0, 5).map(f => f[metricKey]);
+
+        metrics[t] = {
+          count: funds.length,
+          avgReturn,
+          metricLabel,
+          topFund: {
+            code: topFund.code,
+            name: topFund.name,
+            amc: topFund.amc,
+            returnVal: topFund[metricKey]
+          },
+          trendBars
+        };
+      } else {
+        metrics[t] = {
+          count: funds.length,
+          avgReturn: 0,
+          metricLabel: '1Y',
+          topFund: null,
+          trendBars: []
+        };
+      }
     });
 
     return {
       success: true,
       stats,
+      metrics,
       failures
     };
   }

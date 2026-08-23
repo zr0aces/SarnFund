@@ -1,44 +1,41 @@
 # Development
 
 ## Prerequisites
-# Node.js 24+
-# npm
+- Node.js 24+ & npm
+- Docker & Docker Compose (optional)
 
-## Setup Environment
+## Environment Setup
+```bash
 cp .env.example .env
+```
 
-## Setup Backend
+## Backend Development
+```bash
 cd backend && npm install
+cd backend && npm run init            # Seed initial mock data
+cd backend && npm run dev             # Start dev server with nodemon (:3001)
+cd backend && npm start               # Start production server
+cd backend && npm run scrape          # Run scrape reusing 7-day registry
+cd backend && npm run scrape:refresh  # Wipe registry and force full scrape
+```
 
-## Initialize Backend Mock Data
-cd backend && npm run init
-
-## Run Scraper Pipeline
-cd backend && npm run scrape
-
-## Run Scraper Pipeline (Full Refresh)
-cd backend && npm run scrape:refresh
-
-## Run Backend Server (Development)
-cd backend && npm run dev
-
-## Run Backend Server (Production)
-cd backend && npm start
-
-## Setup Frontend
+## Frontend Development
+```bash
 cd frontend && npm install
+cd frontend && npm run dev            # Start Vite dev server (:5173, proxies to :3001)
+cd frontend && npm run lint           # Run ESLint (max-warnings 0 enforced)
+cd frontend && npm run build          # Production build -> dist/
+cd frontend && npm run preview        # Preview production build locally
+```
 
-## Run Frontend Dashboard (Development)
-cd frontend && npm run dev
+## Root Data Ingestion Utility
+```bash
+# Auto-detects Docker or local backend and scrapes data
+node scripts/fetch-funds.js
 
-## Lint Frontend Code
-cd frontend && npm run lint
-
-## Build Frontend Dashboard
-cd frontend && npm run build
-
-## Preview Frontend Build
-cd frontend && npm run preview
+# Force full registry rebuild and refresh
+node scripts/fetch-funds.js --refresh
+```
 
 ## Version Management (CalVer)
 
@@ -61,5 +58,14 @@ node scripts/release.mjs --build     # Bumps, syncs, and triggers docker compose
 
 ### Set Custom Version Explicitly
 ```bash
-node scripts/release.mjs 2026.6.5    # Bumps to exactly 2026.6.5 (supports v prefix too)
+node scripts/release.mjs 2026.8.0    # Bumps to exactly 2026.8.0 (supports v prefix too)
 ```
+
+## Quality & Verification Checklist
+
+Before completing any task or PR:
+1. `cd frontend && npm run lint` — verify zero ESLint errors and warnings.
+2. `cd frontend && npm run build` — verify production build succeeds with clean chunking.
+3. `node scripts/sync-version.mjs --check` — verify version synchronization.
+4. `./.agent-parity/bin/agent-parity status` — verify cross-agent parity and git tracking.
+5. `npm audit --prefix frontend && npm audit --prefix backend` — verify zero package vulnerabilities.
