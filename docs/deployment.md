@@ -48,6 +48,37 @@ docker compose logs -f nginx    # Nginx logs only
 docker compose down
 ```
 
+### Trigger Data Scrape in Docker
+You can trigger a data scrape in Docker using any of the following methods:
+
+**1. Using Docker Compose exec (Recommended):**
+```bash
+# Normal scrape (reuses 7-day registry cache)
+docker compose exec backend npm run scrape
+
+# Force full registry rebuild
+docker compose exec backend npm run scrape:refresh
+```
+
+**2. Using Docker CLI with container name (`sarnfund-backend`):**
+```bash
+docker exec -it sarnfund-backend npm run scrape
+docker exec -it sarnfund-backend npm run scrape:refresh
+```
+
+**3. Using Host Script:**
+```bash
+# Auto-detects running backend container and delegates inside it
+node scripts/fetch-funds.js
+node scripts/fetch-funds.js --refresh
+```
+
+**4. Using HTTP API Endpoint:**
+```bash
+curl -X POST "http://localhost:8091/api/scrape?force=true" \
+     -H "X-Scrape-Token: <your-SCRAPE_TOKEN>"
+```
+
 ### Update Deployment to New Version
 When a new version is released:
 1. Update the `VERSION` file locally to match the target release tag.

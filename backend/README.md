@@ -35,6 +35,22 @@ npm run scrape:refresh # wipe registry and force full scrape from scratch
 npm run init           # seed mock data files
 ```
 
+### Running inside Docker
+
+The backend application files live at `/app/` inside the container. To execute scraping inside a running container:
+
+```bash
+# Using Docker Compose
+docker compose exec backend npm run scrape
+docker compose exec backend npm run scrape:refresh
+
+# Using Docker CLI directly
+docker exec -it sarnfund-backend npm run scrape
+docker exec -it sarnfund-backend npm run scrape:refresh
+```
+
+*(Note: `scripts/fetch-funds.js` at the repository root automatically delegates to `docker compose exec backend node scraper.js` when Docker is running).*
+
 ## Environment variables
 
 | Variable | Required | Default | Description |

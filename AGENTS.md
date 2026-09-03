@@ -25,8 +25,9 @@ cd frontend && npm run lint      # ESLint execution (max-warnings 0 enforced)
 cd frontend && npm run preview   # preview production build locally
 
 # Data Ingestion & Refresh Commands (run from project root)
-node scripts/fetch-funds.js          # scrape latest NAV using cached registry
+node scripts/fetch-funds.js          # scrape latest NAV using cached registry (auto-detects Docker)
 node scripts/fetch-funds.js --refresh # scrape with forced registry rebuild
+docker compose exec backend npm run scrape # scrape directly inside running Docker container
 
 # Versioning Commands (run from project root)
 node scripts/sync-version.mjs        # propagate VERSION file to package manifests

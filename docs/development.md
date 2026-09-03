@@ -28,13 +28,31 @@ cd frontend && npm run build          # Production build -> dist/
 cd frontend && npm run preview        # Preview production build locally
 ```
 
-## Root Data Ingestion Utility
+## Data Ingestion & Scraping
+
+### Host Utility (Auto-detects Docker)
+The root script `scripts/fetch-funds.js` automatically detects if the `backend` container is running in Docker Compose and transparently forwards the scrape command inside it. If Docker is not running, it falls back to local execution.
 ```bash
-# Auto-detects Docker or local backend and scrapes data
+# Fetch latest daily NAV (reuses 7-day fund registry)
 node scripts/fetch-funds.js
 
 # Force full registry rebuild and refresh
 node scripts/fetch-funds.js --refresh
+```
+
+### Running Directly Inside Docker
+Inside the backend container, the application files live at `/app/`, with the scraper entrypoint at `scraper.js` (`npm run scrape`):
+```bash
+# Run scrape inside the running backend container
+docker compose exec backend npm run scrape
+# or: docker compose exec backend node scraper.js
+
+# Force full registry rebuild inside container
+docker compose exec backend npm run scrape:refresh
+# or: docker compose exec backend node scraper.js --refresh
+
+# One-off run if the container stack is stopped
+docker compose run --rm backend npm run scrape
 ```
 
 ## Version Management (CalVer)

@@ -45,12 +45,23 @@ cd frontend && npm install && npm run dev
 ```
 
 ### Data Fetching & Scraping Commands
+
+**From Host (auto-detects and runs inside Docker if container is running):**
 ```bash
 # Fetch latest daily NAV (reuses 7-day fund registry)
 node scripts/fetch-funds.js
 
 # Force full refresh (wipes registry cache and queries all 18 AMCs from scratch)
 node scripts/fetch-funds.js --refresh
+```
+
+**Inside Docker Container Directly:**
+```bash
+# Run scrape inside running backend container
+docker compose exec backend npm run scrape
+
+# Force full refresh inside container
+docker compose exec backend npm run scrape:refresh
 ```
 
 ## Architecture
