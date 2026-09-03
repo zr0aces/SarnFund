@@ -1,6 +1,6 @@
 {
   "name": "sarnfund-backend",
-  "version": "2026.8.0",
+  "version": "2026.9.1",
   "description": "Backend scraper service for SarnFund",
   "license": "MIT",
   "type": "module",
