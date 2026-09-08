@@ -83,3 +83,11 @@ Before completing any task:
 1. Run `cd frontend && npm run lint` to verify zero ESLint warnings/errors.
 2. Run `cd frontend && npm run build` to verify frontend production build succeeds.
 3. Run `node scripts/sync-version.mjs --check` to verify version alignment.
+
+<!-- agent-parity:pointer -->
+## Shared memory and agent state
+
+This repository is wired with `agent-parity`: a shared `memory` MCP server (`memory_recent`, `memory_add`, `memory_search`, `memory_get`) plus managed files under `.agent-parity/`, `.mcp.json`, `.cursor/`, `.codex/`, and `.agents/`. Treat those as repository state, not disposable generated files, and commit every changed managed file when you push.
+
+The full rules — including the cross-agent bootstrap for repairing a missing `memory` registration — live in the `agent-parity` block in [`AGENTS.md`](./AGENTS.md). Read it before touching memory wiring or bypassing the pre-push guard.
+<!-- /agent-parity:pointer -->

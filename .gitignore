@@ -150,6 +150,10 @@ graphify-out/
 .brainsync/
 .superpowers/
 
-# agent-parity:begin
+# agent-parity + agent tooling write into these; keep them in the repo
 !/.codex/
-# agent-parity:end
+
+# agent-parity tooling is local, reinstallable: keep it out of git.
+# Only the memory notes sync.
+/.agent-parity/*
+!/.agent-parity/memory/
