@@ -84,6 +84,14 @@ Before completing any task:
 2. Run `cd frontend && npm run build` to verify frontend production build succeeds.
 3. Run `node scripts/sync-version.mjs --check` to verify version alignment.
 
+## Plans
+
+When creating a plan file under `docs/plans/`, the filename must include the creation date using the format `YYYY-MM-dd-plan-name.md`.
+Use the actual date when the plan is created.
+Use a clear, descriptive name for `plan-name`.
+
+Example: `2026-09-12-document-figures-alignment.md`
+
 <!-- agent-parity:begin -->
 ## Shared memory and agent state
 
