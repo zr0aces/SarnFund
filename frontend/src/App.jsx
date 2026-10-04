@@ -5,6 +5,7 @@ import ThaiEsgPage from './pages/ThaiEsgPage';
 import ThaiEsgXPage from './pages/ThaiEsgXPage';
 import SsfPage from './pages/SsfPage';
 import EtfPage from './pages/EtfPage';
+import SpPage from './pages/SpPage';
 
 function App() {
     return (
@@ -16,6 +17,8 @@ function App() {
                 <Route path="/funds/thaiesgx" element={<ThaiEsgXPage />} />
                 <Route path="/funds/ssf" element={<SsfPage />} />
                 <Route path="/funds/etf" element={<EtfPage />} />
+                <Route path="/funds/sp" element={<SpPage />} />
+                <Route path="/funds/sp500" element={<SpPage />} />
                 {/* Fallback */}
                 <Route path="*" element={<div className="p-10 text-center">404 - Page Not Found</div>} />
             </Routes>

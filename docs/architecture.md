@@ -32,7 +32,7 @@ sequenceDiagram
     Backend->>SEC: GET /v2/fund/general-info/amcs (List all AMCs)
     Backend->>SEC: GET /v2/fund/general-info/profiles (Fetch fund profiles per AMC)
     Backend->>SEC: GET /v2/fund/general-info/specifications (Verify specifications)
-    Backend->>Backend: Classify as RMF, SSF, ESG, ESGX, or ETF
+    Backend->>Backend: Classify as RMF, SSF, ESG, ESGX, ETF, or S&P 500 (SP)
     Backend->>Backend: Save registry to data/fund-registry.json
     end
     
@@ -42,18 +42,18 @@ sequenceDiagram
     Backend->>SEC: GET /v2/fund/daily-info/nav (NAV, AUM, offering/redemption)
     Backend->>SEC: GET /v2/fund/factsheet/performance (YTD & returns)
     Backend->>Backend: Assemble fund schema objects
-    Backend->>Backend: Save JSON cache files (rmf.json, esg.json, etc.)
+    Backend->>Backend: Save JSON cache files (rmf.json, esg.json, sp.json, etc.)
     end
 ```
 
 ### 1. Phase 1 — Fund Registry Build (Weekly)
 - **TTL**: 7 days.
-- **Purpose**: Dynamically maps and classifies active funds from 18 AMCs into their respective tax-saving categories: RMF, SSF, ESG (ThaiESG), ESGX, or ETF.
+- **Purpose**: Dynamically maps and classifies active funds from 19 AMCs into their respective categories: RMF, SSF, ESG (ThaiESG), ESGX, ETF, or S&P 500 (SP).
 - **Mechanism**:
-  1. Requests all AMCs and filters against the target map of 18 companies.
+  1. Requests all AMCs and filters against the target map of 19 companies (including AIA IM).
   2. Queries all active (`Registered` / `IPO`) fund profiles for each AMC.
   3. Detects SSF and ESG/ESGX tax incentives from the profile fields.
-  4. For remaining profiles, queries specification details in batches of 5 to detect RMF or ETF types.
+  4. For remaining profiles, queries specification details in batches of 5 to detect RMF or ETF types, and merges the curated S&P 500 funds catalog.
   5. Caches the deduplicated result in `data/fund-registry.json`.
 
 ### 2. Phase 2 — Daily NAV Fetch (Daily)
@@ -63,7 +63,7 @@ sequenceDiagram
   1. Reads `data/fund-registry.json`.
   2. For each registered fund, queries the latest daily NAV (trying today, yesterday, and up to 5 days back to handle weekends and holidays).
   3. Queries performance statistics (YTD, 3M, 6M, 1Y, 3Y, 5Y) filtering specifically for the `ผลตอบแทนกองทุนรวม` (Fund Return) type.
-  4. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `all.json`).
+  4. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `sp.json`, `all.json`).
 
 ## Local Storage & Cache Synchronization
 

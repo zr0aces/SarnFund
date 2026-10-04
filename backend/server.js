@@ -41,10 +41,11 @@ app.use((req, res, next) => {
 await store.ensureDataDir();
 
 // Active fund types — to add a new type: add its key here
-const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'all']);
+const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'sp', 'all']);
 
 // Backward-compat aliases — must be before /:type or Express shadows them
 app.get('/api/funds/tesg', (req, res) => res.redirect(301, '/api/funds/esg'));
+app.get('/api/funds/sp500', (req, res) => res.redirect(301, '/api/funds/sp'));
 app.get('/api/funds/ltf', (_req, res) =>
   res.status(410).json({ success: false, error: 'LTF funds were discontinued. No longer tracked.' })
 );
@@ -175,6 +176,7 @@ app.listen(PORT, () => {
   console.log(`  GET    /api/funds/esgx  - ThaiESGX fund data`);
   console.log(`  GET    /api/funds/ssf   - SSF fund data`);
   console.log(`  GET    /api/funds/etf   - ETF fund data`);
+  console.log(`  GET    /api/funds/sp    - S&P 500 fund data`);
   console.log(`  GET    /api/funds/all   - All fund data`);
   console.log(`  POST   /api/scrape?force=true  - Force scrape`);
   console.log(`  DELETE /api/registry    - Reset fund registry cache`);

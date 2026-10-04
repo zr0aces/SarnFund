@@ -40,6 +40,12 @@ const ETF_INITIAL_DATA = [
   { id: 'et2', code: 'TDEX', name: 'ไทยเด็กซ์ เซ็ท 50 อีทีเอฟ', amc: 'ONE', nav: 9.10, ytd: -0.9, return1y: 3.8, risk: 6, type: 'Index ETF', isNew: false, navDate: '2026-06-23' }
 ];
 
+// Sample S&P 500 data
+const SP_INITIAL_DATA = [
+  { id: 'sp1', code: 'K-US500X-A(A)', name: 'K US500X Equity Fund (Individual Class A)', amc: 'KAsset', nav: 15.96, ytd: 10.5, return1y: 16.3, risk: 6, type: 'SP', isNew: false, navDate: '2026-10-01' },
+  { id: 'sp2', code: 'B-USPASSIVE', name: 'Bualuang US Passive Equity Fund', amc: 'Bualuang', nav: 14.00, ytd: 12.1, return1y: 21.7, risk: 6, type: 'SP', isNew: false, navDate: '2026-10-01' }
+];
+
 async function initializeData() {
   console.log('Initializing SarnFund backend seed data...');
   
@@ -48,14 +54,15 @@ async function initializeData() {
   console.log('✓ Data directory verified/created');
   
   const timestamp = Date.now();
-  const selectedAMCs = ['KKP', 'Krungsri', 'BBL', 'TISCO', 'SCB', 'ONE'];
+  const selectedAMCs = ['KKP', 'Krungsri', 'BBL', 'TISCO', 'SCB', 'ONE', 'KAsset', 'AIA IM'];
   
   const filesToCreate = [
     { name: 'rmf', data: RMF_INITIAL_DATA },
     { name: 'esg', data: ESG_INITIAL_DATA },
     { name: 'esgx', data: ESGX_INITIAL_DATA },
     { name: 'ssf', data: SSF_INITIAL_DATA },
-    { name: 'etf', data: ETF_INITIAL_DATA }
+    { name: 'etf', data: ETF_INITIAL_DATA },
+    { name: 'sp', data: SP_INITIAL_DATA }
   ];
 
   for (const file of filesToCreate) {
@@ -73,7 +80,8 @@ async function initializeData() {
       esg: ESG_INITIAL_DATA,
       esgx: ESGX_INITIAL_DATA,
       ssf: SSF_INITIAL_DATA,
-      etf: ETF_INITIAL_DATA
+      etf: ETF_INITIAL_DATA,
+      sp: SP_INITIAL_DATA
     }
   };
   await store.saveAllFundsCombined(allData);

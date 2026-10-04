@@ -19,7 +19,7 @@ import { FUND_CATEGORIES } from '../config/fundCategories';
 const TAX_TIPS = tipsData.general;
 
 const LandingPage = () => {
-  const [stats, setStats] = useState({ rmf: 0, esg: 0, esgx: 0, ssf: 0, etf: 0 });
+  const [stats, setStats] = useState({ rmf: 0, esg: 0, esgx: 0, ssf: 0, etf: 0, sp: 0 });
   const [metrics, setMetrics] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -55,40 +55,21 @@ const LandingPage = () => {
   const totalFundsCount = Object.values(stats).reduce((a, b) => a + b, 0);
   const categories = Object.values(FUND_CATEGORIES);
 
-  const cardsData = [
-    ...categories.map((cat) => ({
-      id: cat.id,
-      type: 'internal',
-      path: cat.path,
-      badge: cat.badge,
-      icon: cat.icon,
-      title: cat.title,
-      desc: cat.description,
-      colorClass: cat.theme.text,
-      badgeClass: cat.theme.badgeBg,
-      iconBgClass: cat.theme.iconBg,
-      glowClass: cat.theme.glow,
-      accentColor: cat.accentColor,
-      count: stats[cat.id] || 0,
-      metric: metrics[cat.id] || null
-    })),
-    {
-      id: 'tax',
-      type: 'external',
-      path: '/ThaiTax2569.html',
-      badge: 'TAX ENGINE 2569',
-      icon: Calculator,
-      title: 'Thai Tax Calculator 2569',
-      desc: 'Dynamic tax bracket planner, withholding rate optimizer, and deduction limit projector.',
-      colorClass: 'text-rose-400',
-      badgeClass: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      iconBgClass: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      glowClass: 'hover:border-rose-500/40 hover:shadow-[0_0_30px_rgba(244,63,94,0.15)]',
-      accentColor: '#F43F5E',
-      count: 'Active',
-      metric: null
-    }
-  ];
+  const cardsData = categories.map((cat) => ({
+    id: cat.id,
+    path: cat.path,
+    badge: cat.badge,
+    icon: cat.icon,
+    title: cat.title,
+    desc: cat.description,
+    colorClass: cat.theme.text,
+    badgeClass: cat.theme.badgeBg,
+    iconBgClass: cat.theme.iconBg,
+    glowClass: cat.theme.glow,
+    accentColor: cat.accentColor,
+    count: stats[cat.id] || 0,
+    metric: metrics[cat.id] || null
+  }));
 
   return (
     <div className="min-h-screen lg:h-screen lg:max-h-screen flex flex-col lg:flex-row bg-[#090D16] bg-radial-mesh text-slate-100 p-4 sm:p-6 lg:p-8 gap-6 relative overflow-y-auto lg:overflow-hidden font-sans">
@@ -97,14 +78,14 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-telemetry-grid pointer-events-none opacity-40"></div>
 
       {/* Left Panel: Sidebar Telemetry Hub */}
-      <aside className="lg:w-1/4 flex flex-col justify-between glass-panel rounded-3xl p-5 sm:p-6 relative overflow-hidden shrink-0 shadow-2xl z-10">
+      <aside className="lg:w-1/4 flex flex-col justify-between glass-panel rounded-3xl p-5 sm:p-6 relative overflow-y-auto custom-scrollbar shrink-0 shadow-2xl z-10 gap-4">
 
         {/* Ambient Glow Blob */}
         <div className="absolute -top-24 -left-24 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div>
           {/* Logo & Tag Header */}
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-5">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/20 shrink-0">
               <Trophy size={24} className="stroke-[2.5]" />
             </div>
@@ -122,11 +103,11 @@ const LandingPage = () => {
             {'//'} Telemetry Console
           </h2>
 
-          <p className="hidden lg:block text-slate-400 text-xs leading-relaxed mb-6">
-            Real-time mutual fund telemetry console for Thai tax-saving investments (RMF, ThaiESG, SSF, ETF) across 18 Asset Management Companies.
+          <p className="hidden lg:block text-slate-400 text-xs leading-relaxed mb-5">
+            Real-time mutual fund telemetry console for Thai investments (RMF, ThaiESG, SSF, ETF, S&P 500) across 19 Asset Management Companies.
           </p>
 
-          <div className="h-px bg-white/10 my-4 lg:my-6" />
+          <div className="h-px bg-white/10 my-3 lg:my-5" />
 
           {/* Stats Counters */}
           <div className="flex lg:flex-col gap-2.5">
@@ -162,20 +143,82 @@ const LandingPage = () => {
                 </div>
                 <span className="text-xs text-slate-400 font-mono">AMCs Covered</span>
               </div>
-              <span className="text-sm font-mono font-bold text-cyan-400">18 AMCs</span>
+              <span className="text-sm font-mono font-bold text-cyan-400">19 AMCs</span>
             </div>
           </div>
         </div>
 
+        {/* Thai Tax Calculator 2569 Command Tile */}
+        <a
+          href="/ThaiTax2569.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block p-4 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900/80 to-slate-950/90 border border-rose-500/25 hover:border-rose-500/50 hover:shadow-[0_0_25px_rgba(244,63,94,0.18)] transition-all duration-300 relative overflow-hidden shrink-0"
+        >
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-rose-500/15 transition-colors"></div>
+
+          {/* Top Row: Eyebrow + Live Indicator */}
+          <div className="flex items-center justify-between gap-2 mb-2 relative z-10">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/25 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+              TAX ENGINE 2569
+            </span>
+            <div className="p-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 group-hover:scale-110 transition-transform">
+              <Calculator size={15} />
+            </div>
+          </div>
+
+          {/* Title & Description */}
+          <div className="relative z-10 mb-2.5">
+            <h3 className="text-sm font-display font-extrabold text-white group-hover:text-rose-200 transition-colors flex items-center justify-between">
+              <span>Thai Tax Calculator</span>
+              <span className="text-[11px] font-mono font-bold text-rose-400 opacity-90">2569</span>
+            </h3>
+            <p className="text-[11px] text-slate-400 mt-1 leading-snug">
+              Dynamic bracket planner, withholding optimizer & 800k THB deduction limits.
+            </p>
+          </div>
+
+          {/* Stepped Tax Bracket Mini Visualizer */}
+          <div className="relative z-10 p-2 rounded-xl bg-slate-950/70 border border-white/5 flex items-center justify-between gap-2 mb-2.5">
+            <div className="text-[10px] font-mono text-slate-400">
+              <span className="text-rose-400 font-bold">5%</span> → <span className="text-white font-bold">35%</span> Progressive Tiers
+            </div>
+            <div className="flex items-end gap-1 h-5 px-1 shrink-0">
+              {[5, 10, 15, 20, 25, 30, 35].map((rate, rIdx) => (
+                <div
+                  key={rIdx}
+                  title={`Bracket: ${rate}%`}
+                  className="w-1 rounded-t-xs bg-rose-400/80 group-hover:bg-rose-400 transition-all duration-300 origin-bottom"
+                  style={{
+                    height: `${(rate / 35) * 100}%`,
+                    opacity: 0.35 + (rIdx / 7) * 0.65
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Action Row */}
+          <div className="flex items-center justify-between relative z-10 pt-2 border-t border-rose-500/15">
+            <span className="text-[10px] font-mono text-slate-400">Launch Tool</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-rose-300 group-hover:text-rose-200 group-hover:translate-x-0.5 transition-transform">
+              <span>Open Simulator</span>
+              <ExternalLink size={12} className="stroke-[2.5]" />
+            </span>
+          </div>
+        </a>
+
         {/* Tax Tips Carousel Box */}
-        <div className="hidden lg:block mt-6 p-4 rounded-2xl bg-slate-900/80 border border-white/10 relative overflow-hidden shrink-0">
-          <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mb-3">
+        <div className="hidden lg:block p-4 rounded-2xl bg-slate-900/80 border border-white/10 relative overflow-hidden shrink-0">
+          <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mb-2.5">
             <Sparkles size={14} className="animate-pulse" />
             Quick Planner Telemetry
           </div>
-          <div className="space-y-3 max-h-[200px] overflow-y-auto pr-1.5 custom-scrollbar">
+          <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1.5 custom-scrollbar">
             {shuffledTips.map((tip, idx) => (
-              <div key={idx} className="flex gap-2.5 text-xs text-slate-300 leading-relaxed border-b border-white/5 pb-2.5 last:border-0 last:pb-0">
+              <div key={idx} className="flex gap-2.5 text-xs text-slate-300 leading-relaxed border-b border-white/5 pb-2 last:border-0 last:pb-0">
                 <span className="text-amber-400 font-mono font-bold shrink-0">0{idx + 1}.</span>
                 <span>{tip}</span>
               </div>
@@ -211,152 +254,111 @@ const LandingPage = () => {
         {/* 6-Card Dashboard Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 gap-4 flex-grow min-h-0">
 
-          {cardsData.map((card) => {
-            const CardWrapper = card.type === 'internal' ? Link : 'a';
-            const extraProps = card.type === 'external'
-              ? { href: card.path, target: '_blank', rel: 'noopener noreferrer' }
-              : { to: card.path };
+          {cardsData.map((card) => (
+            <Link
+              key={card.id}
+              to={card.path}
+              className={`group flex flex-col justify-between p-5 glass-panel glass-panel-hover rounded-3xl overflow-hidden relative shadow-lg ${card.glowClass}`}
+            >
+              {/* Top Badge & Icon */}
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <span className={`text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg border leading-tight ${card.badgeClass}`}>
+                  {card.badge}
+                </span>
+                <div className={`p-2.5 rounded-2xl border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-300 ${card.iconBgClass} shrink-0`}>
+                  <card.icon size={18} className="stroke-[2.2]" />
+                </div>
+              </div>
 
-            return (
-              <CardWrapper
-                key={card.id}
-                {...extraProps}
-                className={`group flex flex-col justify-between p-5 glass-panel glass-panel-hover rounded-3xl overflow-hidden relative shadow-lg ${card.glowClass}`}
-              >
-                {/* Top Badge & Icon */}
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className={`text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg border leading-tight ${card.badgeClass}`}>
-                    {card.badge}
-                  </span>
-                  <div className={`p-2.5 rounded-2xl border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-300 ${card.iconBgClass} shrink-0`}>
-                    <card.icon size={18} className="stroke-[2.2]" />
+              {/* Title & Description */}
+              <div>
+                <h3 className="text-lg font-display font-extrabold text-white mb-1 group-hover:text-emerald-300 transition-colors leading-snug">
+                  {card.title}
+                </h3>
+                <p className="text-slate-400 text-xs leading-relaxed line-clamp-2">
+                  {card.desc}
+                </p>
+              </div>
+
+              {/* Real Performance Telemetry Pill & Mini-Bar Indicator */}
+              <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
+                {/* Top Fund and Avg Stats */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                      Top ({card.metric?.metricLabel || '1Y'}):
+                    </span>
+                    <span className="text-xs font-display font-extrabold text-white truncate max-w-[120px]">
+                      {card.metric?.topFund ? card.metric.topFund.code : '—'}
+                    </span>
+                    {card.metric?.topFund && typeof card.metric.topFund.returnVal === 'number' && (
+                      <span className={`text-xs font-mono font-bold ${card.metric.topFund.returnVal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {card.metric.topFund.returnVal > 0 ? '+' : ''}{card.metric.topFund.returnVal.toFixed(1)}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
+                    <span>Avg: <strong className={card.metric?.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{card.metric?.avgReturn ? `${card.metric.avgReturn > 0 ? '+' : ''}${card.metric.avgReturn.toFixed(1)}%` : '—'}</strong></span>
+                    {card.metric?.topFund?.amc && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5">
+                        {card.metric.topFund.amc}
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                {/* Title & Description */}
-                <div>
-                  <h3 className="text-lg font-display font-extrabold text-white mb-1 group-hover:text-emerald-300 transition-colors leading-snug">
-                    {card.title}
-                  </h3>
-                  <p className="text-slate-400 text-xs leading-relaxed line-clamp-2">
-                    {card.desc}
-                  </p>
-                </div>
-
-                {/* Real Performance Telemetry Pill & Mini-Bar Indicator (Option 3) */}
-                {card.id !== 'tax' ? (
-                  <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
-                    {/* Top Fund and Avg Stats */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                          Top ({card.metric?.metricLabel || '1Y'}):
-                        </span>
-                        <span className="text-xs font-display font-extrabold text-white truncate max-w-[120px]">
-                          {card.metric?.topFund ? card.metric.topFund.code : '—'}
-                        </span>
-                        {card.metric?.topFund && typeof card.metric.topFund.returnVal === 'number' && (
-                          <span className={`text-xs font-mono font-bold ${card.metric.topFund.returnVal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                            {card.metric.topFund.returnVal > 0 ? '+' : ''}{card.metric.topFund.returnVal.toFixed(1)}%
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
-                        <span>Avg: <strong className={card.metric?.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{card.metric?.avgReturn ? `${card.metric.avgReturn > 0 ? '+' : ''}${card.metric.avgReturn.toFixed(1)}%` : '—'}</strong></span>
-                        {card.metric?.topFund?.amc && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5">
-                            {card.metric.topFund.amc}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Mini-Bar Visual Spectrum */}
-                    <div className="flex items-end gap-1 h-7 px-1 shrink-0">
-                      {card.metric?.trendBars?.length ? (
-                        card.metric.trendBars.map((val, bIdx) => {
-                          const maxVal = Math.max(...card.metric.trendBars.map(Math.abs), 1);
-                          const heightPct = Math.max(Math.min((Math.abs(val) / maxVal) * 100, 100), 20);
-                          return (
-                            <div
-                              key={bIdx}
-                              title={`Rank ${bIdx + 1}: ${val > 0 ? '+' : ''}${val.toFixed(1)}%`}
-                              className="w-1.5 rounded-t-sm transition-all duration-300 group-hover:scale-y-110 origin-bottom"
-                              style={{
-                                height: `${heightPct}%`,
-                                backgroundColor: card.accentColor,
-                                opacity: 0.4 + (0.6 * (1 - bIdx / card.metric.trendBars.length))
-                              }}
-                            />
-                          );
-                        })
-                      ) : (
-                        <div className="flex items-end gap-1 h-full opacity-30">
-                          <div className="w-1.5 h-3 rounded-t-sm bg-slate-600" />
-                          <div className="w-1.5 h-5 rounded-t-sm bg-slate-600" />
-                          <div className="w-1.5 h-4 rounded-t-sm bg-slate-600" />
-                          <div className="w-1.5 h-6 rounded-t-sm bg-slate-600" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  /* Tax Engine Telemetry Pill */
-                  <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-400">
-                          Tax Year 2569:
-                        </span>
-                        <span className="text-xs font-mono font-bold text-white">
-                          Max Cap 800k THB
-                        </span>
-                      </div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                        500k Retirement + 300k ThaiESG
-                      </div>
-                    </div>
-
-                    {/* Mini Tax Bracket Progression Visualizer */}
-                    <div className="flex items-end gap-1 h-7 px-1 shrink-0">
-                      {[5, 10, 15, 20, 25, 30, 35].map((rate, rIdx) => (
+                {/* Mini-Bar Visual Spectrum */}
+                <div className="flex items-end gap-1 h-7 px-1 shrink-0">
+                  {card.metric?.trendBars?.length ? (
+                    card.metric.trendBars.map((val, bIdx) => {
+                      const maxVal = Math.max(...card.metric.trendBars.map(Math.abs), 1);
+                      const heightPct = Math.max(Math.min((Math.abs(val) / maxVal) * 100, 100), 20);
+                      return (
                         <div
-                          key={rIdx}
-                          title={`Bracket: ${rate}%`}
-                          className="w-1 rounded-t-sm bg-rose-400 transition-all duration-300 group-hover:scale-y-110 origin-bottom"
+                          key={bIdx}
+                          title={`Rank ${bIdx + 1}: ${val > 0 ? '+' : ''}${val.toFixed(1)}%`}
+                          className="w-1.5 rounded-t-sm transition-all duration-300 group-hover:scale-y-110 origin-bottom"
                           style={{
-                            height: `${(rate / 35) * 100}%`,
-                            opacity: 0.35 + (rIdx / 7) * 0.65
+                            height: `${heightPct}%`,
+                            backgroundColor: card.accentColor,
+                            opacity: 0.4 + (0.6 * (1 - bIdx / card.metric.trendBars.length))
                           }}
                         />
-                      ))}
+                      );
+                    })
+                  ) : (
+                    <div className="flex items-end gap-1 h-full opacity-30">
+                      <div className="w-1.5 h-3 rounded-t-sm bg-slate-600" />
+                      <div className="w-1.5 h-5 rounded-t-sm bg-slate-600" />
+                      <div className="w-1.5 h-4 rounded-t-sm bg-slate-600" />
+                      <div className="w-1.5 h-6 rounded-t-sm bg-slate-600" />
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
 
-                {/* Bottom Bar: Count & CTA */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-1">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">
-                      {card.id === 'tax' ? 'Status' : 'Available Funds'}
-                    </span>
-                    <span className="text-xs font-mono font-bold text-white mt-0.5">
-                      {loading && card.id !== 'tax' ? (
-                        <span className="inline-block w-8 h-3 bg-slate-800 rounded animate-pulse"></span>
-                      ) : (
-                        card.count
-                      )}
-                    </span>
-                  </div>
-
-                  <span className={`inline-flex items-center gap-1.5 text-xs font-mono font-bold group-hover:translate-x-1 transition-transform ${card.colorClass}`}>
-                    {card.type === 'external' ? 'Launch' : 'Inspect'}
-                    {card.type === 'external' ? <ExternalLink size={12} /> : <ArrowRight size={12} />}
+              {/* Bottom Bar: Count & CTA */}
+              <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-1">
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">
+                    Available Funds
+                  </span>
+                  <span className="text-xs font-mono font-bold text-white mt-0.5">
+                    {loading ? (
+                      <span className="inline-block w-8 h-3 bg-slate-800 rounded animate-pulse"></span>
+                    ) : (
+                      card.count
+                    )}
                   </span>
                 </div>
-              </CardWrapper>
-            );
-          })}
+
+                <span className={`inline-flex items-center gap-1.5 text-xs font-mono font-bold group-hover:translate-x-1 transition-transform ${card.colorClass}`}>
+                  Inspect
+                  <ArrowRight size={12} />
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
 
         {/* Footer Bar */}

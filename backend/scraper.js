@@ -6,11 +6,13 @@ import {
 } from './sec-api-connector.js';
 import config from './config.js';
 import { FileFundStoreAdapter } from './fund-store.js';
+import { SP_FUNDS_CATALOG } from './sp-catalog.js';
 
 // Single source of truth for AMC identity — display name + name-match regex in one entry.
 // v2 AMC list has no amc_id, so we match by comp_name_en / comp_name_th.
 // Adding an AMC here is the only change needed: display and pattern stay in sync.
 const AMC_REGISTRY = {
+  AIA:        { display: 'AIA IM',     pattern: /\baia\b/i },
   KKPAM:      { display: 'KKP',        pattern: /kiartnakin|kiatnakin|\bkkp\b/i },
   KSAM:       { display: 'Krungsri',   pattern: /krungsri/i },
   BBLAM:      { display: 'BBL',        pattern: /\bbbl\b/i },
@@ -72,20 +74,19 @@ function esgSubtype(profile) {
 
 // To add a new fund type: add its name here and handle detection in fundTypeFromTaxIncentive()
 // or via a spec_code in sec-api-connector.js FUND_SPEC_CODES.
-const FUND_TYPES = ['RMF', 'SSF', 'ESG', 'ESGX', 'ETF'];
+const FUND_TYPES = ['RMF', 'SSF', 'ESG', 'ESGX', 'ETF', 'SP'];
 // ESG/ESGX: many funds have null incentive_type — require spec lookup (TESG/TESGX spec_code).
 // Funds with the "Thai ESG" incentive string are caught in Phase 2; null-incentive ones fall here.
 const SPEC_LOOKUP_TYPES = ['RMF', 'ESGX', 'ESG', 'ETF'];
 const BATCH_SIZE     = 5;
 
-// Deduplicate by proj_id only: one fund project = one registry entry.
-// Phase-2 entries (classified by tax_incentive_type) appear first in the list and are kept;
-// Phase-3 entries for the same proj_id are silently dropped.
+// Deduplicate registry: tax funds by proj_id, multi-class SP funds by proj_id + class + code.
 function deduplicateRegistry(entries) {
   const seen = new Set();
   return entries.filter((e) => {
-    if (seen.has(e.proj_id)) return false;
-    seen.add(e.proj_id);
+    const key = e.type === 'SP' ? `${e.proj_id}_${e.class || 'main'}_${e.code}` : e.proj_id;
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
 }
@@ -201,6 +202,8 @@ async function buildRegistry(client, store) {
   }
 
   await store.clearProgress();
+  // Include curated S&P 500 funds catalog
+  partialRegistry.push(...SP_FUNDS_CATALOG);
   const registry = deduplicateRegistry(partialRegistry);
   if (registry.length < partialRegistry.length)
     console.log(`Deduplication removed ${partialRegistry.length - registry.length} duplicate entries`);

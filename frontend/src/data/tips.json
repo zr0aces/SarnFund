@@ -66,6 +66,14 @@
       "ETF: Trades using real-time bidding spreads just like single shares during market hours.",
       "ETF: Pay attention to the bid-ask spread and volume to ensure you enter and exit at fair NAV prices.",
       "ETF: Excellent for capturing immediate market exposure (e.g. SET50) without buying individual constituent stocks."
+    ],
+    "sp": [
+      "S&P 500: Most Thai funds feed into IVV (iShares) or SPY (SPDR) to track top 500 US companies.",
+      "S&P 500: Choose between Hedged (insulates against THB/USD swings) and Unhedged (captures USD appreciation).",
+      "S&P 500 E-Class: Selected AMCs offer zero or ultra-low management fee classes for mobile app investors.",
+      "S&P 500 Tax Classes: Look for RMF (e.g. K-US500XRMF, SCBRMS&P500) and SSF classes for tax deduction.",
+      "S&P 500 DCA: Dollar-cost averaging monthly is widely used to ride out foreign equity volatility.",
+      "S&P 500 Expense Ratio: Total expense ratio (TER) varies significantly between AMC share classes — check factsheets!"
     ]
   }
 }

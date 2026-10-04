@@ -4,6 +4,14 @@ Record of key architectural, layout, and framework design decisions.
 
 ---
 
+## 2026-10-04 — Add S&P 500 (`sp`) Fund Category with Curated Catalog and SEC Live Telemetry
+* **Status**: Accepted
+* **Decision**: Add a dedicated S&P 500 fund type (`sp` / `sp500`) with neon blue accent (`#3B82F6`), Globe telemetry icon, and a curated catalog of 33 funds/classes across 12 AMCs mapped directly to SEC Thailand Open Data API v2 project IDs.
+* **Rationale**: S&P 500 index funds are the dominant US equity allocation vehicle for Thai retail and tax-saving investors. Because they span multiple tax structures (general FIF, E-class, RMF, SSF) and currency hedge approaches (hedged, unhedged, dynamic), grouping them under a unified S&P 500 telemetry console gives investors a dedicated comparison workspace.
+* **Implementation**: Added `backend/sp-catalog.js`, updated `backend/server.js`, `backend/scraper.js`, `backend/fund-store.js`, `frontend/src/config/fundCategories.js`, `frontend/src/pages/SpPage.jsx`, `frontend/src/App.jsx`, and `frontend/src/components/DashboardLayout.jsx`.
+
+---
+
 ## 2026-08-23 — Vite 8 / Rolldown Code-Splitting and Production Bundle Optimization
 * **Status**: Accepted
 * **Decision**: Configure function-based `manualChunks` in `vite.config.js` compatible with Vite 8 / Rolldown to separate application logic from vendor dependencies (`vendor-react`, `vendor-charts`).

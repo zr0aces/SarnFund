@@ -1,5 +1,13 @@
 # Changelog
 
+## [2026.9.1] - 2026-10-04
+
+### Added
+- **S&P 500 Fund Category (`/funds/sp`)**: Added dedicated S&P 500 telemetry analytics page and backend API endpoints (`/api/funds/sp`, `/api/funds/sp500`).
+- **Curated S&P 500 Catalog (`backend/sp-catalog.js`)**: Integrated 33 S&P 500 funds and share classes across 12 AMCs (AIA IM, Asset Plus, Bualuang, Eastspring, KAsset, Krungsri, KKP, KTAM, MFC, SCBAM, TISCO, Talis) mapped directly to official SEC Open Data API v2 project IDs.
+- **AIA IM Integration**: Added AIA Investment Management (Thailand) to `AMC_REGISTRY` and `MASTER_AMC_COLORS` with dedicated `#D9222A` brand styling.
+- **S&P 500 Telemetry UI**: Glassmorphic theme styling with Globe icon, `#3B82F6` neon accent, tax guidance for General/RMF/SSF share classes, and category tips.
+
 ## [2026.8.0] - 2026-08-23
 
 ### Added

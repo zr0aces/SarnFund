@@ -1,6 +1,8 @@
-import { BarChart3, Leaf, Sprout, Wallet, TrendingUp } from 'lucide-react';
+import { BarChart3, Leaf, Sprout, Wallet, TrendingUp, Globe } from 'lucide-react';
 
 export const MASTER_AMC_COLORS = {
+    'AIA IM': '#D9222A',
+    Bualuang: '#2563EB',
     KKP: '#8B5CF6',
     Krungsri: '#F59E0B',
     BBL: '#2563EB',
@@ -166,6 +168,35 @@ export const FUND_CATEGORIES = {
             'Dividends paid depending on fund payout policy'
         ],
         sparklineD: 'M0,15 L12,24 L24,10 L36,22 L48,6 L60,16 L72,4 L84,20 L96,8 L100,2'
+    },
+    sp: {
+        id: 'sp',
+        type: 'sp',
+        path: '/funds/sp',
+        label: 'S&P 500',
+        title: 'S&P 500 Index Telemetry',
+        badge: 'US LARGE-CAP EQUITY',
+        icon: Globe,
+        accentColor: '#3B82F6',
+        allColor: '#3B82F6',
+        theme: {
+            text: 'text-blue-400',
+            bg: 'bg-blue-950/30',
+            border: 'border-blue-500/20',
+            badgeBg: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+            iconBg: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+            glow: 'hover:border-blue-500/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]',
+            tabActive: 'bg-blue-500/20 text-blue-300 border-blue-500/30 shadow-sm'
+        },
+        taxCap: 'General classes: standard FIF. RMF classes: 500k cap (30%). SSF classes: 200k cap.',
+        lockup: 'General classes: None. RMF: Age 55 + 5 years. SSF: 10 full years.',
+        description: 'S&P 500 Index Funds in Thailand. Passive feeders tracking IVV/SPY with hedged, unhedged, and tax-saving share classes.',
+        keyRules: [
+            'Underlying investments predominantly in iShares Core S&P 500 ETF (IVV) or SPDR S&P 500 ETF (SPY)',
+            'Multiple currency hedge strategies: fully hedged, dynamic hedging, or unhedged (UH)',
+            'Features Retail general classes, E-class (low fee via mobile apps), RMF, and SSF investment options'
+        ],
+        sparklineD: 'M0,22 Q15,14 30,18 T60,8 T90,10 T100,2'
     }
 };
 

@@ -1,7 +1,7 @@
 /* global __APP_VERSION__ */
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Calculator, BarChart3, Leaf, Sprout, Wallet, TrendingUp, Search, ShieldCheck } from 'lucide-react';
+import { RefreshCw, ArrowLeft, Calculator, BarChart3, Leaf, Sprout, Wallet, TrendingUp, Globe, Search, ShieldCheck } from 'lucide-react';
 import { useFundData } from '../hooks/useFundData';
 import { FUND_CATEGORIES } from '../config/fundCategories';
 import KPICards from './KPICards';
@@ -16,6 +16,7 @@ const FUND_TABS = [
     { to: '/funds/thaiesgx', label: 'ESGX',     type: 'esgx', icon: Sprout,     activeClass: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
     { to: '/funds/ssf',      label: 'SSF',      type: 'ssf',  icon: Wallet,     activeClass: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
     { to: '/funds/etf',      label: 'ETF',      type: 'etf',  icon: TrendingUp, activeClass: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
+    { to: '/funds/sp',       label: 'S&P 500',  type: 'sp',   icon: Globe,      activeClass: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
 ];
 
 const DashboardLayout = ({ title, icon: Icon, fundType, AMC_COLORS, initialMockData }) => {

@@ -1,13 +1,13 @@
 # SarnFund
 
-Thai mutual fund analytics telemetry console for tax-saving investments tracking RMF, ThaiESG (ESG), ThaiESGX (ESGX), SSF, and ETF funds across 18 Asset Management Companies using the official SEC Open Data API v2.
+Thai mutual fund analytics telemetry console tracking RMF, ThaiESG (ESG), ThaiESGX (ESGX), SSF, ETF, and S&P 500 funds across 19 Asset Management Companies using the official SEC Open Data API v2.
 
 ## Features
 
 - **Official SEC API v2**: Direct data ingestion from `api.sec.or.th` (no web scraping or fragile session cookies).
-- **Five Fund Categories Tracked**: RMF, ThaiESG, ThaiESGX, SSF, and ETF.
+- **Six Fund Categories Tracked**: RMF, ThaiESG, ThaiESGX, SSF, ETF, and S&P 500 (`/funds/sp`).
 - **Thai Tax Engine 2569**: Built-in dynamic tax bracket planner, withholding optimizer, and deduction limit projector.
-- **18 AMCs Tracked**: Including KKP, Krungsri, BBL, TISCO, SCB, KAsset, KTAM, ONE, UOB, Principal, Eastspring, Asset Plus, DAOL, KWI, LH Fund, MFC, TALIS, and XSpring.
+- **19 AMCs Tracked**: Including AIA IM, KKP, Krungsri, BBL, TISCO, SCB, KAsset, KTAM, ONE, UOB, Principal, Eastspring, Asset Plus, DAOL, KWI, LH Fund, MFC, TALIS, and XSpring.
 - **Zero-Downtime Key Failover**: Primary + Secondary API key rotation with automatic 401 failover.
 - **Dual-Layer Caching**: 7-day fund registry metadata cache + 24-hour NAV daily price cache (with browser `localStorage` instant hydration).
 - **High-Performance Telemetry UI**: Dark Obsidian glassmorphic telemetry console with Kanit, Prompt, and JetBrains Mono typography, responsive on mobile and desktop.

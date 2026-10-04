@@ -130,7 +130,7 @@ export class FileFundStoreAdapter {
   }
 
   async getHealth() {
-    const types = ['rmf', 'esg', 'esgx', 'ssf', 'etf'];
+    const types = ['rmf', 'esg', 'esgx', 'ssf', 'etf', 'sp'];
     const cacheResults = await Promise.all(types.map(t => this.getFunds(t)));
     
     let registry = null;
@@ -176,7 +176,7 @@ export class FileFundStoreAdapter {
   }
 
   async getStats() {
-    const types = ['rmf', 'esg', 'esgx', 'ssf', 'etf'];
+    const types = ['rmf', 'esg', 'esgx', 'ssf', 'etf', 'sp'];
     const cacheResults = await Promise.all(types.map(t => this.getFunds(t)));
 
     let failures = [];

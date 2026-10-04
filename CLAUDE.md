@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (`claude` CLI) when working with code
 
 # SarnFund — AI Coding Agent Guidelines
 
-SarnFund is a mutual fund analytics dashboard for Thai tax-saving investments (RMF, SSF, ThaiESG/ESG, ThaiESGX/ESGX, ETF). It fetches data from the **SEC Thailand Open Data API v2** (`api.sec.or.th`) using subscription-key authentication.
+SarnFund is a mutual fund analytics dashboard for Thai investments (RMF, SSF, ThaiESG/ESG, ThaiESGX/ESGX, ETF, S&P 500). It fetches data from the **SEC Thailand Open Data API v2** (`api.sec.or.th`) using subscription-key authentication.
 
 ---
 

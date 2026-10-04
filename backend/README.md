@@ -74,6 +74,8 @@ Secondary keys enable zero-downtime key rotation: if the primary key returns 401
 | GET | `/api/funds/esgx` | — | ThaiESGX fund data |
 | GET | `/api/funds/ssf` | — | SSF fund data |
 | GET | `/api/funds/etf` | — | ETF fund data |
+| GET | `/api/funds/sp` | — | S&P 500 fund data |
+| GET | `/api/funds/sp500` | — | Redirects 301 to `/api/funds/sp` |
 | GET | `/api/funds/all` | — | All fund categories combined |
 | GET | `/api/funds/tesg` | — | Redirects 301 to `/api/funds/esg` (backward compatibility) |
 | GET | `/api/funds/ltf` | — | Returns 410 Gone (LTF discontinued) |
@@ -92,6 +94,7 @@ Secondary keys enable zero-downtime key rotation: if the primary key returns 401
 | `data/esgx.json` | 24 h | Latest ThaiESGX NAV + performance |
 | `data/ssf.json` | 24 h | Latest SSF NAV + performance |
 | `data/etf.json` | 24 h | Latest ETF NAV + performance |
+| `data/sp.json` | 24 h | Latest S&P 500 NAV + performance |
 | `data/all.json` | 24 h | Combined snapshot of all fund categories |
 | `data/failed-funds.json` | 24 h | Log of funds with failed lookups or 0 NAV |
 
