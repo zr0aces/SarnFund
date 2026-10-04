@@ -6,7 +6,8 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
 
     const chartData = useMemo(() => {
         const metric = showNewOnly ? 'ytd' : sortBy;
-        const validFunds = funds.filter(f => isValidNumber(f[metric]));
+        // The current SEC snapshot uses zero as the missing-performance sentinel.
+        const validFunds = funds.filter(f => isValidNumber(f[metric]) && f[metric] !== 0);
 
         return validFunds.slice(0, 10).map(f => ({
             name: f.class ? `${f.code} (${f.class})` : f.code,

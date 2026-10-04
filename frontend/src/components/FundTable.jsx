@@ -2,6 +2,17 @@ import { ExternalLink, Filter } from 'lucide-react';
 import { isValidNumber } from '../utils/number';
 
 const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
+    const hasPerformance = funds.some(fund =>
+        ['ytd', 'return3m', 'return6m', 'return1y', 'return3y', 'return5y'].some(key =>
+            isValidNumber(fund[key]) && fund[key] !== 0
+        )
+    );
+    const renderNav = (fund) => (
+        <div className="font-mono">
+            <div className="text-sm text-slate-200">{isValidNumber(fund.nav) ? fund.nav.toFixed(4) : '—'}</div>
+            <div className="text-[10px] text-slate-400">{fund.navDate || 'Date unavailable'}</div>
+        </div>
+    );
 
     const renderReturnCell = (value, isBold = false) => {
         if (value === 0 || !isValidNumber(value)) {
@@ -66,6 +77,12 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                 </div>
             )}
 
+            {funds.length > 0 && !hasPerformance && (
+                <p role="status" className="px-4 sm:px-6 py-3 text-xs text-slate-300 border-b border-white/10">
+                    SEC performance data is unavailable in this snapshot. Latest NAV prices and dates are shown below; missing returns are not 0% returns.
+                </p>
+            )}
+
             {/* Mobile card list (< sm) */}
             {funds.length > 0 && (
                 <div className="sm:hidden divide-y divide-white/5">
@@ -102,6 +119,11 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                         {fund.risk || '-'}
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="mb-3 flex items-center justify-between">
+                                <span className="text-xs text-slate-400">Latest NAV</span>
+                                {renderNav(fund)}
                             </div>
 
                             {/* Return chips */}
@@ -145,6 +167,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                 <th className="p-4">Fund Ticker</th>
                                 <th className="p-4 hidden lg:table-cell">Policy / Class</th>
                                 <th className="p-4 text-center">Risk Tier</th>
+                                <th className="p-4 text-right">Latest NAV</th>
                                 <th className={`p-4 text-right ${sortBy === 'ytd' || showNewOnly ? 'text-emerald-400 bg-emerald-500/10' : ''}`}>YTD</th>
                                 <th className={`p-4 text-right hidden sm:table-cell ${sortBy === 'return3m' ? 'text-emerald-400 bg-emerald-500/10' : ''}`}>3M</th>
                                 <th className={`p-4 text-right hidden sm:table-cell ${sortBy === 'return6m' ? 'text-emerald-400 bg-emerald-500/10' : ''}`}>6M</th>
@@ -210,6 +233,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
                                             {fund.risk || '-'}
                                         </div>
                                     </td>
+                                    <td className="p-4 text-right whitespace-nowrap">{renderNav(fund)}</td>
                                     <td className={`p-4 text-right ${sortBy === 'ytd' || showNewOnly ? 'bg-emerald-500/10' : ''}`}>
                                         {renderReturnCell(fund.ytd, sortBy === 'ytd' || showNewOnly)}
                                     </td>

@@ -7,15 +7,17 @@ export const useFundData = (fundType, initialMockData) => {
     const cacheKey = `fund_cache_${CACHE_VERSION}_${fundType}`;
 
     const getInitialCache = useCallback(() => {
-        const raw = localStorage.getItem(cacheKey);
-        if (raw) {
-            try {
+        try {
+            const raw = localStorage.getItem(cacheKey);
+            if (raw) {
                 const parsed = JSON.parse(raw);
-                if (Date.now() - parsed.timestamp < CACHE_DURATION) {
+                if (Array.isArray(parsed?.data) && parsed.data.length > 0 &&
+                    parsed.data.every(fund => fund && typeof fund === 'object' && !Array.isArray(fund)) &&
+                    Number.isFinite(parsed.timestamp) && Date.now() - parsed.timestamp < CACHE_DURATION) {
                     return parsed;
                 }
-            } catch { /* corrupted cache */ }
-        }
+            }
+        } catch { /* corrupted or unavailable browser storage */ }
         return null;
     }, [cacheKey]);
 
@@ -54,7 +56,8 @@ export const useFundData = (fundType, initialMockData) => {
 
             const result = await res.json();
             if (ignoreRef?.current) return;
-            if (!result.success || !result.data?.length) {
+            if (!result.success || !Array.isArray(result.data) || !result.data.length ||
+                !Number.isFinite(result.timestamp)) {
                 throw new Error('No data available from API');
             }
 
@@ -69,11 +72,13 @@ export const useFundData = (fundType, initialMockData) => {
             setDataSource('api');
             setLoading(false);
 
-            localStorage.setItem(cacheKey, JSON.stringify({
-                timestamp:   result.timestamp,
-                lastUpdated: result.lastUpdated,
-                data:        result.data,
-            }));
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    timestamp:   result.timestamp,
+                    lastUpdated: result.lastUpdated,
+                    data:        result.data,
+                }));
+            } catch { /* display API data even if browser storage is unavailable */ }
         } catch (err) {
             if (ignoreRef?.current) return;
             // In silent mode, only surface the error if there's no cache to fall back on.
@@ -82,7 +87,7 @@ export const useFundData = (fundType, initialMockData) => {
                 setDataSource('error');
             }
         } finally {
-            if (!isSilent) {
+            if (!ignoreRef?.current && (!isSilent || !cachedTs)) {
                 setLoading(false);
             }
         }
@@ -102,7 +107,7 @@ export const useFundData = (fundType, initialMockData) => {
     }, [fundType, cacheKey, getInitialCache, fetchData]);
 
     const refresh = useCallback(() => {
-        localStorage.removeItem(cacheKey);
+        try { localStorage.removeItem(cacheKey); } catch { /* browser storage unavailable */ }
         currentTimestamp.current = 0;
         fetchData(false, null);
     }, [cacheKey, fetchData]);

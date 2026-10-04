@@ -24,10 +24,10 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
     const currentTip = shuffledTips[activeTipIndex];
 
     const stats = useMemo(() => {
-        if (funds.length === 0) return { bestFund: null, avgReturn: 0, metric: sortBy };
+        if (funds.length === 0) return { bestFund: null, avgReturn: null, metric: sortBy };
         const metric = showNewOnly ? 'ytd' : sortBy;
         const validFunds = funds.filter(f => isValidNumber(f[metric]) && f[metric] !== 0);
-        if (validFunds.length === 0) return { bestFund: null, avgReturn: 0, metric };
+        if (validFunds.length === 0) return { bestFund: null, avgReturn: null, metric };
         const bestFund = [...validFunds].sort((a, b) => b[metric] - a[metric])[0];
         const avgReturn = validFunds.reduce((sum, f) => sum + f[metric], 0) / validFunds.length;
         return { bestFund, avgReturn, metric };
@@ -37,6 +37,9 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
     const bestVal = (stats.bestFund && isValidNumber(stats.bestFund[stats.metric]))
         ? stats.bestFund[stats.metric]
         : null;
+    const averageLabel = stats.avgReturn === null
+        ? '—'
+        : `${stats.avgReturn >= 0 ? '+' : ''}${stats.avgReturn.toFixed(2)}%`;
 
     return (
         <>
@@ -85,9 +88,11 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
                             Avg · {label}
                         </p>
                         <span className={`text-sm font-mono font-bold ${stats.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                            {stats.avgReturn >= 0 ? '+' : ''}{stats.avgReturn.toFixed(2)}%
+                            {averageLabel}
                         </span>
-                        <p className="text-[10px] font-mono text-slate-400 mt-0.5">{funds.length} funds</p>
+                        <p className="text-[10px] font-mono text-slate-400 mt-0.5">
+                            {stats.avgReturn === null ? 'Performance unavailable' : `${funds.length} funds`}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -146,9 +151,11 @@ const KPICards = ({ funds, showNewOnly, sortBy, getSortLabel, AMC_COLORS, fundTy
                             {'//'} Average Return ({label})
                         </p>
                         <h3 className={`text-2xl font-mono font-bold tracking-tight ${stats.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                            {stats.avgReturn >= 0 ? '+' : ''}{stats.avgReturn.toFixed(2)}%
+                            {averageLabel}
                         </h3>
-                        <p className="text-xs font-mono text-slate-400 mt-1">Calculated from {funds.length} funds</p>
+                        <p className="text-xs font-mono text-slate-400 mt-1">
+                            {stats.avgReturn === null ? 'Performance unavailable' : `Calculated from ${funds.length} funds`}
+                        </p>
                     </div>
                 </div>
 
