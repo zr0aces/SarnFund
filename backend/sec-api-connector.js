@@ -488,9 +488,12 @@ export class HttpSecAdapter {
     return this._client.getLatestNav(projId, maxDaysBack, fundClass);
   }
 
-  async getFundPerformance(projId) {
+  async getFundPerformance(projId, fundClass = null) {
     const rows = await this._client.getFundPerformance(projId);
-    return parsePerformanceV2(rows);
+    // The endpoint returns all share classes. Never mix another class's returns.
+    const classRows = fundClass
+      ? rows.filter(row => (row.fund_class_name || '').trim() === fundClass.trim())
+      : rows;
+    return parsePerformanceV2(classRows);
   }
 }
-

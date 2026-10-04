@@ -153,37 +153,37 @@ const LandingPage = () => {
           href="/ThaiTax2569.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="group block p-4 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900/80 to-slate-950/90 border border-rose-500/25 hover:border-rose-500/50 hover:shadow-[0_0_25px_rgba(244,63,94,0.18)] transition-all duration-300 relative overflow-hidden shrink-0"
+          className="group block p-4 rounded-2xl bg-gradient-to-br from-rose-50 via-white to-slate-50 text-slate-700 font-display border border-rose-200 hover:border-rose-400 hover:shadow-[0_0_25px_rgba(244,63,94,0.18)] transition-all duration-300 relative overflow-hidden shrink-0"
         >
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-rose-500/15 transition-colors"></div>
 
           {/* Top Row: Eyebrow + Live Indicator */}
           <div className="flex items-center justify-between gap-2 mb-2 relative z-10">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/25 inline-flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-rose-100 text-rose-700 border border-rose-200 inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
               TAX ENGINE 2569
             </span>
-            <div className="p-1.5 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 group-hover:scale-110 transition-transform">
+            <div className="p-1.5 rounded-xl bg-rose-100 text-rose-700 border border-rose-200 group-hover:scale-110 transition-transform">
               <Calculator size={15} />
             </div>
           </div>
 
           {/* Title & Description */}
           <div className="relative z-10 mb-2.5">
-            <h3 className="text-sm font-display font-extrabold text-white group-hover:text-rose-200 transition-colors flex items-center justify-between">
+            <h3 className="text-sm font-sans font-extrabold text-slate-900 group-hover:text-rose-700 transition-colors flex items-center justify-between">
               <span>Thai Tax Calculator</span>
-              <span className="text-[11px] font-mono font-bold text-rose-400 opacity-90">2569</span>
+              <span className="text-[11px] font-display font-bold text-rose-700">2569</span>
             </h3>
-            <p className="text-[11px] text-slate-400 mt-1 leading-snug">
+            <p className="text-[11px] text-slate-600 mt-1 leading-snug">
               Dynamic bracket planner, withholding optimizer & 800k THB deduction limits.
             </p>
           </div>
 
           {/* Stepped Tax Bracket Mini Visualizer */}
-          <div className="relative z-10 p-2 rounded-xl bg-slate-950/70 border border-white/5 flex items-center justify-between gap-2 mb-2.5">
-            <div className="text-[10px] font-mono text-slate-400">
-              <span className="text-rose-400 font-bold">5%</span> → <span className="text-white font-bold">35%</span> Progressive Tiers
+          <div className="relative z-10 p-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 mb-2.5">
+            <div className="text-[10px] text-slate-600">
+              <span className="text-rose-700 font-bold">5%</span> → <span className="text-slate-900 font-bold">35%</span> Progressive Tiers
             </div>
             <div className="flex items-end gap-1 h-5 px-1 shrink-0">
               {[5, 10, 15, 20, 25, 30, 35].map((rate, rIdx) => (
@@ -202,8 +202,8 @@ const LandingPage = () => {
 
           {/* Action Row */}
           <div className="flex items-center justify-between relative z-10 pt-2 border-t border-rose-500/15">
-            <span className="text-[10px] font-mono text-slate-400">Launch Tool</span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-rose-300 group-hover:text-rose-200 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-[10px] text-slate-600">Launch Tool</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 group-hover:text-rose-800 group-hover:translate-x-0.5 transition-transform">
               <span>Open Simulator</span>
               <ExternalLink size={12} className="stroke-[2.5]" />
             </span>
@@ -254,15 +254,22 @@ const LandingPage = () => {
         {/* 6-Card Dashboard Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2 gap-4 flex-grow min-h-0">
 
-          {cardsData.map((card) => (
+          {cardsData.map((card) => {
+            const isSp = card.id === 'sp';
+            const primaryText = isSp ? 'text-slate-900' : 'text-white';
+            const secondaryText = isSp ? 'text-slate-600' : 'text-slate-400';
+            const positiveText = isSp ? 'text-emerald-700' : 'text-emerald-400';
+            const negativeText = isSp ? 'text-rose-700' : 'text-rose-400';
+            const labelFont = isSp ? 'font-display' : 'font-mono';
+            return (
             <Link
               key={card.id}
               to={card.path}
-              className={`group flex flex-col justify-between p-5 glass-panel glass-panel-hover rounded-3xl overflow-hidden relative shadow-lg ${card.glowClass}`}
+              className={`group flex flex-col justify-between p-5 ${isSp ? 'bg-white text-slate-900 font-display border border-blue-200 transition-all hover:bg-blue-50' : 'glass-panel glass-panel-hover'} rounded-3xl overflow-hidden relative shadow-lg ${card.glowClass}`}
             >
               {/* Top Badge & Icon */}
               <div className="flex items-start justify-between gap-2 mb-2">
-                <span className={`text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg border leading-tight ${card.badgeClass}`}>
+                <span className={`text-[10px] ${labelFont} font-bold tracking-wider uppercase px-2.5 py-1 rounded-lg border leading-tight ${card.badgeClass}`}>
                   {card.badge}
                 </span>
                 <div className={`p-2.5 rounded-2xl border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-300 ${card.iconBgClass} shrink-0`}>
@@ -272,35 +279,35 @@ const LandingPage = () => {
 
               {/* Title & Description */}
               <div>
-                <h3 className="text-lg font-display font-extrabold text-white mb-1 group-hover:text-emerald-300 transition-colors leading-snug">
+                <h3 className={`text-lg ${isSp ? 'font-sans group-hover:text-blue-700' : 'font-display group-hover:text-emerald-300'} font-extrabold ${primaryText} mb-1 transition-colors leading-snug`}>
                   {card.title}
                 </h3>
-                <p className="text-slate-400 text-xs leading-relaxed line-clamp-2">
+                <p className={`${secondaryText} text-xs leading-relaxed line-clamp-2`}>
                   {card.desc}
                 </p>
               </div>
 
               {/* Real Performance Telemetry Pill & Mini-Bar Indicator */}
-              <div className="my-2.5 p-2.5 rounded-2xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
+              <div className={`my-2.5 p-2.5 rounded-2xl ${isSp ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/70 border-white/10'} border flex items-center justify-between gap-3`}>
                 {/* Top Fund and Avg Stats */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                    <span className={`text-[10px] ${labelFont} font-bold uppercase tracking-wider ${secondaryText}`}>
                       Top ({card.metric?.metricLabel || '1Y'}):
                     </span>
-                    <span className="text-xs font-display font-extrabold text-white truncate max-w-[120px]">
+                    <span className={`text-xs font-display font-extrabold ${primaryText} truncate max-w-[120px]`}>
                       {card.metric?.topFund ? card.metric.topFund.code : '—'}
                     </span>
                     {card.metric?.topFund && typeof card.metric.topFund.returnVal === 'number' && (
-                      <span className={`text-xs font-mono font-bold ${card.metric.topFund.returnVal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <span className={`text-xs ${labelFont} font-bold ${card.metric.topFund.returnVal >= 0 ? positiveText : negativeText}`}>
                         {card.metric.topFund.returnVal > 0 ? '+' : ''}{card.metric.topFund.returnVal.toFixed(1)}%
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-2">
-                    <span>Avg: <strong className={card.metric?.avgReturn >= 0 ? 'text-emerald-400' : 'text-rose-400'}>{card.metric?.avgReturn ? `${card.metric.avgReturn > 0 ? '+' : ''}${card.metric.avgReturn.toFixed(1)}%` : '—'}</strong></span>
+                  <div className={`text-[10px] ${labelFont} ${secondaryText} mt-0.5 flex items-center gap-2`}>
+                    <span>Avg: <strong className={card.metric?.avgReturn >= 0 ? positiveText : negativeText}>{card.metric?.avgReturn ? `${card.metric.avgReturn > 0 ? '+' : ''}${card.metric.avgReturn.toFixed(1)}%` : '—'}</strong></span>
                     {card.metric?.topFund?.amc && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5">
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded border ${isSp ? 'bg-slate-100 text-slate-700 border-slate-200' : 'bg-slate-800 text-slate-300 border-white/5'}`}>
                         {card.metric.topFund.amc}
                       </span>
                     )}
@@ -338,27 +345,28 @@ const LandingPage = () => {
               </div>
 
               {/* Bottom Bar: Count & CTA */}
-              <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-1">
+              <div className={`flex items-center justify-between pt-3 border-t ${isSp ? 'border-slate-200' : 'border-white/10'} mt-1`}>
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">
+                  <span className={`text-[9px] ${labelFont} ${secondaryText} uppercase tracking-wider`}>
                     Available Funds
                   </span>
-                  <span className="text-xs font-mono font-bold text-white mt-0.5">
+                  <span className={`text-xs ${labelFont} font-bold ${primaryText} mt-0.5`}>
                     {loading ? (
-                      <span className="inline-block w-8 h-3 bg-slate-800 rounded animate-pulse"></span>
+                      <span className={`inline-block w-8 h-3 ${isSp ? 'bg-slate-200' : 'bg-slate-800'} rounded animate-pulse`}></span>
                     ) : (
                       card.count
                     )}
                   </span>
                 </div>
 
-                <span className={`inline-flex items-center gap-1.5 text-xs font-mono font-bold group-hover:translate-x-1 transition-transform ${card.colorClass}`}>
+                <span className={`inline-flex items-center gap-1.5 text-xs ${labelFont} font-bold group-hover:translate-x-1 transition-transform ${card.colorClass}`}>
                   Inspect
                   <ArrowRight size={12} />
                 </span>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* Footer Bar */}

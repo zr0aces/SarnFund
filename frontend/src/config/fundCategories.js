@@ -180,13 +180,13 @@ export const FUND_CATEGORIES = {
         accentColor: '#3B82F6',
         allColor: '#3B82F6',
         theme: {
-            text: 'text-blue-400',
-            bg: 'bg-blue-950/30',
-            border: 'border-blue-500/20',
-            badgeBg: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-            iconBg: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+            text: 'text-blue-700',
+            bg: 'bg-blue-50',
+            border: 'border-blue-200',
+            badgeBg: 'bg-blue-50 text-blue-700 border-blue-200',
+            iconBg: 'bg-blue-50 text-blue-700 border-blue-200',
             glow: 'hover:border-blue-500/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]',
-            tabActive: 'bg-blue-500/20 text-blue-300 border-blue-500/30 shadow-sm'
+            tabActive: 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm'
         },
         taxCap: 'General classes: standard FIF. RMF classes: 500k cap (30%). SSF classes: 200k cap.',
         lockup: 'General classes: None. RMF: Age 55 + 5 years. SSF: 10 full years.',

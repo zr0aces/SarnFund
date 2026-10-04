@@ -245,7 +245,7 @@ async function fetchFundData(client, entry) {
 
   let perf = null;
   try {
-    perf = await client.getFundPerformance(proj_id);
+    perf = await client.getFundPerformance(proj_id, fundClass);
   } catch (err) { console.warn(`Performance fetch failed for ${proj_id}:`, err.message); }
 
   // v2 NAV: sell_price / buy_price are top-level (not nested under amc_info)
@@ -298,7 +298,12 @@ export async function scrapeData(connector, store) {
 
   // Step 1: get or build registry
   let registry = await store.getRegistry();
-  if (!registry) registry = await buildRegistry(connector, store);
+  if (registry) {
+    // Older caches predate SP; include the catalog without rebuilding SEC profiles.
+    registry = deduplicateRegistry([...registry, ...SP_FUNDS_CATALOG]);
+  } else {
+    registry = await buildRegistry(connector, store);
+  }
 
   // Step 2: fetch NAV + performance for every fund concurrently
   const buckets = Object.fromEntries(FUND_TYPES.map((t) => [t, []]));
