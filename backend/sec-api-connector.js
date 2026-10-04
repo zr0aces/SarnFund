@@ -291,6 +291,20 @@ class SecApiClient {
     );
   }
 
+  /**
+   * GET /v2/fund/factsheet/risk-spectrum
+   * Returns: items[].{ proj_id, risk_spectrum, risk_spectrum_desc, ... }
+   */
+  getRiskSpectrum(projId = null) {
+    const params = { latest: 'true' };
+    if (projId) params.proj_id = projId;
+    return this._getAllPages(
+      `${BASE_URL}/v2/fund/factsheet/risk-spectrum`,
+      params,
+      this._fsKey, this._fsKey2, this._fsRL
+    );
+  }
+
   // ── Fund Daily Info API (v2) ──────────────────────────────────────────────
   // Subscription key: SEC_DAILYINFO_KEY
 
@@ -336,6 +350,17 @@ class SecApiClient {
     return this._getAllPages(
       `${BASE_URL}/v2/fund/daily-info/nav`,
       params,
+      this._diKey, this._diKey2, this._diRL
+    );
+  }
+
+  /**
+   * GET /v2/fund/daily-info/nav across all funds within a date range
+   */
+  getDailyNavRange(startNavDate, endNavDate) {
+    return this._getAllPages(
+      `${BASE_URL}/v2/fund/daily-info/nav`,
+      { start_nav_date: startNavDate, end_nav_date: endNavDate },
       this._diKey, this._diKey2, this._diRL
     );
   }
@@ -495,5 +520,68 @@ export class HttpSecAdapter {
       ? rows.filter(row => (row.fund_class_name || '').trim() === fundClass.trim())
       : rows;
     return parsePerformanceV2(classRows);
+  }
+
+  async getRiskMap() {
+    const rows = await this._client.getRiskSpectrum();
+    const map = new Map();
+    for (const r of rows || []) {
+      if (r.proj_id && r.risk_spectrum) {
+        const num = parseInt(String(r.risk_spectrum).replace(/\D/g, ''), 10);
+        if (!isNaN(num) && num > 0) {
+          map.set(r.proj_id, num);
+        }
+      }
+    }
+    return map;
+  }
+
+  async getBenchmarkNavMaps(refDateStr = thaiDateStr(0)) {
+    const d = new Date(refDateStr + 'T00:00:00Z');
+    const year = d.getUTCFullYear();
+    const fmt = (x) => x.toISOString().slice(0, 10);
+
+    const windowForOffsetDays = (daysAgo) => {
+      const target = new Date(d.getTime() - daysAgo * 86400000);
+      const start = new Date(target.getTime() - 4 * 86400000);
+      const end = new Date(target.getTime() + 1 * 86400000);
+      return { start: fmt(start), end: fmt(end) };
+    };
+
+    const windows = {
+      ytd:     { start: `${year - 1}-12-25`, end: `${year - 1}-12-31` },
+      year_1:  windowForOffsetDays(365),
+      month_6: windowForOffsetDays(182),
+      month_3: windowForOffsetDays(91),
+      year_3:  windowForOffsetDays(365 * 3),
+      year_5:  windowForOffsetDays(365 * 5),
+    };
+
+    const [riskMap, ...navMaps] = await Promise.all([
+      this.getRiskMap().catch(() => new Map()),
+      ...Object.entries(windows).map(async ([key, win]) => {
+        const map = new Map();
+        try {
+          const items = await this._client.getDailyNavRange(win.start, win.end);
+          for (const item of items || []) {
+            if (item.last_val != null && item.last_val !== '-') {
+              const val = Number(item.last_val);
+              const cls = (item.fund_class_name || '').trim();
+              if (cls) map.set(`${item.proj_id}::${cls}`, val);
+              map.set(`${item.proj_id}::main`, val);
+            }
+          }
+        } catch (err) {
+          console.warn(`Failed loading benchmark map for ${key}:`, err.message);
+        }
+        return [key, map];
+      })
+    ]);
+
+    const result = { riskMap };
+    for (const [key, map] of navMaps) {
+      result[key] = map;
+    }
+    return result;
   }
 }

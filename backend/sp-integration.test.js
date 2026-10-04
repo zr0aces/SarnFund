@@ -69,3 +69,31 @@ test('performance parser isolates share classes and does not borrow missing retu
   assert.equal((await adapter.getFundPerformance('project', 'A')).ytd, 0);
   assert.equal((await adapter.getFundPerformance('project')).year_1, 18, 'preserve unfiltered callers');
 });
+
+test('scraper computes trailing returns and resolves risk when SEC factsheet performance is empty', async () => {
+  const conn = connector();
+  conn.getFundPerformance = async () => ({ year_1: 0, ytd: 0 }); // simulate SEC 204 empty
+  conn.getLatestNav = async () => ({ nav: { last_val: 120, net_asset: 1000000 }, navDate: '2026-10-01' });
+  conn.getBenchmarkNavMaps = async () => ({
+    ytd: new Map([['project::main', 100]]),
+    year_1: new Map([['project::main', 96]]),
+    month_6: new Map([['project::main', 110]]),
+    month_3: new Map([['project::main', 115]]),
+    riskMap: new Map([['project', 6]])
+  });
+
+  const registry = [{ proj_id: 'project', code: 'TEST', name: 'Test Fund', amc: 'Test', type: 'SP', class: null, riskLevel: 0, status: 'Registered' }];
+  let savedData = null;
+  const store = {
+    ...memoryStore(registry),
+    saveFunds: async (type, funds) => { savedData = funds; }
+  };
+
+  await scrapeData(conn, store);
+  const testFund = savedData.find(f => f.code === 'TEST');
+  assert.ok(testFund, 'Test fund should be saved');
+  assert.equal(testFund.return1y, 25); // (120 - 96) / 96 * 100 = 25%
+  assert.equal(testFund.ytd, 20);      // (120 - 100) / 100 * 100 = 20%
+  assert.equal(testFund.risk, 6);      // resolved from riskMap
+});
+

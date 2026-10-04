@@ -156,12 +156,22 @@ async function buildRegistry(client, store) {
     const amcResults = await runBatched(profileTasks, BATCH_SIZE);
     const allProfiles = amcResults.flat();
 
-    // Phase 3 prep: classify by tax incentive (all AMCs) vs unknown (target AMCs only for spec lookup)
+  // Phase 3 prep: classify by tax incentive (all AMCs) vs unknown (target AMCs only for spec lookup)
+    let riskMap = new Map();
+    if (typeof client.getRiskMap === 'function') {
+      try {
+        riskMap = await client.getRiskMap();
+        console.log(`Risk spectrum map built: ${riskMap.size} funds`);
+      } catch (err) {
+        console.warn('Risk spectrum fetch failed:', err.message);
+      }
+    }
+
     unknownProfiles = [];
     for (const profile of allProfiles) {
       const fundType = fundTypeFromTaxIncentive(profile);
       if (fundType) {
-        partialRegistry.push(profileToEntry(profile, fundType));
+        partialRegistry.push(profileToEntry(profile, fundType, riskMap));
       } else if (profile.amcCode) {
         // Only target AMC unknowns get the expensive spec lookup (for RMF/ETF)
         unknownProfiles.push(profile);
@@ -212,7 +222,7 @@ async function buildRegistry(client, store) {
   return registry;
 }
 
-function profileToEntry(profile, fundType) {
+function profileToEntry(profile, fundType, riskMap = new Map()) {
   // fund_class_name is 'main' for single-class funds; store null in that case
   const cls = (profile.fund_class_name && profile.fund_class_name !== 'main')
     ? profile.fund_class_name.trim() : null;
@@ -223,15 +233,14 @@ function profileToEntry(profile, fundType) {
     amc:       (profile.displayName || '').trim(),
     type:      fundType,
     class:     cls,
-    // riskLevel: available at /v2/fund/factsheet/risk-spectrum (separate call)
-    riskLevel: 0,
+    riskLevel: riskMap.get(profile.proj_id) || 0,
     status:    profile.fund_status || 'Registered',
   };
 }
 
 // ── NAV + performance fetch ───────────────────────────────────────────────────
 
-async function fetchFundData(client, entry) {
+async function fetchFundData(client, entry, benchmarkMaps = {}) {
   const { proj_id, code, name, amc, type, class: fundClass, riskLevel, status } = entry;
 
   const result = await client.getLatestNav(proj_id, 15, fundClass);
@@ -248,6 +257,28 @@ async function fetchFundData(client, entry) {
     perf = await client.getFundPerformance(proj_id, fundClass);
   } catch (err) { console.warn(`Performance fetch failed for ${proj_id}:`, err.message); }
 
+  const currentNav = numVal(nav.last_val);
+
+  // Helper to compute return against a benchmark historical NAV map
+  const calcReturn = (pastMap, isAnnualized = false, years = 1) => {
+    if (!pastMap || !currentNav) return 0;
+    const past = pastMap.get(`${proj_id}::${fundClass || 'main'}`) ?? pastMap.get(`${proj_id}::main`);
+    if (!past || past <= 0) return 0;
+    if (isAnnualized && years > 1) {
+      return Number(((Math.pow(currentNav / past, 1 / years) - 1) * 100).toFixed(2));
+    }
+    return Number((((currentNav - past) / past) * 100).toFixed(2));
+  };
+
+  const ytd = (perf?.ytd && perf.ytd !== 0) ? perf.ytd : calcReturn(benchmarkMaps.ytd);
+  const return3m = (perf?.return3m ?? perf?.month_3) || calcReturn(benchmarkMaps.month_3);
+  const return6m = (perf?.return6m ?? perf?.month_6) || calcReturn(benchmarkMaps.month_6);
+  const return1y = (perf?.return1y ?? perf?.year_1) || calcReturn(benchmarkMaps.year_1);
+  const return3y = (perf?.return3y ?? perf?.year_3) || calcReturn(benchmarkMaps.year_3, true, 3);
+  const return5y = (perf?.return5y ?? perf?.year_5) || calcReturn(benchmarkMaps.year_5, true, 5);
+
+  const resolvedRisk = numVal(riskLevel) || (benchmarkMaps.riskMap?.get(proj_id) ?? 0);
+
   // v2 NAV: sell_price / buy_price are top-level (not nested under amc_info)
   // change_val / change_percent not available in v2 daily-info/nav
   return {
@@ -256,21 +287,21 @@ async function fetchFundData(client, entry) {
     name,
     amc,
     class:            fundClass,
-    nav:              numVal(nav.last_val),
+    nav:              currentNav,
     navDate,
     navChange:        0,                       // not available in SEC API v2
     navChangePercent: 0,                       // not available in SEC API v2
     netAsset:         numVal(nav.net_asset),
     sellPrice:        numVal(nav.sell_price),  // v2: top-level (was amc_info.sell_price)
     buyPrice:         numVal(nav.buy_price),   // v2: top-level (was amc_info.buy_price)
-    ytd:              perf?.ytd     ?? 0,
-    return3m:         perf?.return3m ?? perf?.month_3 ?? 0,
-    return6m:         perf?.return6m ?? perf?.month_6 ?? 0,
-    return1y:         perf?.return1y ?? perf?.year_1  ?? 0,
+    ytd,
+    return3m,
+    return6m,
+    return1y,
     return2y:         0,                       // not available from SEC API
-    return3y:         perf?.return3y ?? perf?.year_3  ?? 0,
-    return5y:         perf?.return5y ?? perf?.year_5  ?? 0,
-    risk:             numVal(riskLevel),
+    return3y,
+    return5y,
+    risk:             resolvedRisk,
     type,
     isNew:            false,
     factsheetUrl: `https://market.sec.or.th/public/mrap/MRAPView.aspx?FTYPE=M&PID=${proj_id}`,
@@ -305,6 +336,18 @@ export async function scrapeData(connector, store) {
     registry = await buildRegistry(connector, store);
   }
 
+  // Pre-load benchmark historical NAV snapshots across the market for trailing returns
+  let benchmarkMaps = {};
+  if (typeof connector.getBenchmarkNavMaps === 'function') {
+    try {
+      console.log('Fetching historical NAV benchmark snapshots for trailing return calculation…');
+      benchmarkMaps = await connector.getBenchmarkNavMaps();
+      console.log('✓ Benchmark NAV snapshots loaded (YTD, 1Y, 6M, 3M, 3Y, 5Y)');
+    } catch (err) {
+      console.warn('Warning: Could not fetch benchmark NAV maps:', err.message);
+    }
+  }
+
   // Step 2: fetch NAV + performance for every fund concurrently
   const buckets = Object.fromEntries(FUND_TYPES.map((t) => [t, []]));
   let succeeded = 0, failed = 0;
@@ -312,7 +355,7 @@ export async function scrapeData(connector, store) {
 
   const navTasks = registry.map((entry) => async () => {
     try {
-      const data = await fetchFundData(connector, entry);
+      const data = await fetchFundData(connector, entry, benchmarkMaps);
       return { entry, success: true, data };
     } catch (err) {
       return { entry, success: false, reason: err.message };

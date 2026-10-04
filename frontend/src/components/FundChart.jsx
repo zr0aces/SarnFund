@@ -1,6 +1,61 @@
 import { useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { isValidNumber } from '../utils/number';
+
+const CustomTooltip = ({ active, payload, label, AMC_COLORS }) => {
+    if (active && payload && payload.length) {
+        const item = payload[0];
+        const val = item.value;
+        const isPos = typeof val === 'number' && val >= 0;
+        const amc = item.payload.amc;
+        const amcColor = AMC_COLORS[amc] || AMC_COLORS['All'] || '#38BDF8';
+        return (
+            <div className="bg-slate-950/95 backdrop-blur-md rounded-2xl border border-white/15 shadow-2xl p-3 font-sans min-w-[180px]">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="font-display font-extrabold text-white text-xs truncate max-w-[140px]">
+                        {label}
+                    </span>
+                    {amc && (
+                        <span 
+                            className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded text-white shrink-0 shadow-xs"
+                            style={{ backgroundColor: amcColor }}
+                        >
+                            {amc}
+                        </span>
+                    )}
+                </div>
+                <div className="flex items-center justify-between gap-3 font-mono text-xs pt-1.5 border-t border-white/10">
+                    <span className="text-slate-400 text-[11px] font-medium uppercase tracking-wider">Return</span>
+                    <span className={`font-bold text-xs ${isPos ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {typeof val === 'number' ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '—'}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+    return null;
+};
+
+const renderBarLabel = (props) => {
+    const { x, y, width, height, value } = props;
+    if (typeof value !== 'number') return null;
+    const isPos = value >= 0;
+    const fill = isPos ? '#34D399' : '#F43F5E';
+    return (
+        <text 
+            x={x + width + 8} 
+            y={y + height / 2} 
+            fill={fill} 
+            textAnchor="start" 
+            dominantBaseline="central"
+            fontSize={11}
+            fontWeight={700}
+            fontFamily="JetBrains Mono, monospace"
+        >
+            {isPos ? '+' : ''}{value.toFixed(1)}%
+        </text>
+    );
+};
 
 const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => {
 
@@ -9,12 +64,15 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
         // The current SEC snapshot uses zero as the missing-performance sentinel.
         const validFunds = funds.filter(f => isValidNumber(f[metric]) && f[metric] !== 0);
 
-        return validFunds.slice(0, 10).map(f => ({
-            name: f.class ? `${f.code} (${f.class})` : f.code,
-            return: f[metric],
-            amc: f.amc,
-            isNew: f.isNew
-        }));
+        return validFunds.slice(0, 10).map(f => {
+            const hasDistinctClass = f.class && f.class !== f.code && !f.code.includes(f.class);
+            return {
+                name: hasDistinctClass ? `${f.code} (${f.class})` : f.code,
+                return: f[metric],
+                amc: f.amc,
+                isNew: f.isNew
+            };
+        });
     }, [funds, showNewOnly, sortBy]);
 
     if (chartData.length === 0) return null;
@@ -32,7 +90,7 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
             </div>
             <div className="h-56 sm:h-72 lg:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 24, left: 10, bottom: 5 }}>
+                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 60, left: 10, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(255, 255, 255, 0.08)" />
                         <XAxis 
                             type="number" 
@@ -44,29 +102,20 @@ const FundChart = ({ funds, sortBy, showNewOnly, getSortLabel, AMC_COLORS }) => 
                         <YAxis 
                             dataKey="name" 
                             type="category" 
-                            width={100} 
+                            width={115} 
                             axisLine={false} 
                             tickLine={false} 
                             tick={{ fill: '#E2E8F0', fontSize: 11, fontWeight: 600, fontFamily: 'Kanit' }} 
                         />
                         <Tooltip
                             cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }}
-                            contentStyle={{ 
-                                backgroundColor: 'rgba(15, 22, 38, 0.95)', 
-                                backdropFilter: 'blur(12px)',
-                                borderRadius: '16px', 
-                                border: '1px solid rgba(255, 255, 255, 0.15)', 
-                                boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.5)',
-                                color: '#F8FAFC',
-                                fontFamily: 'Prompt',
-                                padding: '10px 14px'
-                            }}
-                            formatter={(value) => [`${value.toFixed(2)}%`, `Return`]}
+                            content={<CustomTooltip AMC_COLORS={AMC_COLORS} />}
                         />
                         <Bar dataKey="return" radius={[0, 6, 6, 0]} barSize={26}>
                             {chartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={AMC_COLORS[entry.amc] || AMC_COLORS['All']} />
                             ))}
+                            <LabelList dataKey="return" content={renderBarLabel} />
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
