@@ -1,12 +1,27 @@
 # Changelog
 
-## [2026.9.1] - 2026-10-04
+## [2026.10.1] - 2026-10-04
 
 ### Added
 - **S&P 500 Fund Category (`/funds/sp`)**: Added dedicated S&P 500 telemetry analytics page and backend API endpoints (`/api/funds/sp`, `/api/funds/sp500`).
 - **Curated S&P 500 Catalog (`backend/sp-catalog.js`)**: Integrated 33 S&P 500 funds and share classes across 12 AMCs (AIA IM, Asset Plus, Bualuang, Eastspring, KAsset, Krungsri, KKP, KTAM, MFC, SCBAM, TISCO, Talis) mapped directly to official SEC Open Data API v2 project IDs.
 - **AIA IM Integration**: Added AIA Investment Management (Thailand) to `AMC_REGISTRY` and `MASTER_AMC_COLORS` with dedicated `#D9222A` brand styling.
 - **S&P 500 Telemetry UI**: Glassmorphic theme styling with Globe icon, `#3B82F6` neon accent, tax guidance for General/RMF/SSF share classes, and category tips.
+- **Historical NAV Trailing Returns Engine (`backend/sec-api-connector.js`, `backend/scraper.js`)**: Implemented `getBenchmarkNavMaps()` and `getDailyNavRange()` to query historical market-wide daily NAV snapshots across benchmark target dates (YTD start: Dec 30/31, 1M, 3M, 6M, 1Y, 3Y, 5Y). Calculates precise trailing returns with compound annualization for multi-year horizons (`(1 + r)^(1/years) - 1`).
+- **SEC Factsheet Risk Spectrum Mapping (`getRiskSpectrum`)**: Added risk tier loader querying `/v2/fund/factsheet/fund-factsheet-spectrum` to resolve official SEC risk tiers 1–8 (`risk_spectrum`) when fund profile risk levels are unpopulated.
+- **In-Bar Float Metric Labels (`frontend/src/components/FundChart.jsx`)**: Added Recharts `LabelList` rendering formatted float return percentages directly at bar ends with positive/negative color semantics.
+- **S&P 500 Integration & Calculation Tests (`backend/sp-integration.test.js`)**: 5 automated Node.js test cases covering catalog integrity, project ID uniqueness, SEC profile merging, trailing return calculations (simple + annualized), and risk spectrum mapping.
+- **Backend Test Script (`backend/package.json`)**: Added `npm test` script executing the Node.js test runner for fast local and CI verification.
+
+### Changed
+- **Telemetry UI Harmonization**: Unified all 6 fund category pages (RMF, ThaiESG, ThaiESGX, SSF, ETF, S&P 500) and the Thai Tax Calculator sidebar widget under Dark Obsidian glassmorphic telemetry theme (`#090D16`, `glass-panel`, `glass-panel-subtle`), eliminating light theme overrides on the Landing Page.
+- **Chart Tooltip & Axis Contrast**: Replaced default Recharts tooltip with a custom glassmorphic dark tooltip displaying neon emerald/rose returns and AMC badge tags; deduplicated Y-axis labels when fund abbreviations match.
+- **Frontend Dependency Upgrades**: Upgraded 12 in-major packages: `react`/`react-dom` 19.3.0, `lucide-react` 1.52.0, `vite` 8.3.2, `@vitejs/plugin-react` 6.0.0, `@eslint/js` 9.39.5, `globals` 17.4.0, `eslint-plugin-react-hooks` 7.1.0, `eslint-plugin-react-refresh` 0.4.26, `@types/react` 19.2.14, `@types/react-dom` 19.2.3, `tailwindcss` 4.2.2, `@tailwindcss/vite` 4.2.2.
+
+### Fixed
+- **Missing Returns & Risk Levels on Dashboard**: Fixed dashboard displaying `"-"` for returns and risk levels caused by SEC API factsheet performance returning HTTP 204 No Content for mutual funds.
+- **Chart Contrast in Dark Mode**: Fixed illegible black text in Top 10 Performance Radar tooltips.
+
 
 ## [2026.8.0] - 2026-08-23
 

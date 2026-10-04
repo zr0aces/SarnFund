@@ -10,7 +10,8 @@
     "dev": "nodemon server.js",
     "scrape": "node scraper.js",
     "scrape:refresh": "node scraper.js --refresh",
-    "init": "node init-data.js"
+    "init": "node init-data.js",
+    "test": "node --test sp-integration.test.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

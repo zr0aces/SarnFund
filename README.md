@@ -37,8 +37,8 @@ Access the application at http://localhost:8091.
 
 ### Run (Local Development)
 ```bash
-# Terminal 1: Run Backend API
-cd backend && npm install && npm run scrape && npm run dev
+# Terminal 1: Run Backend API & Tests
+cd backend && npm install && npm test && npm run dev
 
 # Terminal 2: Run Frontend Dashboard
 cd frontend && npm install && npm run dev
@@ -51,7 +51,7 @@ cd frontend && npm install && npm run dev
 # Fetch latest daily NAV (reuses 7-day fund registry)
 node scripts/fetch-funds.js
 
-# Force full refresh (wipes registry cache and queries all 18 AMCs from scratch)
+# Force full refresh (wipes registry cache and queries all 19 AMCs from scratch)
 node scripts/fetch-funds.js --refresh
 ```
 

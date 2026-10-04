@@ -14,6 +14,7 @@ SarnFund is a mutual fund analytics dashboard for Thai investments (RMF, SSF, Th
 # Backend Commands (run from backend/ directory)
 cd backend && npm run dev        # nodemon watch mode, API on :3001
 cd backend && npm start          # production start
+cd backend && npm test           # run automated unit & integration tests
 cd backend && npm run scrape     # run two-phase scrape manually (2–5 min initial run)
 cd backend && npm run scrape:refresh # scrape with forced registry rebuild
 cd backend && npm run init       # seed initial mock data without API scrape
@@ -28,6 +29,7 @@ cd frontend && npm run preview   # preview production build locally
 node scripts/fetch-funds.js          # scrape latest NAV using cached registry (auto-detects Docker)
 node scripts/fetch-funds.js --refresh # scrape with forced registry rebuild
 docker compose exec backend npm run scrape # scrape directly inside running Docker container
+docker compose exec backend npm run scrape:refresh # scrape with forced registry rebuild inside container
 
 # Versioning Commands (run from project root)
 node scripts/sync-version.mjs        # propagate VERSION file to package manifests
@@ -59,7 +61,7 @@ All instruction files follow standardized formatting, taxonomy, and operational 
 ## 3. Core Development Practices & Guidelines
 
 - **Module Format**: Pure ESM (`"type": "module"`) in both backend and frontend. Use `import`/`export` only; do not use `require()`.
-- **UI/UX & Design System**: Light theme default, Kanit font for headings/titles, Prompt font for body copy/tables. Responsive dynamic layout.
+- **UI/UX & Design System**: Dark Obsidian glassmorphic telemetry theme (`#090D16`), Kanit font for headings/titles, Prompt font for body copy/tables, JetBrains Mono for metrics. Responsive dynamic layout.
 - **Error Handling**: Use `numVal(val, fallback)` for SEC API numeric parsing (`"-"` and `null` fallback). Use `runBatched()` for rate-limiting.
 - **Security**: Never log API keys or secrets. Store credentials in root `.env`.
 
@@ -71,6 +73,8 @@ All instruction files follow standardized formatting, taxonomy, and operational 
 | :--- | :--- |
 | [backend/sec-api-connector.js](file:///home/san/workspace/SarnFund/backend/sec-api-connector.js) | SEC API v2 connector, rate limiting, and 401 failover handling |
 | [backend/scraper.js](file:///home/san/workspace/SarnFund/backend/scraper.js) | Two-phase scraper (Phase 1: Fund Registry, Phase 2: Daily NAV) |
+| [backend/sp-catalog.js](file:///home/san/workspace/SarnFund/backend/sp-catalog.js) | Curated S&P 500 catalog mapping across 12 AMCs to SEC API project IDs |
+| [backend/sp-integration.test.js](file:///home/san/workspace/SarnFund/backend/sp-integration.test.js) | Automated tests for catalog, trailing returns, and risk spectrum |
 | [backend/server.js](file:///home/san/workspace/SarnFund/backend/server.js) | Express endpoints, CORS, cron scheduling (06:30 PM daily) |
 | [frontend/src/hooks/useFundData.js](file:///home/san/workspace/SarnFund/frontend/src/hooks/useFundData.js) | Dual-layer cache hook (`fund_cache_v4_*`) |
 | [VERSION](file:///home/san/workspace/SarnFund/VERSION) | Single source of truth for CalVer versioning (`YYYY.M.MINOR`) |
@@ -82,7 +86,8 @@ All instruction files follow standardized formatting, taxonomy, and operational 
 Before completing any task:
 1. Run `cd frontend && npm run lint` to verify zero ESLint warnings/errors.
 2. Run `cd frontend && npm run build` to verify frontend production build succeeds.
-3. Run `node scripts/sync-version.mjs --check` to verify version alignment.
+3. Run `cd backend && npm test` to verify backend calculations and integration pass.
+4. Run `node scripts/sync-version.mjs --check` to verify version alignment.
 
 ## Plans
 

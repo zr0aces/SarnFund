@@ -3,8 +3,8 @@
 Coding and design guidelines for developers modifying SarnFund.
 
 ## UI/UX & Typography
-- **Font Face**: Headings and major titles must use **Kanit**. Body copy, tables, labels, and forms must use **Prompt**.
-- **Themes**: Standardized strictly on a clean, accessible **Light Theme** system. Avoid dark-mode variants unless explicitly requested.
+- **Font Face**: Headings and major titles must use **Kanit**. Body copy, tables, labels, and forms must use **Prompt**. Telemetry metrics, return percentages, timestamps, and numeric cells must use **JetBrains Mono**.
+- **Themes**: Standardized on the unified **Dark Obsidian** glassmorphic telemetry theme (`#090D16`), utilizing dark glass panels (`glass-panel`, `glass-panel-subtle`), vibrant neon accent hierarchies per fund category, and accessible high-contrast text and in-chart float labels.
 - **Layout**: Dashboards and data grids must be sized dynamically to fit the browser viewport, avoiding unnecessary vertical or horizontal scrollbars where possible.
 
 ## Error Handling & API Resilience

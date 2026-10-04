@@ -32,15 +32,18 @@ sequenceDiagram
     Backend->>SEC: GET /v2/fund/general-info/amcs (List all AMCs)
     Backend->>SEC: GET /v2/fund/general-info/profiles (Fetch fund profiles per AMC)
     Backend->>SEC: GET /v2/fund/general-info/specifications (Verify specifications)
+    Backend->>Backend: Merge curated S&P 500 catalog (sp-catalog.js)
     Backend->>Backend: Classify as RMF, SSF, ESG, ESGX, ETF, or S&P 500 (SP)
     Backend->>Backend: Save registry to data/fund-registry.json
     end
     
     rect rgb(245, 245, 245)
-    Note over Backend, SEC: Phase 2: Daily NAV & Performance (Daily at 6:30 PM)
+    Note over Backend, SEC: Phase 2: Daily NAV & Trailing Performance (Daily at 6:30 PM)
     Backend->>Backend: Load data/fund-registry.json
-    Backend->>SEC: GET /v2/fund/daily-info/nav (NAV, AUM, offering/redemption)
-    Backend->>SEC: GET /v2/fund/factsheet/performance (YTD & returns)
+    Backend->>SEC: GET /v2/fund/daily-info/{date} (Market-wide NAV snapshots for YTD, 1M, 3M, 6M, 1Y, 3Y, 5Y)
+    Backend->>SEC: GET /v2/fund/factsheet/fund-factsheet-spectrum (Risk spectrum mapping 1-8)
+    Backend->>SEC: GET /v2/fund/factsheet/performance (Factsheet performance fallback)
+    Backend->>Backend: Compute trailing returns with compound annualization
     Backend->>Backend: Assemble fund schema objects
     Backend->>Backend: Save JSON cache files (rmf.json, esg.json, sp.json, etc.)
     end
@@ -53,17 +56,22 @@ sequenceDiagram
   1. Requests all AMCs and filters against the target map of 19 companies (including AIA IM).
   2. Queries all active (`Registered` / `IPO`) fund profiles for each AMC.
   3. Detects SSF and ESG/ESGX tax incentives from the profile fields.
-  4. For remaining profiles, queries specification details in batches of 5 to detect RMF or ETF types, and merges the curated S&P 500 funds catalog.
+  4. For remaining profiles, queries specification details in batches of 5 to detect RMF or ETF types, and merges the curated S&P 500 funds catalog (`backend/sp-catalog.js`).
   5. Caches the deduplicated result in `data/fund-registry.json`.
 
-### 2. Phase 2 — Daily NAV Fetch (Daily)
+### 2. Phase 2 — Daily NAV & Trailing Performance Engine (Daily)
 - **TTL**: 24 hours (run automatically by backend cron job daily at 06:30 PM server time).
-- **Purpose**: Fetches daily Net Asset Value (NAV), Assets Under Management (AUM), offering/redemption prices, and YTD / multi-year performance.
+- **Purpose**: Fetches daily Net Asset Value (NAV), Assets Under Management (AUM), offering/redemption prices, SEC risk spectrum tiers, and calculates trailing returns (YTD, 1M, 3M, 6M, 1Y, 3Y, 5Y).
 - **Mechanism**:
   1. Reads `data/fund-registry.json`.
-  2. For each registered fund, queries the latest daily NAV (trying today, yesterday, and up to 5 days back to handle weekends and holidays).
-  3. Queries performance statistics (YTD, 3M, 6M, 1Y, 3Y, 5Y) filtering specifically for the `ผลตอบแทนกองทุนรวม` (Fund Return) type.
-  4. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `sp.json`, `all.json`).
+  2. Queries the latest daily NAV for each fund (probing today, yesterday, and up to 5 days back to handle weekends and market holidays).
+  3. Pre-fetches historical benchmark daily NAV snapshots across the entire market (`getBenchmarkNavMaps`) for target dates: YTD start (Dec 30/31 of previous year), 1M, 3M, 6M, 1Y, 3Y, and 5Y ago.
+  4. Calculates trailing returns:
+     - **<= 1 Year** (YTD, 1M, 3M, 6M, 1Y): Simple percentage return: `((currentNav - pastNav) / pastNav) * 100`.
+     - **> 1 Year** (3Y, 5Y): Compound annualized return: `(((1 + r)^(1 / years)) - 1) * 100`.
+     - **Fallback**: Merges with `/v2/fund/factsheet/performance` (`ผลตอบแทนกองทุนรวม`) when available.
+  5. Resolves risk levels via `/v2/fund/factsheet/fund-factsheet-spectrum` (`getRiskSpectrum`), mapping official SEC risk tiers 1–8 (`risk_spectrum`) if the profile risk level is unpopulated.
+  6. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `sp.json`, `all.json`).
 
 ## Local Storage & Cache Synchronization
 

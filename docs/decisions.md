@@ -12,6 +12,22 @@ Record of key architectural, layout, and framework design decisions.
 
 ---
 
+## 2026-10-04 — Historical NAV Benchmark Snapshot Calculation & Factsheet Spectrum Risk Mapping
+* **Status**: Accepted
+* **Decision**: Implement a market-wide historical daily NAV snapshot pipeline (`getBenchmarkNavMaps`) for trailing returns (YTD, 1M, 3M, 6M, 1Y, 3Y, 5Y) and query `/v2/fund/factsheet/fund-factsheet-spectrum` (`getRiskSpectrum`) for official SEC risk tiers 1–8.
+* **Rationale**: The official SEC factsheet performance endpoint (`/v2/fund/factsheet/performance`) frequently returns HTTP 204 No Content for mutual funds, resulting in empty metrics (`"-"`) on the dashboard. By snapshotting daily NAV across target historical dates in a single market-wide batch query per period, SarnFund calculates accurate trailing returns with compound annualization (`(1 + r)^(1/years) - 1`) for multi-year horizons, with zero additional per-fund HTTP overhead.
+* **Implementation**: Implemented `getBenchmarkNavMaps()` and `getDailyNavRange()` in `backend/sec-api-connector.js`, added calculation and spectrum mapping logic in `backend/scraper.js`, and added automated verification in `backend/sp-integration.test.js`.
+
+---
+
+## 2026-10-04 — Telemetry UI Harmonization & In-Chart Contrast Accessibility
+* **Status**: Accepted
+* **Decision**: (1) Unify all 6 fund categories and the sidebar Thai Tax Calculator under the Dark Obsidian glassmorphic telemetry theme (`#090D16`), removing legacy light-theme overrides. (2) Replace default Recharts tooltips with a custom glassmorphic neon tooltip, add formatted float return percentages at bar ends via `LabelList`, and deduplicate Y-axis labels when fund abbreviations match.
+* **Rationale**: (1) Eliminates visual fragmentation between category pages and landing view, providing a cohesive dark telemetry aesthetic. (2) Default Recharts tooltips rendered unreadable dark text on dark backgrounds; adding direct bar labels and neon tooltip chips delivers immediate readability without requiring hover interactions on mobile devices.
+* **Implementation**: Updated `frontend/src/pages/LandingPage.jsx`, `frontend/src/config/fundCategories.js`, and `frontend/src/components/FundChart.jsx`.
+
+---
+
 ## 2026-08-23 — Vite 8 / Rolldown Code-Splitting and Production Bundle Optimization
 * **Status**: Accepted
 * **Decision**: Configure function-based `manualChunks` in `vite.config.js` compatible with Vite 8 / Rolldown to separate application logic from vendor dependencies (`vendor-react`, `vendor-charts`).

@@ -15,6 +15,7 @@ cd backend && npm install
 cd backend && npm run init            # Seed initial mock data
 cd backend && npm run dev             # Start dev server with nodemon (:3001)
 cd backend && npm start               # Start production server
+cd backend && npm test                # Run automated unit & integration tests
 cd backend && npm run scrape          # Run scrape reusing 7-day registry
 cd backend && npm run scrape:refresh  # Wipe registry and force full scrape
 ```
@@ -84,6 +85,7 @@ node scripts/release.mjs 2026.8.0    # Bumps to exactly 2026.8.0 (supports v pre
 Before completing any task or PR:
 1. `cd frontend && npm run lint` — verify zero ESLint errors and warnings.
 2. `cd frontend && npm run build` — verify production build succeeds with clean chunking.
-3. `node scripts/sync-version.mjs --check` — verify version synchronization.
-4. `./.agent-parity/bin/agent-parity status` — verify cross-agent parity and git tracking.
-5. `npm audit --prefix frontend && npm audit --prefix backend` — verify zero package vulnerabilities.
+3. `cd backend && npm test` — verify backend calculations, S&P 500 catalog, and return logic pass.
+4. `node scripts/sync-version.mjs --check` — verify version synchronization.
+5. `./.agent-parity/bin/agent-parity status` — verify cross-agent parity and git tracking.
+6. `npm audit --prefix frontend && npm audit --prefix backend` — verify zero package vulnerabilities.
