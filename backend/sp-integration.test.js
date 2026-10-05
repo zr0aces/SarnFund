@@ -10,6 +10,7 @@ function memoryStore(registry) {
     getProgress: async () => null,
     clearProgress: async () => {},
     saveRegistry: async () => {},
+    getFunds: async () => null,
     saveFunds: async () => {},
     saveFailedFunds: async () => {},
     saveAllFundsCombined: async () => {},
@@ -86,7 +87,9 @@ test('scraper computes trailing returns and resolves risk when SEC factsheet per
   let savedData = null;
   const store = {
     ...memoryStore(registry),
-    saveFunds: async (type, funds) => { savedData = funds; }
+    saveFunds: async (type, funds) => {
+      if (type === 'sp') savedData = funds;
+    }
   };
 
   await scrapeData(conn, store);
@@ -95,5 +98,61 @@ test('scraper computes trailing returns and resolves risk when SEC factsheet per
   assert.equal(testFund.return1y, 25); // (120 - 96) / 96 * 100 = 25%
   assert.equal(testFund.ytd, 20);      // (120 - 100) / 100 * 100 = 20%
   assert.equal(testFund.risk, 6);      // resolved from riskMap
+});
+
+test('scraper falls back to existing cached fund data when live NAV returns null', async () => {
+  const conn = connector();
+  conn.getLatestNav = async () => null; // simulate SEC API 204 or missing NAV
+
+  const cachedFund = {
+    id: 'project_main_TEST',
+    proj_id: 'project',
+    code: 'TEST',
+    name: 'Test Fund',
+    amc: 'Test',
+    type: 'SP',
+    nav: 125.5,
+    navDate: '2026-09-30',
+    risk: 6,
+    return1y: 20
+  };
+
+  const registry = [{ proj_id: 'project', code: 'TEST', name: 'Test Fund', amc: 'Test', type: 'SP', class: null, riskLevel: 6, status: 'Registered' }];
+  let savedData = null;
+  const store = {
+    ...memoryStore(registry),
+    getFunds: async (type) => {
+      if (type === 'sp') return { data: [cachedFund] };
+      return null;
+    },
+    saveFunds: async (type, funds) => {
+      if (type === 'sp') savedData = funds;
+    }
+  };
+
+  const result = await scrapeData(conn, store);
+  assert.equal(result.abortedWrite, undefined, 'should not abort since cached fund data salvaged the scrape');
+  assert.ok(savedData, 'saveFunds should have been called');
+  const fund = savedData.find(f => f.code === 'TEST');
+  assert.ok(fund, 'cached fund should be present');
+  assert.equal(fund.nav, 125.5);
+});
+
+test('scraper aborts destructive file write when all funds fail and no cache exists', async () => {
+  const conn = connector();
+  conn.getLatestNav = async () => null; // all fail
+
+  const registry = [{ proj_id: 'project', code: 'TEST', name: 'Test Fund', amc: 'Test', type: 'SP', class: null, riskLevel: 6, status: 'Registered' }];
+  let saveFundsCalled = false;
+  const store = {
+    ...memoryStore(registry),
+    getFunds: async () => null, // no cache exists
+    saveFunds: async () => { saveFundsCalled = true; },
+    saveFailedFunds: async () => {}
+  };
+
+  const result = await scrapeData(conn, store);
+  assert.equal(result.abortedWrite, true, 'abortedWrite must be true');
+  assert.equal(saveFundsCalled, false, 'saveFunds must NOT be called when write is aborted');
 });
 

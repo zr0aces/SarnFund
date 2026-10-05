@@ -274,7 +274,7 @@ class SecApiClient {
   getFundPerformance(projId) {
     return this._getAllPages(
       `${BASE_URL}/v2/fund/factsheet/performance`,
-      { proj_id: projId, latest: 'true' },
+      { proj_id: projId },
       this._fsKey, this._fsKey2, this._fsRL
     );
   }
@@ -286,7 +286,7 @@ class SecApiClient {
   getFundUrls(projId) {
     return this._getAllPages(
       `${BASE_URL}/v2/fund/factsheet/urls`,
-      { proj_id: projId, latest: 'true' },
+      { proj_id: projId },
       this._fsKey, this._fsKey2, this._fsRL
     );
   }

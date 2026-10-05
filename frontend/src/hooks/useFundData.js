@@ -43,6 +43,10 @@ export const useFundData = (fundType, initialMockData) => {
     // Prevents a stale silent fetch from overwriting newer data that arrived
     // while it was in-flight.
     const currentTimestamp = useRef(initialCache ? initialCache.timestamp : 0);
+    const mockDataRef = useRef(initialMockData);
+    useEffect(() => {
+        mockDataRef.current = initialMockData;
+    }, [initialMockData]);
 
     const fetchData = useCallback(async (isSilent = false, cachedTs = null, ignoreRef = null) => {
         if (!isSilent) {
@@ -83,6 +87,7 @@ export const useFundData = (fundType, initialMockData) => {
             if (ignoreRef?.current) return;
             // In silent mode, only surface the error if there's no cache to fall back on.
             if (!isSilent || !cachedTs) {
+                setFunds(prev => (prev && prev.length > 0) ? prev : (mockDataRef.current || []));
                 setError(`Unable to fetch data: ${err.message}`);
                 setDataSource('error');
             }

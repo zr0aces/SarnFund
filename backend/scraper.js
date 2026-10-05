@@ -240,11 +240,28 @@ function profileToEntry(profile, fundType, riskMap = new Map()) {
 
 // ── NAV + performance fetch ───────────────────────────────────────────────────
 
-async function fetchFundData(client, entry, benchmarkMaps = {}) {
+async function fetchFundData(client, entry, benchmarkMaps = {}, previousFundMap = new Map()) {
   const { proj_id, code, name, amc, type, class: fundClass, riskLevel, status } = entry;
 
-  const result = await client.getLatestNav(proj_id, 15, fundClass);
+  let result = null;
+  try {
+    result = await client.getLatestNav(proj_id, 15, fundClass);
+  } catch (err) {
+    // Client error (e.g. rate limit / network)
+  }
+
   if (!result) {
+    // If live NAV is unavailable from SEC API (e.g. 204 or temporary downtime),
+    // check if we have a previously cached fund entry to retain known values.
+    const key = `${proj_id}_${fundClass || 'main'}_${code}`;
+    const previous = previousFundMap.get(key) || previousFundMap.get(code);
+    if (previous && previous.nav && previous.nav > 0) {
+      return {
+        ...previous,
+        risk: numVal(riskLevel) || previous.risk || 0,
+        type,
+      };
+    }
     if (status === 'IPO') {
       return null; // IPO funds might not have NAV data yet
     }
@@ -336,6 +353,26 @@ export async function scrapeData(connector, store) {
     registry = await buildRegistry(connector, store);
   }
 
+  // Pre-load existing cached funds to prevent data loss on transient SEC API failures
+  const previousFundMap = new Map();
+  if (typeof store.getFunds === 'function') {
+    for (const t of FUND_TYPES) {
+      try {
+        const existing = await store.getFunds(t.toLowerCase());
+        if (existing?.data?.length) {
+          for (const fund of existing.data) {
+            if (fund.id) previousFundMap.set(fund.id, fund);
+            if (fund.code) previousFundMap.set(fund.code, fund);
+            if (fund.proj_id) {
+              const key = `${fund.proj_id}_${fund.class || 'main'}_${fund.code}`;
+              previousFundMap.set(key, fund);
+            }
+          }
+        }
+      } catch { /* ignored */ }
+    }
+  }
+
   // Pre-load benchmark historical NAV snapshots across the market for trailing returns
   let benchmarkMaps = {};
   if (typeof connector.getBenchmarkNavMaps === 'function') {
@@ -355,7 +392,7 @@ export async function scrapeData(connector, store) {
 
   const navTasks = registry.map((entry) => async () => {
     try {
-      const data = await fetchFundData(connector, entry, benchmarkMaps);
+      const data = await fetchFundData(connector, entry, benchmarkMaps, previousFundMap);
       return { entry, success: true, data };
     } catch (err) {
       return { entry, success: false, reason: err.message };
@@ -410,7 +447,36 @@ export async function scrapeData(connector, store) {
   const lastUpdated = new Date(timestamp).toISOString();
   const selectedAMCs = Object.values(AMC_REGISTRY).map(({ display }) => display);
 
+  // Guard: if zero funds succeeded and failures occurred, do NOT overwrite existing data files!
+  if (succeeded === 0 && failed > 0) {
+    console.warn(`WARNING: Scrape produced 0 successful funds (${failed} failed). Aborting file write to protect existing fund cache.`);
+    await store.saveFailedFunds(failed, failedFunds);
+    return {
+      timestamp,
+      lastUpdated,
+      selectedAMCs,
+      data: Object.fromEntries(FUND_TYPES.map((t) => [t.toLowerCase(), []])),
+      failedCount: failed,
+      failures: failedFunds,
+      abortedWrite: true
+    };
+  }
+
   // Step 3: write per-type, combined files, and failed funds list
+  for (const type of FUND_TYPES) {
+    const typeKey = type.toLowerCase();
+    if (buckets[type].length === 0 && typeof store.getFunds === 'function') {
+      const hadEntries = registry.some((e) => e.type === type);
+      if (hadEntries) {
+        const existing = await store.getFunds(typeKey);
+        if (existing?.data?.length) {
+          console.warn(`Preserving ${existing.data.length} existing funds for ${type} (scraped 0 funds)`);
+          buckets[type] = existing.data;
+        }
+      }
+    }
+  }
+
   await Promise.all([
     ...FUND_TYPES.map((type) =>
       store.saveFunds(type.toLowerCase(), buckets[type], { selectedAMCs })

@@ -37,8 +37,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ensure data directory exists
-await store.ensureDataDir();
+// Ensure data directory exists and has baseline data
+await store.ensureBaselineData();
 
 // Active fund types — to add a new type: add its key here
 const ACTIVE_FUND_TYPES = new Set(['rmf', 'esg', 'esgx', 'ssf', 'etf', 'sp', 'all']);

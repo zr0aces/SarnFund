@@ -147,5 +147,9 @@ const start = Date.now();
 const result = await scrapeData();
 const elapsed = ((Date.now() - start) / 1000).toFixed(1);
 
-const total = Object.values(result.data).flat().length;
-console.log(`Done in ${elapsed}s — ${total} funds written to ${targetDataDir}/`);
+if (result.abortedWrite) {
+  console.warn(`\n⚠️ Scrape produced 0 fresh funds. Existing data files in ${targetDataDir}/ were protected and kept intact.`);
+} else {
+  const total = Object.values(result.data).flat().length;
+  console.log(`Done in ${elapsed}s — ${total} funds written to ${targetDataDir}/`);
+}

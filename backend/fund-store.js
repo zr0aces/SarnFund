@@ -26,9 +26,20 @@ export class FileFundStoreAdapter {
 
   async getFunds(type, forceFresh = false) {
     try {
-      const filePath = path.join(this.dataDir, `${type.toLowerCase()}.json`);
+      const typeKey = type.toLowerCase();
+      const filePath = path.join(this.dataDir, `${typeKey}.json`);
       const data = await fs.readFile(filePath, 'utf-8');
       const parsed = JSON.parse(data);
+
+      const isAll = typeKey === 'all';
+      const hasData = isAll
+        ? (parsed?.data && typeof parsed.data === 'object' && Object.values(parsed.data).some(arr => Array.isArray(arr) && arr.length > 0))
+        : (Array.isArray(parsed?.data) && parsed.data.length > 0);
+
+      if (!hasData) {
+        return null;
+      }
+
       const valid = this.isCacheValid(parsed.timestamp);
       
       if (valid || !forceFresh) {
@@ -44,6 +55,17 @@ export class FileFundStoreAdapter {
       return null;
     } catch (error) {
       return null;
+    }
+  }
+
+  async ensureBaselineData() {
+    await this.ensureDataDir();
+    const types = ['rmf', 'esg', 'esgx', 'ssf', 'etf', 'sp'];
+    const checks = await Promise.all(types.map(t => this.getFunds(t)));
+    const needsSeed = checks.some(c => !c || !c.data || c.data.length === 0);
+    if (needsSeed) {
+      const { initializeData } = await import('./init-data.js');
+      await initializeData(this);
     }
   }
 
