@@ -32,12 +32,18 @@ docker compose exec backend npm run scrape # scrape directly inside running Dock
 docker compose exec backend npm run scrape:refresh # scrape with forced registry rebuild inside container
 
 # Versioning Commands (run from project root)
-node scripts/sync-version.mjs        # propagate VERSION file to package manifests
+node scripts/sync-version.mjs        # metadata-only sync: manifests + local lock versions
 node scripts/sync-version.mjs --check # verify version consistency across files
-node scripts/release.mjs             # bump version according to CalVer rules
+node scripts/release.mjs             # prepare only: bump, sync, check
+node scripts/release.mjs --help      # examples and independent --build / --tag opt-ins
+node --test scripts/version-control.test.mjs # release-tooling regression suite
 ```
 
 ---
+
+Local release never installs dependencies or pushes. Build precedes exact-path commit and annotated local tag when requested; build failure retains prepared metadata and blocks tagging. To tag an already-prepared version, use printed Git commands instead of rerunning release. Root VERSION is authoritative; missing/malformed source fails.
+
+Local release never installs dependencies or pushes. Build precedes exact-path commit and annotated local tag when requested; build failure retains prepared metadata and blocks tagging. To tag an already-prepared version, use printed Git commands instead of rerunning release. Root VERSION is authoritative; missing/malformed source fails.
 
 ## 2. Supported AI Coding Tools & Architecture
 
