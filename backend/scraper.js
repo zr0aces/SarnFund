@@ -265,7 +265,34 @@ async function fetchFundData(client, entry, benchmarkMaps = {}, previousFundMap 
     if (status === 'IPO') {
       return null; // IPO funds might not have NAV data yet
     }
-    throw new Error('No NAV data found in the last 15 days');
+    // Retain registered fund metadata from registry when live NAV is unavailable
+    const resolvedRisk = numVal(riskLevel) || (benchmarkMaps.riskMap?.get(proj_id) ?? previous?.risk ?? 0);
+    return {
+      id:               `fund_${proj_id}_${fundClass || 'main'}_${code}`,
+      code,
+      name,
+      amc,
+      class:            fundClass,
+      nav:              previous?.nav ?? null,
+      navDate:          previous?.navDate ?? null,
+      navChange:        0,
+      navChangePercent: 0,
+      netAsset:         previous?.netAsset ?? 0,
+      sellPrice:        previous?.sellPrice ?? 0,
+      buyPrice:         previous?.buyPrice ?? 0,
+      ytd:              previous?.ytd ?? 0,
+      return3m:         previous?.return3m ?? 0,
+      return6m:         previous?.return6m ?? 0,
+      return1y:         previous?.return1y ?? 0,
+      return2y:         0,
+      return3y:         previous?.return3y ?? 0,
+      return5y:         previous?.return5y ?? 0,
+      risk:             resolvedRisk,
+      type,
+      isNew:            false,
+      factsheetUrl:     `https://market.sec.or.th/public/mrap/MRAPView.aspx?FTYPE=M&PID=${proj_id}`,
+      navUnavailable:   true,
+    };
   }
   const { nav, navDate } = result;
 
@@ -420,16 +447,18 @@ export async function scrapeData(connector, store) {
       continue;
     }
     
-    // Filter funds with no valid NAV (zero means no price data available)
-    if (!r.data.nav || r.data.nav === 0) {
+    // Track funds with no valid NAV while retaining them in the catalog
+    if (!r.data.nav || r.data.nav <= 0) {
       failedFunds.push({
         code: r.entry.code,
         name: r.entry.name,
         amc: r.entry.amc,
         type: r.entry.type,
         class: r.entry.class,
-        reason: 'NAV value is zero'
+        reason: 'No NAV data found in the last 15 days'
       });
+      // Retain registered fund in category bucket so catalog count is not depleted
+      buckets[r.entry.type]?.push(r.data);
       continue;
     }
     

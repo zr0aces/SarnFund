@@ -9,7 +9,7 @@ const FundTable = ({ funds, sortBy, setSortBy, showNewOnly, AMC_COLORS }) => {
     );
     const renderNav = (fund) => (
         <div className="font-mono">
-            <div className="text-sm text-slate-200">{isValidNumber(fund.nav) ? fund.nav.toFixed(4) : '—'}</div>
+            <div className="text-sm text-slate-200">{isValidNumber(fund.nav) && fund.nav > 0 ? fund.nav.toFixed(4) : '—'}</div>
             <div className="text-[10px] text-slate-400">{fund.navDate || 'Date unavailable'}</div>
         </div>
     );

@@ -12,9 +12,8 @@ export async function initializeData(store = new FileFundStoreAdapter()) {
   
   await store.ensureDataDir();
   console.log('✓ Data directory verified/created');
-  
   const timestamp = Date.now();
-  const selectedAMCs = ['KKP', 'Krungsri', 'BBL', 'TISCO', 'SCB', 'ONE', 'KAsset', 'AIA IM', 'KTAM', 'Eastspring', 'Asset Plus', 'UOB'];
+  const selectedAMCs = Array.from(new Set(Object.values(SEED_FUNDS).flat().map(f => f.amc).filter(Boolean))).sort();
   
   const filesToCreate = [
     { name: 'rmf', data: SEED_FUNDS.rmf },

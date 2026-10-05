@@ -20,7 +20,10 @@ export const MASTER_AMC_COLORS = {
     'LH Fund': '#94A3B8',
     MFC: '#FA5252',
     TALIS: '#D97706',
-    XSpring: '#64748B'
+    XSpring: '#64748B',
+    Aberdeen: '#E11D48',
+    'First Plus': '#14B8A6',
+    Sawakami: '#84CC16'
 };
 
 export const FUND_CATEGORIES = {
