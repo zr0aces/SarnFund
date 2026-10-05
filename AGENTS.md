@@ -43,8 +43,6 @@ node --test scripts/version-control.test.mjs # release-tooling regression suite
 
 Local release never installs dependencies or pushes. Build precedes exact-path commit and annotated local tag when requested; build failure retains prepared metadata and blocks tagging. To tag an already-prepared version, use printed Git commands instead of rerunning release. Root VERSION is authoritative; missing/malformed source fails.
 
-Local release never installs dependencies or pushes. Build precedes exact-path commit and annotated local tag when requested; build failure retains prepared metadata and blocks tagging. To tag an already-prepared version, use printed Git commands instead of rerunning release. Root VERSION is authoritative; missing/malformed source fails.
-
 ## 2. Supported AI Coding Tools & Architecture
 
 SarnFund supports three AI coding tools:
