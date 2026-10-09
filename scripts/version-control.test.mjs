@@ -227,9 +227,22 @@ test('manual instructions use actual upstream and separate exact branch/tag push
   git(root, 'update-ref', 'refs/remotes/fixture-remote/trunk', 'HEAD');
   const out = output();
   assert.equal(release(root, config, [], out.options), 0);
-  assert.ok(out.logs.includes("git push 'fixture-remote' 'HEAD:refs/heads/trunk'"));
-  assert.ok(out.logs.includes("git push 'fixture-remote' 'refs/tags/v2026.10.2'"));
+  const command = out.logs.find((s) => s.startsWith('git add -- '));
+  assert.ok(command);
+  assert.ok(command.includes("&& git commit -m 'chore(release): v2026.10.2'"));
+  assert.ok(command.includes("&& git tag -a 'v2026.10.2' -m 'Release v2026.10.2'"));
+  assert.ok(command.includes("&& git push 'fixture-remote' 'HEAD:refs/heads/trunk'"));
+  assert.ok(command.includes("&& git push 'fixture-remote' 'refs/tags/v2026.10.2'"));
   assert.ok(out.logs.some((s) => s.includes('ls-remote')));
+
+  git(root, 'checkout', '--detach');
+  const detached = output();
+  assert.equal(release(root, config, [], detached.options), 0);
+  const detachedCommand = detached.logs.find((s) => s.startsWith('git add -- '));
+  assert.ok(detachedCommand);
+  assert.ok(detachedCommand.endsWith("git tag -a 'v2026.10.3' -m 'Release v2026.10.3'"));
+  assert.ok(!detachedCommand.includes('git push'));
+  assert.ok(detached.logs.some((s) => s.includes('No attached branch/upstream available')));
 });
 
 test('local inventory and actual entry scripts work from unrelated CWD and spaced paths', (t) => {

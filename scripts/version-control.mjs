@@ -215,19 +215,22 @@ function instructions(root, version, paths, run, log) {
     try { return absentGitResult(root, ['check-ignore', '--quiet', '--no-index', '--', file], run); }
     catch { return true; } // Non-Git preparation still prints its exact inventory.
   });
+  const commands = [
+    `git add -- ${staging.map(quote).join(' ')}`,
+    `git commit -m ${quote(`chore(release): ${tag}`)}`,
+    `git tag -a ${quote(tag)} -m ${quote(`Release ${tag}`)}`,
+  ];
   log(`Prepared ${version}; review changes before publishing.`);
   log('The Git index must be empty before staging release paths.');
-  log(`git add -- ${staging.map(quote).join(' ')}`);
-  log(`git commit -m ${quote(`chore(release): ${tag}`)}`);
-  log(`git tag -a ${quote(tag)} -m ${quote(`Release ${tag}`)}`);
   try {
     const branch = git(root, ['symbolic-ref', '--quiet', '--short', 'HEAD'], run);
     const [remote, ref] = git(root, ['for-each-ref', '--format=%(upstream:remotename)%00%(upstream:remoteref)', `refs/heads/${branch}`], run).split('\0');
     if (!remote || !ref) throw new Error('No upstream');
     log(`Before pushing, verify the remote tag is absent: git ls-remote --tags ${quote(remote)} ${quote(`refs/tags/${tag}`)}`);
-    log(`git push ${quote(remote)} ${quote(`HEAD:${ref}`)}`);
-    log(`git push ${quote(remote)} ${quote(`refs/tags/${tag}`)}`);
+    commands.push(`git push ${quote(remote)} ${quote(`HEAD:${ref}`)}`);
+    commands.push(`git push ${quote(remote)} ${quote(`refs/tags/${tag}`)}`);
   } catch { log('No attached branch/upstream available: select and verify the remote branch and release tag manually; no push performed.'); }
+  log(commands.join(' && '));
 }
 
 export function release(root, config, argv, { now = new Date(), run = child, log = console.log, warn = console.error, ...transaction } = {}) {
