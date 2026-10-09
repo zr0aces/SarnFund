@@ -7,9 +7,10 @@ Express API server that fetches Thai mutual fund data from the **SEC Thailand Op
 | File | Purpose |
 |------|---------|
 | `sec-api-connector.js` | SEC API client — rate limiting, primary/secondary key failover, all endpoints, `numVal` helper |
-| `scraper.js` | Two-phase scrape: fund registry build + daily NAV fetch |
+| `scraper.js` | Two-phase scrape: fund registry build + daily NAV fetch with zero-purge fallback retention |
+| `seed-data.js` | Authoritative baseline seed dataset (794 funds across RMF, SSF, ESG, ESGX, ETF, SP) |
 | `server.js` | Express routes, cron scheduler (06:30 PM daily), inline `.env` loader (checks root/local paths) |
-| `init-data.js` | Seed script for empty cache files |
+| `init-data.js` | Seed script for populating cache files from `seed-data.js` |
 
 ## Setup
 
@@ -98,6 +99,11 @@ Secondary keys enable zero-downtime key rotation: if the primary key returns 401
 | `data/all.json` | 24 h | Combined snapshot of all fund categories |
 | `data/failed-funds.json` | 24 h | Log of funds with failed lookups or 0 NAV |
 
+### Catalog Retention & Zero-Purge Policy
+- **Never Drop Registered Funds**: When SEC API endpoints return HTTP 204 or no daily NAV data is found in recent days, `scraper.js` **retains** the fund in its category bucket with fallback metadata (`nav: null`, `navUnavailable: true`). Registered funds are never purged from JSON cache files.
+- **Authoritative Baseline Seed (`seed-data.js`)**: Contains the complete set of 794 registered funds matching `data/fund-registry.json` (RMF: 379, SSF: 299, ESG: 38, ESGX: 34, ETF: 11, SP: 33). Running `npm run init` seeds all categories completely.
+- **Destructive Write Abort**: If a scrape encounters 0 successful funds and fails on all queries with no existing cache, it aborts writing to prevent blanking good data.
+
 Daily scrape runs automatically at **06:30 PM** (Asia/Bangkok timezone) via `node-cron`.
 
 ## Rate limiting
@@ -110,5 +116,7 @@ Daily scrape runs automatically at **06:30 PM** (Asia/Bangkok timezone) via `nod
 
 - Empty fields are returned as `"-"` (dash string) instead of JSON `null`
 - `numVal(v)` exported from `sec-api-connector.js` safely parses any field: handles `null`, `"-"`, `""`, `NaN` → returns 0 (or a custom fallback)
-- HTTP `204 No Content` = no data for that date (weekend/holiday); treated the same as null
+- HTTP `204 No Content` = no data for that date (weekend/holiday/unavailable); treated the same as null
 - `getLatestNav()` tries today then falls back up to 5 days to handle Thai market holidays
+- If daily NAV returns null across all fallback days, the fund's previous cached NAV is preserved, or a fallback record (`nav: null`, `navDate: null`) is generated so the fund remains available in the dashboard.
+

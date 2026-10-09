@@ -11,6 +11,8 @@ Coding and design guidelines for developers modifying SarnFund.
 - **API Inputs**: When parsing numeric values from external APIs, use the `numVal(v, fallback)` helper function. The SEC API v2 utilizes `"-"` for null or empty values; `numVal` converts these, alongside `null`, `""`, and `NaN`, to the specified fallback.
 - **Rate Limiting**: Do not trigger concurrent raw fetch loops. Wrap operations using `runBatched(tasks, concurrency)` to respect the SEC's limit of 3,000 requests per 300 seconds.
 - **Failover Logic**: Utilize the primary and secondary key failover mechanism in `SecApiClient` for endpoints returning HTTP 401.
+- **Catalog Retention (Zero-Purge)**: Never discard or drop registered funds from datasets or UI tables when upstream API queries return HTTP 204 No Content, missing NAV, or 0. Create fallback schema records (`nav: null`, `navDate: null`, `navUnavailable: true`). UI components must render `nav: null` gracefully using `'—'` and `'Date unavailable'` without runtime exceptions.
+- **Baseline Seed Parity**: `backend/seed-data.js` must mirror 100% of registered funds in `data/fund-registry.json` across all categories (RMF, SSF, ESG, ESGX, ETF, SP) so initial environment seeding (`npm run init`) guarantees full catalog coverage.
 
 ## Security
 - **No Hardcoded Secrets**: Secrets, keys, and tokens must never be written in the code. Reference them via `process.env`.

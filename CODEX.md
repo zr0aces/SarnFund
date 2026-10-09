@@ -67,6 +67,7 @@ All instruction files follow standardized formatting, taxonomy, and operational 
 - **Module Format**: Pure ESM (`"type": "module"`) in both backend and frontend. Use `import`/`export` only; do not use `require()`.
 - **UI/UX & Design System**: Dark Obsidian glassmorphic telemetry theme (`#090D16`), Kanit font for headings/titles, Prompt font for body copy/tables, JetBrains Mono for metrics. Responsive dynamic layout.
 - **Error Handling**: Use `numVal(val, fallback)` for SEC API numeric parsing (`"-"` and `null` fallback). Use `runBatched()` for rate-limiting.
+- **Catalog Retention & Resilience Invariant**: Never drop or purge registered funds from datasets or UI tables when upstream SEC API v2 returns HTTP 204 No Content, missing NAV, or zero. Scraper must preserve cached NAV or build fallback metadata records (`nav: null`, `navUnavailable: true`). Frontend components must render `nav: null` gracefully using `'—'` and `'Date unavailable'`. `backend/seed-data.js` must maintain exact 1-to-1 parity with all 794 funds in `data/fund-registry.json` (RMF: 379, SSF: 299, ESG: 38, ESGX: 34, ETF: 11, SP: 33).
 - **Security**: Never log API keys or secrets. Store credentials in root `.env`.
 
 ---
@@ -76,7 +77,8 @@ All instruction files follow standardized formatting, taxonomy, and operational 
 | File | Purpose |
 | :--- | :--- |
 | [backend/sec-api-connector.js](file:///home/san/workspace/SarnFund/backend/sec-api-connector.js) | SEC API v2 connector, rate limiting, and 401 failover handling |
-| [backend/scraper.js](file:///home/san/workspace/SarnFund/backend/scraper.js) | Two-phase scraper (Phase 1: Fund Registry, Phase 2: Daily NAV) |
+| [backend/scraper.js](file:///home/san/workspace/SarnFund/backend/scraper.js) | Two-phase scraper (Phase 1: Fund Registry, Phase 2: Daily NAV) with zero-purge retention |
+| [backend/seed-data.js](file:///home/san/workspace/SarnFund/backend/seed-data.js) | Authoritative baseline seed dataset (794 funds across RMF, SSF, ESG, ESGX, ETF, SP) |
 | [backend/sp-catalog.js](file:///home/san/workspace/SarnFund/backend/sp-catalog.js) | Curated S&P 500 catalog mapping across 12 AMCs to SEC API project IDs |
 | [backend/sp-integration.test.js](file:///home/san/workspace/SarnFund/backend/sp-integration.test.js) | Automated tests for catalog, trailing returns, and risk spectrum |
 | [backend/server.js](file:///home/san/workspace/SarnFund/backend/server.js) | Express endpoints, CORS, cron scheduling (06:30 PM daily) |

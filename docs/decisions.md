@@ -4,6 +4,14 @@ Record of key architectural, layout, and framework design decisions.
 
 ---
 
+## 2026-10-06 — Resilient Fund Catalog Retention & Baseline Seed Dataset Invariant
+* **Status**: Accepted
+* **Decision**: (1) Enforce a strict Zero-Purge Policy in `backend/scraper.js`: registered funds are retained in category buckets even when upstream SEC API v2 returns HTTP 204 No Content or zero NAV. (2) Fall back to registered fund metadata (`nav: null`, `navUnavailable: true`) instead of throwing fatal errors. (3) Render `null`/zero NAV gracefully in `FundTable.jsx` as `'—'` with `'Date unavailable'`. (4) Maintain full parity in `backend/seed-data.js` across all registered funds in `data/fund-registry.json` (794 funds across RMF, SSF, ESG, ESGX, ETF, SP).
+* **Rationale**: Upstream SEC API daily NAV endpoints (`/v2/fund/daily-info/nav`) frequently return HTTP 204 No Content or experience market holiday gaps. Previously, the scraper threw `No NAV data found in the last 15 days` and dropped funds without active NAV (`if (!r.data.nav || r.data.nav === 0) continue;`). Combined with an incomplete seed dataset (232 funds), this caused total fund counts to plummet from 794 to ~180 on refresh. Retaining registered funds with fallback metadata preserves catalog integrity and user visibility regardless of external API outages.
+* **Implementation**: Updated `backend/scraper.js`, `frontend/src/components/FundTable.jsx`, `backend/seed-data.js`, `backend/init-data.js`, and `frontend/src/config/fundCategories.js`.
+
+---
+
 ## 2026-10-04 — Add S&P 500 (`sp`) Fund Category with Curated Catalog and SEC Live Telemetry
 * **Status**: Accepted
 * **Decision**: Add a dedicated S&P 500 fund type (`sp` / `sp500`) with neon blue accent (`#3B82F6`), Globe telemetry icon, and a curated catalog of 33 funds/classes across 12 AMCs mapped directly to SEC Thailand Open Data API v2 project IDs.

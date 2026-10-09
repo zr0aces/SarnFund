@@ -73,6 +73,13 @@ sequenceDiagram
   5. Resolves risk levels via `/v2/fund/factsheet/fund-factsheet-spectrum` (`getRiskSpectrum`), mapping official SEC risk tiers 1–8 (`risk_spectrum`) if the profile risk level is unpopulated.
   6. Assembles standard fund schema JSON files and saves them to the data directory (e.g. `rmf.json`, `esg.json`, `ssf.json`, `esgx.json`, `etf.json`, `sp.json`, `all.json`).
 
+### 3. Catalog Retention & Resilience Invariant (Zero-Purge Policy)
+- **Zero-Purge Guarantee**: Registered funds from `data/fund-registry.json` must **never be discarded** from category datasets, even when upstream SEC API endpoints return HTTP 204 No Content, empty daily NAV, or when market holidays/downtime occur.
+- **Graceful Fallback Records**: If live NAV is unavailable, the scraper preserves prior cached NAV from `previousFundMap`. If no cache exists, it constructs a fallback record (`nav: null`, `navDate: null`, `navUnavailable: true`, complete AMC display name, factsheet URL, risk tier, and class) so the fund remains visible and searchable in the catalog.
+- **Frontend Safe Rendering**: Tables (`FundTable.jsx`), KPI cards (`KPICards.jsx`), and charts (`FundChart.jsx`) handle `nav: null` gracefully: metrics display `'—'`, dates display `'Date unavailable'`, and return-based rankings filter out unpriced funds without runtime errors or layout distortion.
+- **Destructive Write Guard**: The scraper explicitly aborts writing output files if 0 funds succeed and failures occur while no valid cache exists, preventing accidental overwrite of healthy fund datasets.
+- **Authoritative Baseline Seed Parity**: `backend/seed-data.js` maintains exact 1-to-1 parity with all 794 registered funds in `data/fund-registry.json` (RMF: 379, SSF: 299, ESG: 38, ESGX: 34, ETF: 11, SP: 33). This guarantees that initializing an empty environment (`npm run init`) seeds the entire multi-category catalog without dropping funds.
+
 ## Local Storage & Cache Synchronization
 
 The React frontend utilizes a custom `useFundData` hook to maximize performance and deliver a smooth user experience:

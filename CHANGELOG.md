@@ -1,5 +1,17 @@
 # Changelog
 
+## [2026.10.3] - 2026-10-06
+
+### Added
+- **Resilient Fund Catalog Retention (Zero-Purge Policy)**: Updated `backend/scraper.js` to preserve registered funds in category buckets even when upstream SEC API v2 daily NAV endpoint returns HTTP 204 No Content, missing NAV, or zero.
+- **Authoritative Baseline Seed Dataset (`backend/seed-data.js`)**: Merged all 794 registered funds matching `data/fund-registry.json` across all categories (RMF: 379, SSF: 299, ESG: 38, ESGX: 34, ETF: 11, SP: 33) into `SEED_FUNDS` with historical NAV and returns where available.
+- **Dynamic AMC Detection (`backend/init-data.js`)**: Dynamic AMC discovery from seed dataset during `npm run init`.
+- **AMC Brand Palette Expansion (`frontend/src/config/fundCategories.js`)**: Added brand colors for Aberdeen (`#E11D48`), First Plus (`#14B8A6`), and Sawakami (`#84CC16`).
+
+### Fixed
+- **Catalog Depletion on API 204 / Scrape Refresh**: Prevented fund count from dropping from 794 to ~180 when upstream SEC daily NAV endpoint returns HTTP 204.
+- **Frontend Missing NAV Rendering**: Updated `FundTable.jsx` to gracefully display `'—'` and `'Date unavailable'` for unpriced or zero-NAV funds without layout shift or exceptions.
+
 ## [2026.10.1] - 2026-10-04
 
 ### Added
